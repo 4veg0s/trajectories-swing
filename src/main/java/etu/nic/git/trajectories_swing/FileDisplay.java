@@ -8,20 +8,46 @@ import java.awt.*;
 public class FileDisplay {
     private JFrame frame;
     private JPanel fileDataPanel;
+    private JLabel fileNameLabel;
     private JTextArea fileTextArea;
-    private JScrollPane scrollPane;
 
     public void buildGUI() {
+        String filePath = "../traject1.txt";
         this.frame = new JFrame();
-        this.fileTextArea = initFileTextArea();
-        this.scrollPane = initFileTextScrollPane(this.fileTextArea);
-        loadFileDataToArea("../traject1.txt");
-        fileDataPanel = new JPanel(new BorderLayout());
-        fileDataPanel.add(BorderLayout.CENTER, this.scrollPane);
-        this.frame.getContentPane().add(fileDataPanel);
+
+        JPanel fileDisplayPanel = initFileDisplayPanel(filePath);
+        loadFileDataToArea(filePath);
+        this.frame.getContentPane().add(fileDisplayPanel);
         this.frame.setBounds(new Rectangle(100, 100, 400, 500));
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setVisible(true);
+    }
+
+    private JPanel initFileDisplayPanel(String filePath) {
+        Box header = new Box(BoxLayout.Y_AXIS);
+
+        JLabel fileHeaderLabel = new JLabel("Файл");
+        fileHeaderLabel.setAlignmentX(0.5f);
+        fileHeaderLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+        header.add(fileHeaderLabel);
+
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(SwingConstants.HORIZONTAL);
+        header.add(separator);
+
+        fileNameLabel = new JLabel(filePath);
+        fileNameLabel.setAlignmentX(0.5f);
+        fileNameLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+        header.add(fileNameLabel);
+
+        this.fileTextArea = initFileTextArea();
+        JScrollPane scrollPane = initFileTextScrollPane(this.fileTextArea);
+
+        JPanel fileDisplayPanel = new JPanel(new BorderLayout());
+        fileDisplayPanel.add(BorderLayout.CENTER, scrollPane);
+        fileDisplayPanel.add(BorderLayout.NORTH, header);
+
+        return fileDisplayPanel;
     }
 
     private JTextArea initFileTextArea() {
