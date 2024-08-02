@@ -1,0 +1,87 @@
+package etu.nic.git.trajectories_swing.table;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+public class TrajectoryRowTableModel extends AbstractTableModel {
+    private final List<TrajectoryRow> trajectoryRowList;
+
+    private final String[] columnNames = new String[]{
+            "T, с", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
+    };
+    private final Class[] columnClass = new Class[]{
+            Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class
+    };
+
+    public TrajectoryRowTableModel(List<TrajectoryRow> trajectoryRowList) {
+        this.trajectoryRowList = trajectoryRowList;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnClass[columnIndex];
+    }
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    @Override
+    public int getRowCount() {
+        return trajectoryRowList.size();
+    }
+
+    // Время, x-координата, y-координата, z-координата, x-составляющая скорости, yсоставляющая скорости, z-составляющая скорости
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        TrajectoryRow row = trajectoryRowList.get(rowIndex);
+        if (0 == columnIndex) {
+            return row.getTime();
+        } else if (1 == columnIndex) {
+            return row.getCoordinateX();
+        } else if (2 == columnIndex) {
+            return row.getCoordinateY();
+        } else if (3 == columnIndex) {
+            return row.getCoordinateZ();
+        } else if (4 == columnIndex) {
+            return row.getVelocityX();
+        } else if (5 == columnIndex) {
+            return row.getVelocityY();
+        } else if (6 == columnIndex) {
+            return row.getVelocityZ();
+        }
+        return null;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        TrajectoryRow row = trajectoryRowList.get(rowIndex);
+        if (0 == columnIndex) {
+            row.setTime((Double) aValue);
+        } else if (1 == columnIndex) {
+            row.setCoordinateX((Double) aValue);
+        } else if (2 == columnIndex) {
+            row.setCoordinateY((Double) aValue);
+        } else if (3 == columnIndex) {
+            row.setCoordinateZ((Double) aValue);
+        } else if (4 == columnIndex) {
+            row.setVelocityX((Double) aValue);
+        } else if (5 == columnIndex) {
+            row.setVelocityY((Double) aValue);
+        } else if (6 == columnIndex) {
+            row.setVelocityZ((Double) aValue);
+        }
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
+        return true;
+    }
+}

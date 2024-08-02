@@ -1,5 +1,7 @@
 package etu.nic.git.trajectories_swing.tools;
 
+import etu.nic.git.trajectories_swing.table.TrajectoryRow;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,6 +25,16 @@ public class FileDataLoader {
             throw new RuntimeException(e);
         }
         return fileText.toString();
+    }
+    public static List<TrajectoryRow> parseToTrajectoryRowList(String fileData) {
+        String[] lines = fileData.split("\n");
+        List<TrajectoryRow> trajectoryRowList = new ArrayList<>();
+        for (String line : lines) {
+            if (TrajectoryRow.isValidTrajectoryString(line)) {
+                trajectoryRowList.add(TrajectoryRow.buildTrajectoryRowFromString(line));
+            }
+        }
+        return trajectoryRowList;
     }
 
     public static String[][] plainDataToArray(String data) {
