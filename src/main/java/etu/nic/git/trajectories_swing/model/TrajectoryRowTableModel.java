@@ -107,7 +107,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     public String getTableDataInString() {
         StringBuilder tableData = new StringBuilder();
         for (TrajectoryRow row : trajectoryRowList) {
-            tableData.append(row.toString());
+            tableData.append(row.toFileString());
             tableData.append("\n");
         }
         return tableData.toString();

@@ -1,21 +1,19 @@
 package etu.nic.git.trajectories_swing.display_components;
 
-import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.tools.FileDataLoader;
 import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class FileDisplay {
-    private JPanel background;
-    private JLabel displayHeader;
-    private JLabel filePathLabel;
-    private JTextArea fileTextArea;
-    private JScrollPane scrollPane;
-    private TrajectoryFileStorage fileStorage;
+public class FileDataDisplay {
+    private final JPanel background;
+    private final JLabel displayHeader;
+    private final JLabel filePathLabel;
+    private final JTextArea fileTextArea;
+    private final JScrollPane scrollPane;
+    private final TrajectoryFileStorage fileStorage;
 
-    public FileDisplay(TrajectoryFileStorage storage) {
+    public FileDataDisplay(TrajectoryFileStorage storage) {
         fileStorage = storage;
 
         Box header = new Box(BoxLayout.Y_AXIS);
@@ -33,17 +31,17 @@ public class FileDisplay {
             filePathLabel = new JLabel("Файл не выбран");
         } else {
             String path = fileStorage.getCurrentFile().getFilePath();
-            if (path.length() > 20) {
-                String shortenedPath = path.substring(0, 3) +
+            if (path.length() > 30) {
+                String shortenedPath =
+                        path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
                         "..." +
-                        path.substring(path.length() - 15, path.length() - 1);
+                        path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")), path.length() - 1);
                 filePathLabel = new JLabel(shortenedPath);
                 filePathLabel.setToolTipText(path);
             } else {
                 filePathLabel = new JLabel(path);
             }
         }
-
         filePathLabel.setAlignmentX(0.5f);
         filePathLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
         header.add(filePathLabel);
@@ -60,39 +58,6 @@ public class FileDisplay {
         return background;
     }
 
-    public void buildGUI() {
-        String filePath = "../traject1.txt";
-
-        JPanel fileDisplayPanel = initFileDisplayPanel(filePath);
-        loadFileDataToArea(filePath);
-    }
-
-    private JPanel initFileDisplayPanel(String filePath) {
-        Box header = new Box(BoxLayout.Y_AXIS);
-
-        displayHeader = new JLabel("Файл");
-        displayHeader.setAlignmentX(0.5f);
-        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-        header.add(displayHeader);
-
-        JSeparator separator = new JSeparator();
-        separator.setOrientation(SwingConstants.HORIZONTAL);
-        header.add(separator);
-
-        filePathLabel = new JLabel(filePath);
-        filePathLabel.setAlignmentX(0.5f);
-        filePathLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-        header.add(filePathLabel);
-
-        this.fileTextArea = initFileTextArea();
-        JScrollPane scrollPane = initFileTextScrollPane(this.fileTextArea);
-
-        JPanel fileDisplayPanel = new JPanel(new BorderLayout());
-        fileDisplayPanel.add(BorderLayout.CENTER, scrollPane);
-        fileDisplayPanel.add(BorderLayout.NORTH, header);
-
-        return fileDisplayPanel;
-    }
 
     public void updateDisplayedInfo() {
         loadFileDataToArea(fileStorage.getCurrentFile().getFileData());

@@ -1,6 +1,7 @@
 package etu.nic.git.trajectories_swing.tools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
 public class TrajectoryFile {
@@ -8,7 +9,7 @@ public class TrajectoryFile {
     private String fileName;
     private String fileData;
 
-    public TrajectoryFile(String filePath) {
+    public TrajectoryFile(String filePath) throws FileNotFoundException {
         File file = new File(filePath);
         if (file.exists()) {
             this.filePath = file.getAbsolutePath();
@@ -16,6 +17,7 @@ public class TrajectoryFile {
             loadDataFromFile(filePath);
         } else {
             // fixme случаи если файла не существует
+            throw new FileNotFoundException();
         }
     }
 

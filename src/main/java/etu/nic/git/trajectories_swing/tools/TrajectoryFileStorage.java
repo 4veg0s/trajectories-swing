@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Хранилище файлов с траекториями
  * содержит индекс файла, открытого на данный момоент
+ *
  */
 public class TrajectoryFileStorage {
     private int currentFileIndex;

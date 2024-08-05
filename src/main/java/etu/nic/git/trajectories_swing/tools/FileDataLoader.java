@@ -36,8 +36,4 @@ public class FileDataLoader {
         }
         return trajectoryRowList;
     }
-
-    public static String[][] plainDataToArray(String data) {
-        return null;
-    }
 }

@@ -3,7 +3,7 @@ package etu.nic.git;
 import etu.nic.git.trajectories_swing.ApplicationAssembler;
 
 /**
- * Hello world!
+ * Assemble and show application
  *
  */
 public class App {

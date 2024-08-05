@@ -13,18 +13,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TableDisplay {
-    private JLabel displayHeader;
-    private JTable table;
-    private JScrollPane scrollPane;
-    private JPanel background;
-    private TrajectoryRowTableModel model;
+    private final JLabel displayHeader;
+    private final JTable table;
+    private final JScrollPane scrollPane;
+    private final JPanel background;
+    private final TrajectoryRowTableModel model;
 
     public TableDisplay(TrajectoryRowTableModel tableModel) {
         model = tableModel;
 
         // настройка лейбла-заголовка для компонента
         displayHeader = new JLabel("Таблица");
-        displayHeader.setAlignmentX(0.5f);
+        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
@@ -43,38 +43,7 @@ public class TableDisplay {
         return background;
     }
 
-    public void createAndShowGUI() {
-        String filePath = "../traject1.txt";
-
-        // fixme: перенести метод в TrajectoryRow
-        List<TrajectoryRow> trajectoryRowList = FileDataLoader.parseToTrajectoryRowList(FileDataLoader.loadDataFromFile(filePath));
-
-        TrajectoryRowTableModel tableModel = new TrajectoryRowTableModel(trajectoryRowList);
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                TrajectoryRowTableModel model = (TrajectoryRowTableModel) e.getSource();
-                model.sortByTime(); // если было изменение значения ячейки в таблице,
-                // то произойдет сортировка по времени для данных модели
-
-            }
-        });
-        table = new JTable(tableModel);
-
-        setJTableColumnsWidth(table, 1200, 10, 15, 15, 15, 15, 15, 15);
-//        table.putClientProperty("terminateEditOnFocusLost", true);
-
-
-
-        table.setRowHeight(20);
-        table.setSize(1200, 800);
-
-        JFrame frame = new JFrame("Custom JTable");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        table.setFillsViewportHeight(true);
-    }
-
+    // fixme может пригодиться
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
                                              double... percentages) {
         double total = 0;

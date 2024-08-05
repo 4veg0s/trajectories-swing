@@ -151,14 +151,26 @@ public class TrajectoryRow {
         this.velocityZ = velocityZ;
     }
 
+    public String toFileString() {  // "toString", но в том же виде, как и строка из исходного файла
+        return String.format("%.3f", time).replace(",", ".") + "  " +
+                String.format("%.1f", coordinateX).replace(",", ".") + "  " +
+                String.format("%.1f", coordinateY).replace(",", ".") + "  " +
+                String.format("%.1f", coordinateZ).replace(",", ".") + "  " +
+                String.format("%.3f", velocityX).replace(",", ".") + "  " +
+                String.format("%.3f", velocityY).replace(",", ".") + "  " +
+                String.format("%.3f", velocityZ).replace(",", ".");
+    }
+
     @Override
     public String toString() {
-        return time + " " +
-                coordinateX + " " +
-                coordinateY + " " +
-                coordinateZ + " " +
-                velocityX + " " +
-                velocityY + " " +
-                velocityZ;
+        return "TrajectoryRow{" +
+                "time=" + time +
+                ", coordinateX=" + coordinateX +
+                ", coordinateY=" + coordinateY +
+                ", coordinateZ=" + coordinateZ +
+                ", velocityX=" + velocityX +
+                ", velocityY=" + velocityY +
+                ", velocityZ=" + velocityZ +
+                '}';
     }
 }
