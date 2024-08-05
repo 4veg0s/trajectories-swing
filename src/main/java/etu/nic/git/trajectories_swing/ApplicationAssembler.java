@@ -3,6 +3,7 @@ package etu.nic.git.trajectories_swing;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
+import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.tools.FileDataLoader;
 import etu.nic.git.trajectories_swing.tools.TrajectoryFile;
@@ -18,6 +19,7 @@ public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
     private TrajectoryRowTableModel model;
     private MainFrame mainFrame;
+    private TopMenuBar menuBar;
     private CatalogDisplay catalogDisplay;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
@@ -25,13 +27,18 @@ public class ApplicationAssembler {
     public ApplicationAssembler() {
         model = initModel();
         fileStorage = initFileStorage();
+        fileStorage.setCurrentFileIndex(0);  // fixme на время без FileChooser
         catalogDisplay = new CatalogDisplay(fileStorage, initCatalogActionListener());
         tableDisplay = new TableDisplay(model);
         fileDisplay = new FileDisplay(fileStorage);
 
+        menuBar = new TopMenuBar();
+
         model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
         fileDisplay.updateDisplayedInfo();
+        model.fireTableDataChanged();
     }
+
 
     public void updateEntireInfo() {
         model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
@@ -78,8 +85,10 @@ public class ApplicationAssembler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String actionCommand = e.getActionCommand();
-                fileStorage.updateCurrentFileIndexByFile(fileStorage.findFileByName(actionCommand));
+                TrajectoryFile currentFile = fileStorage.findFileByName(actionCommand);
+                fileStorage.updateCurrentFileIndexByFile(currentFile);
                 updateEntireInfo();
+                mainFrame.appendFileToFrameTitle(currentFile.getName());
                 model.fireTableDataChanged();
             }
         };
@@ -90,7 +99,7 @@ public class ApplicationAssembler {
     }
 
     public void assemble() {
-        mainFrame = new MainFrame(catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
+        mainFrame = new MainFrame(menuBar.getMenuBar(), catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
     }
 
     public TrajectoryFileStorage getFileStorage() {

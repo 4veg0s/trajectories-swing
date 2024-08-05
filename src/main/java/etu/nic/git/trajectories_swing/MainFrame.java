@@ -8,8 +8,11 @@ public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
         super();
     }
-    public MainFrame(JComponent catalogDisplay, JComponent tableDisplay, JComponent fileDisplay) {
+    public MainFrame(JMenuBar menuBar, JComponent catalogDisplay, JComponent tableDisplay, JComponent fileDisplay) {
         super("Траектории");
+
+        this.setJMenuBar(menuBar);
+
         JPanel background = new JPanel(new BorderLayout());
 
         // разделитель для гуи
@@ -37,5 +40,9 @@ public class MainFrame extends JFrame {
 
     public void showMainFrame() {
         this.setVisible(true);
+    }
+
+    public void appendFileToFrameTitle(String name) {
+        this.setTitle("Траектории - " + name);
     }
 }
