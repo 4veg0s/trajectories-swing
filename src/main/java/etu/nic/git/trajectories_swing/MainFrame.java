@@ -45,4 +45,8 @@ public class MainFrame extends JFrame {
     public void appendFileToFrameTitle(String name) {
         this.setTitle("Траектории - " + name);
     }
+
+    public Rectangle getFrameBounds() {
+        return this.getBounds();
+    }
 }

@@ -56,4 +56,9 @@ public class TableDisplay {
             column.setPreferredWidth((int) (tablePreferredWidth * (percentages[i] / total)));
         }
     }
+
+    public void revalidateAndRepaint() {
+        background.revalidate();
+        background.repaint();
+    }
 }

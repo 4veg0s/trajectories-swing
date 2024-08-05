@@ -63,6 +63,7 @@ public class FileDisplay {
         loadFileDataToArea(fileStorage.getCurrentFile().getData());
     }
 
+
     private JTextArea initFileTextArea() {
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);

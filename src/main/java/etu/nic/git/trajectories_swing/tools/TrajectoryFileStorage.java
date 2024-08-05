@@ -1,6 +1,7 @@
 package etu.nic.git.trajectories_swing.tools;
 
 
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,14 @@ public class TrajectoryFileStorage {
         fileList = new ArrayList<>();
     }
 
-    public void add(TrajectoryFile file) {
-        fileList.add(file);
-        currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
+    public void add(TrajectoryFile file) throws FileAlreadyExistsException {
+        if (findFileByName(file.getName()) == null) {
+            fileList.add(file);
+            currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
+        } else {
+            throw new FileAlreadyExistsException("Файл с таким именем уже загружен");
+        }
+
     }
 
     public void updateFileDataByIndex(int index, String fileData) {

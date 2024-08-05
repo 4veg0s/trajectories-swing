@@ -13,15 +13,19 @@ import java.util.stream.Collectors;
 public class CatalogDisplay {
     private final JLabel displayHeader;
     private final JPanel background;
+    private final Box fileBox;
     private final TrajectoryFileStorage fileStorage;
     private List<JButton> buttons;
-    public CatalogDisplay(TrajectoryFileStorage storage, ActionListener buttonListener) {
+    private ActionListener buttonListener;
+    public CatalogDisplay(TrajectoryFileStorage storage, ActionListener listener) {
         buttons = new ArrayList<>();
         fileStorage = storage;
 
+        buttonListener = listener;
+
         List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
 
-        Box fileBox = new Box(BoxLayout.Y_AXIS);
+        fileBox = new Box(BoxLayout.Y_AXIS);
 
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
@@ -48,5 +52,23 @@ public class CatalogDisplay {
 
     public JComponent getComponent() {
         return background;
+    }
+    public void refreshFileList() {
+        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
+        fileBox.removeAll();
+        buttons.clear();
+        // создание кнопок по именам файлов в хранилище и добавление их в бокс
+        JButton button;
+        for (String fileName : fileNames) {
+            button = new JButton(fileName);
+            button.addActionListener(buttonListener);
+
+            button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+
+            buttons.add(button);
+            fileBox.add(button);
+        }
+        background.revalidate();
+        background.repaint();
     }
 }

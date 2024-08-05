@@ -2,12 +2,16 @@ package etu.nic.git.trajectories_swing.menus;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class TopMenuBar {
+    public static final String MENU_OPEN = "Открыть";
+    public static final String MENU_SAVE = "Сохранить";
+    public static final String MENU_SAVE_AS = "Сохранить как";
     private final JMenuBar menuBar;
     private final JMenu fileMenu;
 
-    public TopMenuBar() {
+    public TopMenuBar(ActionListener menuActionListener) {
         menuBar = new JMenuBar();
 
         fileMenu = new JMenu("Файл");
@@ -15,10 +19,12 @@ public class TopMenuBar {
 
         menuBar.add(fileMenu);
 
-
-        JMenuItem openMenuItem = new JMenuItem("Открыть");
-        JMenuItem saveMenuItem = new JMenuItem("Сохранить");
-        JMenuItem saveAsMenuItem = new JMenuItem("Сохранить как");
+        JMenuItem openMenuItem = new JMenuItem(MENU_OPEN);
+        openMenuItem.addActionListener(menuActionListener);
+        JMenuItem saveMenuItem = new JMenuItem(MENU_SAVE);
+        saveMenuItem.addActionListener(menuActionListener);
+        JMenuItem saveAsMenuItem = new JMenuItem(MENU_SAVE_AS);
+        saveAsMenuItem.addActionListener(menuActionListener);
 
         fileMenu.add(openMenuItem);
         fileMenu.add(saveMenuItem);

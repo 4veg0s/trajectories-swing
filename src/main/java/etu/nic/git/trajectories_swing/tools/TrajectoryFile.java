@@ -21,6 +21,17 @@ public class TrajectoryFile {
         }
     }
 
+    public TrajectoryFile(File file) throws FileNotFoundException {
+        if (file.exists()) {
+            this.path = file.getAbsolutePath();
+            this.name = file.getName();  // пока имя файла в приложении не переназначили
+            loadDataFromFile(path);
+        } else {
+            // fixme случаи если файла не существует
+            throw new FileNotFoundException();
+        }
+    }
+
     public void loadDataFromFile(String filePath) {
         setData(FileDataLoader.loadDataFromFile(filePath));
     }
