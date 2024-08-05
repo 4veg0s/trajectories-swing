@@ -1,7 +1,7 @@
 package etu.nic.git;
 
 
-import etu.nic.git.trajectories_swing.table.TrajectoryRow;
+import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import org.junit.Assert;
 import org.junit.Test;
 

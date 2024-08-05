@@ -1,10 +1,11 @@
-package etu.nic.git.trajectories_swing.table;
+package etu.nic.git.trajectories_swing.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrajectoryRowTableModel extends AbstractTableModel {
-    private final List<TrajectoryRow> trajectoryRowList;
+    private List<TrajectoryRow> trajectoryRowList;
 
     private final String[] columnNames = new String[]{
             "T, с", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
@@ -12,6 +13,9 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     private final Class[] columnClass = new Class[]{
             Double.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class
     };
+
+    public TrajectoryRowTableModel() {
+    }
 
     public TrajectoryRowTableModel(List<TrajectoryRow> trajectoryRowList) {
         this.trajectoryRowList = trajectoryRowList;
@@ -77,11 +81,35 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         } else if (6 == columnIndex) {
             row.setVelocityZ((Double) aValue);
         }
+        fireTableDataChanged();
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex)
     {
         return true;
+    }
+
+    public List<TrajectoryRow> getTrajectoryRowList() {
+        return trajectoryRowList;
+    }
+
+    public void setTrajectoryRowList(List<TrajectoryRow> trajectoryRowList) {
+        this.trajectoryRowList = trajectoryRowList;
+    }
+
+    public void sortByTime() {
+        trajectoryRowList = trajectoryRowList.stream()
+                .sorted(((o1, o2) -> Double.compare(o1.getTime(), o2.getTime())))
+                .collect(Collectors.toList());
+    }
+
+    public String getTableDataInString() {
+        StringBuilder tableData = new StringBuilder();
+        for (TrajectoryRow row : trajectoryRowList) {
+            tableData.append(row.toString());
+            tableData.append("\n");
+        }
+        return tableData.toString();
     }
 }

@@ -1,6 +1,6 @@
 package etu.nic.git.trajectories_swing.tools;
 
-import etu.nic.git.trajectories_swing.table.TrajectoryRow;
+import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

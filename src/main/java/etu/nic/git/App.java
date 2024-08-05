@@ -1,16 +1,16 @@
 package etu.nic.git;
 
-import etu.nic.git.trajectories_swing.table.TableDisplay;
+import etu.nic.git.trajectories_swing.ApplicationAssembler;
 
 /**
  * Hello world!
  *
  */
-public class App 
-{
+public class App {
     public static void main( String[] args )
     {
-//        new FileDisplay().buildGUI();
-        new TableDisplay().createAndShowGUI();
+        ApplicationAssembler assembler = new ApplicationAssembler();
+        assembler.assemble();
+        assembler.showGUI();
     }
 }

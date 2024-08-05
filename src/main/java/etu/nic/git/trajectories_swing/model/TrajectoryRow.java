@@ -1,4 +1,4 @@
-package etu.nic.git.trajectories_swing.table;
+package etu.nic.git.trajectories_swing.model;
 
 // Время, x-координата, y-координата, z-координата, x-составляющая скорости, yсоставляющая скорости, z-составляющая скорости
 // "T, с", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
@@ -8,21 +8,24 @@ import java.util.regex.Pattern;
 public class TrajectoryRow {
     private static final int AMOUNT_OF_PARAMETERS = 7;
     private double time;
-    private double CoordinateX;
-    private double CoordinateY;
-    private double CoordinateZ;
-    private double VelocityX;
-    private double VelocityY;
-    private double VelocityZ;
+    private double coordinateX;
+    private double coordinateY;
+    private double coordinateZ;
+    private double velocityX;
+    private double velocityY;
+    private double velocityZ;
+
+    public TrajectoryRow() {
+    }
 
     public TrajectoryRow(double time, double CoordinateX, double CoordinateY, double CoordinateZ, double VelocityX, double VelocityY, double VelocityZ) {
         this.time = time;
-        this.CoordinateX = CoordinateX;
-        this.CoordinateY = CoordinateY;
-        this.CoordinateZ = CoordinateZ;
-        this.VelocityX = VelocityX;
-        this.VelocityY = VelocityY;
-        this.VelocityZ = VelocityZ;
+        this.coordinateX = CoordinateX;
+        this.coordinateY = CoordinateY;
+        this.coordinateZ = CoordinateZ;
+        this.velocityX = VelocityX;
+        this.velocityY = VelocityY;
+        this.velocityZ = VelocityZ;
     }
 
     public static TrajectoryRow buildTrajectoryRowFromString(String rawString) {
@@ -40,7 +43,7 @@ public class TrajectoryRow {
                 convertedValues[4],
                 convertedValues[5],
                 convertedValues[6]
-                );
+        );
     }
 
     /**
@@ -101,50 +104,61 @@ public class TrajectoryRow {
     }
 
     public double getCoordinateX() {
-        return CoordinateX;
+        return coordinateX;
     }
 
     public void setCoordinateX(double coordinateX) {
-        this.CoordinateX = coordinateX;
+        this.coordinateX = coordinateX;
     }
 
     public double getCoordinateY() {
-        return CoordinateY;
+        return coordinateY;
     }
 
     public void setCoordinateY(double coordinateY) {
-        this.CoordinateY = coordinateY;
+        this.coordinateY = coordinateY;
     }
 
     public double getCoordinateZ() {
-        return CoordinateZ;
+        return coordinateZ;
     }
 
     public void setCoordinateZ(double coordinateZ) {
-        this.CoordinateZ = coordinateZ;
+        this.coordinateZ = coordinateZ;
     }
 
     public double getVelocityX() {
-        return VelocityX;
+        return velocityX;
     }
 
     public void setVelocityX(double velocityX) {
-        this.VelocityX = velocityX;
+        this.velocityX = velocityX;
     }
 
     public double getVelocityY() {
-        return VelocityY;
+        return velocityY;
     }
 
     public void setVelocityY(double velocityY) {
-        this.VelocityY = velocityY;
+        this.velocityY = velocityY;
     }
 
     public double getVelocityZ() {
-        return VelocityZ;
+        return velocityZ;
     }
 
     public void setVelocityZ(double velocityZ) {
-        this.VelocityZ = velocityZ;
+        this.velocityZ = velocityZ;
+    }
+
+    @Override
+    public String toString() {
+        return time + " " +
+                coordinateX + " " +
+                coordinateY + " " +
+                coordinateZ + " " +
+                velocityX + " " +
+                velocityY + " " +
+                velocityZ;
     }
 }
