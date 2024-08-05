@@ -2,19 +2,19 @@ package etu.nic.git.trajectories_swing.tools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
+import java.util.Objects;
 
 public class TrajectoryFile {
-    private String filePath;
-    private String fileName;
-    private String fileData;
+    private String path;
+    private String name;
+    private String data;
 
-    public TrajectoryFile(String filePath) throws FileNotFoundException {
-        File file = new File(filePath);
+    public TrajectoryFile(String path) throws FileNotFoundException {
+        File file = new File(path);
         if (file.exists()) {
-            this.filePath = file.getAbsolutePath();
-            this.fileName = file.getName();  // пока имя файла в приложении не переназначили
-            loadDataFromFile(filePath);
+            this.path = file.getAbsolutePath();
+            this.name = file.getName();  // пока имя файла в приложении не переназначили
+            loadDataFromFile(path);
         } else {
             // fixme случаи если файла не существует
             throw new FileNotFoundException();
@@ -22,30 +22,43 @@ public class TrajectoryFile {
     }
 
     public void loadDataFromFile(String filePath) {
-        setFileData(FileDataLoader.loadDataFromFile(filePath));
+        setData(FileDataLoader.loadDataFromFile(filePath));
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getPath() {
+        return path;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getName() {
+        return name;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getFileData() {
-        return fileData;
+    public String getData() {
+        return data;
     }
 
-    public void setFileData(String fileData) {
-        this.fileData = fileData;
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrajectoryFile that = (TrajectoryFile) o;
+        return Objects.equals(path, that.path) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, name);
     }
 }

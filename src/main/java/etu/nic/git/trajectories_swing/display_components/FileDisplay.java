@@ -5,7 +5,7 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import javax.swing.*;
 import java.awt.*;
 
-public class FileDataDisplay {
+public class FileDisplay {
     private final JPanel background;
     private final JLabel displayHeader;
     private final JLabel filePathLabel;
@@ -13,7 +13,7 @@ public class FileDataDisplay {
     private final JScrollPane scrollPane;
     private final TrajectoryFileStorage fileStorage;
 
-    public FileDataDisplay(TrajectoryFileStorage storage) {
+    public FileDisplay(TrajectoryFileStorage storage) {
         fileStorage = storage;
 
         Box header = new Box(BoxLayout.Y_AXIS);
@@ -30,7 +30,7 @@ public class FileDataDisplay {
         if (fileStorage.isEmpty()) {
             filePathLabel = new JLabel("Файл не выбран");
         } else {
-            String path = fileStorage.getCurrentFile().getFilePath();
+            String path = fileStorage.getCurrentFile().getPath();
             if (path.length() > 30) {
                 String shortenedPath =
                         path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
@@ -50,8 +50,8 @@ public class FileDataDisplay {
         scrollPane = initFileTextScrollPane(fileTextArea);
 
         background = new JPanel(new BorderLayout());
-        background.add(BorderLayout.CENTER, scrollPane);
         background.add(BorderLayout.NORTH, header);
+        background.add(BorderLayout.CENTER, scrollPane);
     }
 
     public JComponent getComponent() {
@@ -60,7 +60,7 @@ public class FileDataDisplay {
 
 
     public void updateDisplayedInfo() {
-        loadFileDataToArea(fileStorage.getCurrentFile().getFileData());
+        loadFileDataToArea(fileStorage.getCurrentFile().getData());
     }
 
     private JTextArea initFileTextArea() {

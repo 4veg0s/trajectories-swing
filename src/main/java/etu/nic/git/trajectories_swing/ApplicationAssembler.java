@@ -1,6 +1,7 @@
 package etu.nic.git.trajectories_swing;
 
-import etu.nic.git.trajectories_swing.display_components.FileDataDisplay;
+import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.tools.FileDataLoader;
@@ -9,31 +10,42 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 
 public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
     private TrajectoryRowTableModel model;
     private MainFrame mainFrame;
+    private CatalogDisplay catalogDisplay;
     private TableDisplay tableDisplay;
-    private FileDataDisplay fileDataDisplay;
+    private FileDisplay fileDisplay;
 
     public ApplicationAssembler() {
         model = initModel();
         fileStorage = initFileStorage();
+        catalogDisplay = new CatalogDisplay(fileStorage, initCatalogActionListener());
         tableDisplay = new TableDisplay(model);
-        fileDataDisplay = new FileDataDisplay(fileStorage);
+        fileDisplay = new FileDisplay(fileStorage);
 
-        model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getFileData()));
-        fileDataDisplay.updateDisplayedInfo();
+        model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
+        fileDisplay.updateDisplayedInfo();
+    }
+
+    public void updateEntireInfo() {
+        model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
+        fileDisplay.updateDisplayedInfo();
     }
 
     // fixme инициализация файлов пока не реализован FileChooser
     public TrajectoryFileStorage initFileStorage() {
-        String filePath = "data/traject1.txt";
+        String filePath1 = "data/traject1.txt";
+        String filePath2 = "data/traject2.txt";
         TrajectoryFileStorage fileStorage = new TrajectoryFileStorage();
         try {
-            fileStorage.add(new TrajectoryFile(filePath));
+            fileStorage.add(new TrajectoryFile(filePath1));
+            fileStorage.add(new TrajectoryFile(filePath2));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -54,11 +66,23 @@ public class ApplicationAssembler {
                         model.getTableDataInString()
                 );    // при изменении данных модели подгрузятся
                       // изменения и в объект, соответствующий этому файлу
-                fileDataDisplay.updateDisplayedInfo();
+                fileDisplay.updateDisplayedInfo();
             }
         });
 
         return model;
+    }
+
+    public ActionListener initCatalogActionListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String actionCommand = e.getActionCommand();
+                fileStorage.updateCurrentFileIndexByFile(fileStorage.findFileByName(actionCommand));
+                updateEntireInfo();
+                model.fireTableDataChanged();
+            }
+        };
     }
 
     public void showGUI() {
@@ -66,7 +90,7 @@ public class ApplicationAssembler {
     }
 
     public void assemble() {
-        mainFrame = new MainFrame(tableDisplay.getComponent(), fileDataDisplay.getComponent());
+        mainFrame = new MainFrame(catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
     }
 
     public TrajectoryFileStorage getFileStorage() {
@@ -93,11 +117,11 @@ public class ApplicationAssembler {
         this.tableDisplay = tableDisplay;
     }
 
-    public FileDataDisplay getFileDisplay() {
-        return fileDataDisplay;
+    public FileDisplay getFileDisplay() {
+        return fileDisplay;
     }
 
-    public void setFileDisplay(FileDataDisplay fileDataDisplay) {
-        this.fileDataDisplay = fileDataDisplay;
+    public void setFileDisplay(FileDisplay fileDisplay) {
+        this.fileDisplay = fileDisplay;
     }
 }

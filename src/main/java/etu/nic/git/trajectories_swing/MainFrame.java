@@ -8,11 +8,28 @@ public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
         super();
     }
-    public MainFrame(JComponent tableDisplay, JComponent fileDisplay) {
+    public MainFrame(JComponent catalogDisplay, JComponent tableDisplay, JComponent fileDisplay) {
         super("Траектории");
         JPanel background = new JPanel(new BorderLayout());
-        background.add(BorderLayout.WEST, fileDisplay); // fileDisplay
-        background.add(BorderLayout.CENTER, tableDisplay);   // tableDisplay
+
+        // разделитель для гуи
+        JSeparator separator = new JSeparator();
+        separator.setOrientation(SwingConstants.HORIZONTAL);
+        // верхняя часть окна с каталогом и таблицей
+        Box leftRow = new Box(BoxLayout.Y_AXIS);
+        leftRow.add(catalogDisplay);
+        leftRow.add(separator);
+        leftRow.add(fileDisplay);
+
+        // нижняя часть окна
+        Box rightRow = new Box(BoxLayout.Y_AXIS);
+        rightRow.add(tableDisplay);
+        rightRow.add(separator);
+//        TODO: rightRow.add(chartDisplay);
+
+        background.add(BorderLayout.WEST, leftRow);
+        background.add(BorderLayout.CENTER, rightRow);
+
         this.getContentPane().add(background);
         this.setBounds(new Rectangle(100, 100, 1200, 800));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -23,11 +23,24 @@ public class TrajectoryFileStorage {
     }
 
     public void updateFileDataByIndex(int index, String fileData) {
-        findFileByIndex(index).setFileData(fileData);
+        findFileByIndex(index).setData(fileData);
     }
 
     public TrajectoryFile findFileByIndex(int index) {
         return (fileList.size() - 1 >= index) ? fileList.get(index) : null;
+    }
+
+    public TrajectoryFile findFileByName(String fileName) {
+        for (TrajectoryFile file : fileList) {
+            if (file.getName().equals(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    public void updateCurrentFileIndexByFile(TrajectoryFile file) {
+        setCurrentFileIndex(fileList.indexOf(file));
     }
 
     public int getCurrentFileIndex() {
