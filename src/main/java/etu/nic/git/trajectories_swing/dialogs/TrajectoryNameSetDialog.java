@@ -18,7 +18,7 @@ public class TrajectoryNameSetDialog {
         mainFrame = frame;
         dialog = new JDialog(mainFrame, "Файл траекторной информации", Dialog.ModalityType.DOCUMENT_MODAL);
 
-        Box verticalBox = new Box(BoxLayout.Y_AXIS);
+        JPanel panelGrid = new JPanel(new GridLayout(3, 1));
 
         JLabel trajectoryNameLabel = new JLabel("Введите название траектории");
         trajectoryNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -26,6 +26,8 @@ public class TrajectoryNameSetDialog {
         trajectoryNameField = new JTextField(TrajectoryFile.TRAJECTORY_NAME_PREFIX + TrajectoryFile.getNextTrajectoryIndex());
 
         okButton = new JButton("OK");
+        JPanel buttonPanel = new JPanel();
+
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,11 +36,14 @@ public class TrajectoryNameSetDialog {
             }
         });
 
-        verticalBox.add(trajectoryNameLabel);
-        verticalBox.add(trajectoryNameField);
-        verticalBox.add(okButton);
+        buttonPanel.add(okButton);
+        okButton.setHorizontalAlignment(SwingConstants.CENTER);
 
-        dialog.add(verticalBox);
+        panelGrid.add(trajectoryNameLabel);
+        panelGrid.add(trajectoryNameField);
+        panelGrid.add(buttonPanel);
+
+        dialog.add(panelGrid);
 
         Rectangle mainFrameBounds = mainFrame.getFrameBounds();
         dialog.setBounds(new Rectangle(mainFrameBounds.x + mainFrameBounds.width / 2,

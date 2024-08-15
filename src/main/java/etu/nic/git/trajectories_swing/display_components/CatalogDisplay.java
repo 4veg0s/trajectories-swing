@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 public class CatalogDisplay {
     private final JLabel displayHeader;
     private final JPanel background;
-    private final Box fileBox;
+    private final JPanel buttonPanel;
     private final TrajectoryFileStorage fileStorage;
     private List<JButton> buttons;
     private ActionListener buttonListener;
+
     public CatalogDisplay(TrajectoryFileStorage storage, ActionListener listener) {
         buttons = new ArrayList<>();
         fileStorage = storage;
@@ -25,7 +26,7 @@ public class CatalogDisplay {
 
         List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
 
-        fileBox = new Box(BoxLayout.Y_AXIS);
+        buttonPanel = new JPanel(new GridLayout(fileNames.size() + 1, 1));
 
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
@@ -36,14 +37,14 @@ public class CatalogDisplay {
             button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
             buttons.add(button);
-            fileBox.add(button);
+            buttonPanel.add(button);
         }
 
         displayHeader = new JLabel("Каталог");
         displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
-        JScrollPane scrollPane = new JScrollPane(fileBox);
+        JScrollPane scrollPane = new JScrollPane(buttonPanel);
 
         background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
@@ -55,7 +56,8 @@ public class CatalogDisplay {
     }
     public void refreshFileList() {
         List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
-        fileBox.removeAll();
+        buttonPanel.removeAll();
+        buttonPanel.setLayout(new GridLayout(fileNames.size() + 1, 1));
         buttons.clear();
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
@@ -74,7 +76,7 @@ public class CatalogDisplay {
             }
 
             buttons.add(button);
-            fileBox.add(button);
+            buttonPanel.add(button);
         }
         background.revalidate();
         background.repaint();
