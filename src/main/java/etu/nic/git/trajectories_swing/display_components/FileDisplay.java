@@ -35,7 +35,7 @@ public class FileDisplay {
                 String shortenedPath =
                         path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
                         "..." +
-                        path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")), path.length() - 1);
+                        path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
                 filePathLabel = new JLabel(shortenedPath);
                 filePathLabel.setToolTipText(path);
             } else {
@@ -84,5 +84,16 @@ public class FileDisplay {
 
     private void loadFileDataToArea(String fileData) {
         this.fileTextArea.setText(fileData);
+        String path = fileStorage.getCurrentFile().getPath();
+        if (path.length() > 30) {
+            String shortenedPath =
+                    path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
+                            "..." +
+                            path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
+            filePathLabel.setText(shortenedPath);
+            filePathLabel.setToolTipText(path);
+        } else {
+            filePathLabel.setText(path);
+        }
     }
 }
