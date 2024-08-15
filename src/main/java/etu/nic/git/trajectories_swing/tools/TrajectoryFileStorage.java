@@ -25,6 +25,13 @@ public class TrajectoryFileStorage {
         } else {
             throw new FileAlreadyExistsException("Траектория с таким именем уже загружена");
         }
+    }
+
+    public void replaceFileByName(String name, TrajectoryFile newFile) {
+        TrajectoryFile file = findFileByName(name);
+        int indexOfFileToReplace = fileList.indexOf(file);
+        fileList.remove(indexOfFileToReplace);
+        fileList.add(indexOfFileToReplace, newFile);
 
     }
 

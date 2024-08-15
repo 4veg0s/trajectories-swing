@@ -1,6 +1,8 @@
 package etu.nic.git.trajectories_swing;
 
 import etu.nic.git.trajectories_swing.dialogs.FileExceptionDialog;
+import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
+import etu.nic.git.trajectories_swing.dialogs.TrajectoryExistsDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
@@ -132,11 +134,27 @@ public class ApplicationAssembler {
 
                                 File chosenFile = fileChooser.getSelectedFile();
                                 try {
-                                    TrajectoryFile trajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
-//                                    trajectoryNameSetDialog.hide();
-                                    fileStorage.add(trajectoryFile);
+                                    TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
+
+                                    TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
+                                    if (existingFile != null) {   // если такая траектория уже загружеан
+                                        if (existingFile.hasChanges()) {
+                                            ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);
+                                            boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult();
+                                            if (isClosedWithConfirm) {
+                                                fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);
+                                            } else {
+                                                this.actionPerformed(e);
+                                            }
+                                        } else {
+                                            new TrajectoryExistsDialog(mainFrame).show();
+                                        }
+                                    } else {
+                                        fileStorage.add(newTrajectoryFile);
+                                    }
+
                                     updateEntireInfo();
-                                    mainFrame.appendFileToFrameTitle(trajectoryFile.getName());
+                                    mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
                                 } catch (FileNotFoundException ex) {
                                     throw new RuntimeException(ex);
                                 } catch (FileAlreadyExistsException ex) {

@@ -100,4 +100,8 @@ public class TrajectoryFile {
     public int hashCode() {
         return Objects.hash(path, name);
     }
+
+    public boolean hasChanges() {
+        return !dataOnCreation.equals(data);
+    }
 }
