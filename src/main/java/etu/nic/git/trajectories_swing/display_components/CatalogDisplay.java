@@ -29,16 +29,11 @@ public class CatalogDisplay {
 
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
-//        for (String fileName : fileNames) {
-        for (int i = 0; i < fileNames.size(); i++) {
-            String fileName = fileNames.get(i);
+        for (String fileName : fileNames) {
             button = new JButton(fileName);
             button.addActionListener(buttonListener);
 
             button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-            if (i == storage.getCurrentFileIndex()) {
-                button.setBackground(Color.YELLOW); // fixme
-            }
 
             buttons.add(button);
             fileBox.add(button);
@@ -64,11 +59,19 @@ public class CatalogDisplay {
         buttons.clear();
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
-        for (String fileName : fileNames) {
+        for (int i = 0; i < fileNames.size(); i++) {
+            String fileName = fileNames.get(i);
+
             button = new JButton(fileName);
             button.addActionListener(buttonListener);
 
             button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+            if (i == fileStorage.getCurrentFileIndex()) {
+                button.setBackground(new Color(53, 128, 187));
+                button.setForeground(Color.WHITE);
+            } else {
+                button.setBackground(Color.WHITE);
+            }
 
             buttons.add(button);
             fileBox.add(button);
