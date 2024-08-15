@@ -23,7 +23,7 @@ public class TrajectoryFileStorage {
             fileList.add(file);
             currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
         } else {
-            throw new FileAlreadyExistsException("Файл с таким именем уже загружен");
+            throw new FileAlreadyExistsException("Траектория с таким именем уже загружена");
         }
 
     }

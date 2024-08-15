@@ -5,27 +5,33 @@ import java.io.FileNotFoundException;
 import java.util.Objects;
 
 public class TrajectoryFile {
+    public static final String TRAJECTORY_NAME_PREFIX = "Траектория ";
+    private static int nextTrajectoryIndex = 1;
     private String path;
     private String name;
     private String data;
 
-    public TrajectoryFile(String path) throws FileNotFoundException {
+    public TrajectoryFile(String path, String name) throws FileNotFoundException {
         File file = new File(path);
         if (file.exists()) {
             this.path = file.getAbsolutePath();
-            this.name = file.getName();  // пока имя файла в приложении не переназначили
+            this.name = name;  // пока имя файла в приложении не переназначили
             loadDataFromFile(path);
+
+            nextTrajectoryIndex++; // fixme
         } else {
             // fixme случаи если файла не существует
             throw new FileNotFoundException();
         }
     }
 
-    public TrajectoryFile(File file) throws FileNotFoundException {
+    public TrajectoryFile(File file, String name) throws FileNotFoundException {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
-            this.name = file.getName();  // пока имя файла в приложении не переназначили
+            this.name = name;
             loadDataFromFile(path);
+
+            nextTrajectoryIndex++; // fixme
         } else {
             // fixme случаи если файла не существует
             throw new FileNotFoundException();
@@ -58,6 +64,10 @@ public class TrajectoryFile {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public static int getNextTrajectoryIndex() {
+        return nextTrajectoryIndex;
     }
 
     @Override

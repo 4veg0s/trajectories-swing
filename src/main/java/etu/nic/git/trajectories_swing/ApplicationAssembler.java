@@ -1,5 +1,6 @@
 package etu.nic.git.trajectories_swing;
 
+import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
@@ -18,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Paths;
 
 public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
@@ -114,32 +114,39 @@ public class ApplicationAssembler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String actionCommand = e.getActionCommand();
+
+                Rectangle mainFrameBounds = mainFrame.getFrameBounds();
                 switch (actionCommand) {
-                    case TopMenuBar.MENU_OPEN:
+                    case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
                         int returnVal = fileChooser.showOpenDialog(mainFrame);
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            File chosenFile = fileChooser.getSelectedFile();
-                            try {
-                                TrajectoryFile trajectoryFile = new TrajectoryFile(chosenFile);
-                                fileStorage.add(trajectoryFile);
-                                updateEntireInfo();
-                                mainFrame.appendFileToFrameTitle(trajectoryFile.getName());
-                            } catch (FileNotFoundException ex) {
-                                throw new RuntimeException(ex);
-                            } catch (FileAlreadyExistsException ex) {
-                                JDialog dialog = new JDialog(mainFrame, "Выбор файла", Dialog.ModalityType.DOCUMENT_MODAL);
 
-                                JLabel dialogLabel = new JLabel(ex.getMessage());
-                                dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                            TrajectoryNameSetDialog trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
+                            boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
+                            if (isTrajectoryNameAccepted) {
+                                String textFieldString = trajectoryNameSetDialog.getTextFieldString();
 
-                                dialog.add(dialogLabel);
+                                File chosenFile = fileChooser.getSelectedFile();
+                                try {
+                                    TrajectoryFile trajectoryFile = new TrajectoryFile(chosenFile, textFieldString);
+                                    fileStorage.add(trajectoryFile);
+                                    updateEntireInfo();
+                                    mainFrame.appendFileToFrameTitle(trajectoryFile.getName());
+                                } catch (FileNotFoundException ex) {
+                                    throw new RuntimeException(ex);
+                                } catch (FileAlreadyExistsException ex) {
+                                    JDialog dialog = new JDialog(mainFrame, "Выбор файла", Dialog.ModalityType.DOCUMENT_MODAL);
 
-                                Rectangle mainFrameBounds = mainFrame.getFrameBounds();
+                                    JLabel dialogLabel = new JLabel(ex.getMessage());
+                                    dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-                                dialog.setBounds(new Rectangle(mainFrameBounds.x + mainFrameBounds.width / 2,
-                                        mainFrameBounds.y + mainFrameBounds.height / 2, 300, 100));
+                                    dialog.add(dialogLabel);
 
-                                dialog.setVisible(true);
+                                    dialog.setBounds(new Rectangle(mainFrameBounds.x + mainFrameBounds.width / 2,
+                                            mainFrameBounds.y + mainFrameBounds.height / 2, 300, 100));
+
+                                    dialog.setVisible(true);
+                                }
                             }
                         }
                         break;
