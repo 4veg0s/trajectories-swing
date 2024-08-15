@@ -29,11 +29,16 @@ public class CatalogDisplay {
 
         // создание кнопок по именам файлов в хранилище и добавление их в бокс
         JButton button;
-        for (String fileName : fileNames) {
+//        for (String fileName : fileNames) {
+        for (int i = 0; i < fileNames.size(); i++) {
+            String fileName = fileNames.get(i);
             button = new JButton(fileName);
             button.addActionListener(buttonListener);
 
             button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+            if (i == storage.getCurrentFileIndex()) {
+                button.setBackground(Color.YELLOW); // fixme
+            }
 
             buttons.add(button);
             fileBox.add(button);
@@ -54,7 +59,7 @@ public class CatalogDisplay {
         return background;
     }
     public void refreshFileList() {
-        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisc).collect(Collectors.toList());
+        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
         fileBox.removeAll();
         buttons.clear();
         // создание кнопок по именам файлов в хранилище и добавление их в бокс

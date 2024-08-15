@@ -101,7 +101,9 @@ public class ApplicationAssembler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String actionCommand = e.getActionCommand();
-                TrajectoryFile currentFile = fileStorage.findFileByName(actionCommand);
+                TrajectoryFile currentFile = fileStorage.findFileByName(
+                        TrajectoryFile.stripAsteriskFromNameString(actionCommand)
+                );
                 fileStorage.updateCurrentFileIndexByFile(currentFile);
                 updateEntireInfo();
                 mainFrame.appendFileToFrameTitle(currentFile.getName());

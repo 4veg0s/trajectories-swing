@@ -65,8 +65,11 @@ public class TrajectoryFile {
      *
      * @return имя траектории со звездочкой, если данные были изменены, иначе - без звездочки
      */
-    public String getNameWithAsterisc() {
+    public String getNameWithAsterisk() {
         return name + ((dataOnCreation.equals(data)) ? "" : "*");
+    }
+    public static String stripAsteriskFromNameString(String rawName) {
+        return rawName.replace("*", "");
     }
 
     public void setName(String name) {
