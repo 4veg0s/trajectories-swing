@@ -54,7 +54,11 @@ public class TrajectoryNameSetDialog {
         return closedOnOk;
     }
 
+
     public String getTextFieldString() {
         return trajectoryNameField.getText();
+    }
+    public JDialog getDialog() {
+        return dialog;
     }
 }

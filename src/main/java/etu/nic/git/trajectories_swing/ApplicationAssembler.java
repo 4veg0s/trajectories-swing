@@ -1,5 +1,6 @@
 package etu.nic.git.trajectories_swing;
 
+import etu.nic.git.trajectories_swing.dialogs.FileExceptionDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
@@ -34,9 +35,9 @@ public class ApplicationAssembler {
         model = initModel();
 
         fileStorage = new TrajectoryFileStorage();
-        fileStorage.setCurrentFileIndex(0);  // fixme на время без FileChooser
+//        fileStorage.setCurrentFileIndex(0);  // fixme на время без FileChooser
 
-        fileChooser = new JFileChooser(new File("."));
+        fileChooser = new JFileChooser(new File("./data"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         catalogDisplay = new CatalogDisplay(fileStorage, initCatalogActionListener());
@@ -114,38 +115,31 @@ public class ApplicationAssembler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String actionCommand = e.getActionCommand();
+                TrajectoryNameSetDialog trajectoryNameSetDialog;
 
-                Rectangle mainFrameBounds = mainFrame.getFrameBounds();
                 switch (actionCommand) {
                     case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
                         int returnVal = fileChooser.showOpenDialog(mainFrame);
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-                            TrajectoryNameSetDialog trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
+                            trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
                             boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
+
                             if (isTrajectoryNameAccepted) {
-                                String textFieldString = trajectoryNameSetDialog.getTextFieldString();
+                                String trajectoryName = trajectoryNameSetDialog.getTextFieldString();
 
                                 File chosenFile = fileChooser.getSelectedFile();
                                 try {
-                                    TrajectoryFile trajectoryFile = new TrajectoryFile(chosenFile, textFieldString);
+                                    TrajectoryFile trajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
+//                                    trajectoryNameSetDialog.hide();
                                     fileStorage.add(trajectoryFile);
                                     updateEntireInfo();
                                     mainFrame.appendFileToFrameTitle(trajectoryFile.getName());
                                 } catch (FileNotFoundException ex) {
                                     throw new RuntimeException(ex);
                                 } catch (FileAlreadyExistsException ex) {
-                                    JDialog dialog = new JDialog(mainFrame, "Выбор файла", Dialog.ModalityType.DOCUMENT_MODAL);
-
-                                    JLabel dialogLabel = new JLabel(ex.getMessage());
-                                    dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-                                    dialog.add(dialogLabel);
-
-                                    dialog.setBounds(new Rectangle(mainFrameBounds.x + mainFrameBounds.width / 2,
-                                            mainFrameBounds.y + mainFrameBounds.height / 2, 300, 100));
-
-                                    dialog.setVisible(true);
+                                    new FileExceptionDialog(trajectoryNameSetDialog.getDialog(), ex).show();
+                                    this.actionPerformed(e);
                                 }
                             }
                         }
