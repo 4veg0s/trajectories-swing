@@ -10,13 +10,15 @@ public class TrajectoryFile {
     private String path;
     private String name;
     private String data;
+    private final String dataOnCreation;
 
     public TrajectoryFile(String path, String name) throws FileNotFoundException {
         File file = new File(path);
         if (file.exists()) {
             this.path = file.getAbsolutePath();
             this.name = name;  // пока имя файла в приложении не переназначили
-            loadDataFromFile(path);
+            this.data = getDataFromFile(path);
+            this.dataOnCreation = this.data;
 
             nextTrajectoryIndex++; // fixme
         } else {
@@ -29,7 +31,8 @@ public class TrajectoryFile {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
             this.name = name;
-            loadDataFromFile(path);
+            this.data = getDataFromFile(path);
+            this.dataOnCreation = this.data;
 
             nextTrajectoryIndex++; // fixme
         } else {
@@ -38,8 +41,12 @@ public class TrajectoryFile {
         }
     }
 
-    public void loadDataFromFile(String filePath) {
-        setData(FileDataLoader.loadDataFromFile(filePath));
+    public String getDataFromFile(String filePath) {
+        return FileDataLoader.getDataFromFile(filePath);
+    }
+
+    public String getDataOnCreation() {
+        return dataOnCreation;
     }
 
     public String getPath() {
@@ -52,6 +59,14 @@ public class TrajectoryFile {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     *
+     * @return имя траектории со звездочкой, если данные были изменены, иначе - без звездочки
+     */
+    public String getNameWithAsterisc() {
+        return name + ((dataOnCreation.equals(data)) ? "" : "*");
     }
 
     public void setName(String name) {

@@ -54,7 +54,7 @@ public class CatalogDisplay {
         return background;
     }
     public void refreshFileList() {
-        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
+        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisc).collect(Collectors.toList());
         fileBox.removeAll();
         buttons.clear();
         // создание кнопок по именам файлов в хранилище и добавление их в бокс

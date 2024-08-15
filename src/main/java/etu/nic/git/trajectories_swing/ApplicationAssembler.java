@@ -88,7 +88,7 @@ public class ApplicationAssembler {
                         model.getTableDataInString()
                 );    // при изменении данных модели подгрузятся
                       // изменения и в объект, соответствующий этому файлу
-                fileDisplay.updateDisplayedInfo();
+                updateEntireInfo();
             }
         });
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDataLoader {
-    public static String loadDataFromFile(String fileName) {
+    public static String getDataFromFile(String fileName) {
         List<String> rawFileLines = new ArrayList<>();
         StringBuilder fileText = new StringBuilder();
         try {
