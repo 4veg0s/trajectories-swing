@@ -30,7 +30,19 @@ public class TrajectoryFileStorage {
         int indexOfFileToReplace = fileList.indexOf(file);
         fileList.remove(indexOfFileToReplace);
         fileList.add(indexOfFileToReplace, newFile);
+    }
 
+    public void removeFileByName(String name) {
+        TrajectoryFile file = findFileByName(name);
+        int indexOfFileToReplace = fileList.indexOf(file);
+        fileList.remove(indexOfFileToReplace);
+        if (indexOfFileToReplace == currentFileIndex) {
+            if (fileList.isEmpty()) {
+                currentFileIndex = 0;
+            } else if (currentFileIndex != 0) {
+                currentFileIndex--;
+            }
+        }
     }
 
     public void updateFileDataByIndex(int index, String fileData) {

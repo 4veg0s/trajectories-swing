@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
+    private static final String FRAME_TITLE = "Траектории";
 
     public MainFrame() throws HeadlessException {
         super();
@@ -43,7 +44,15 @@ public class MainFrame extends JFrame {
     }
 
     public void appendFileToFrameTitle(String name) {
-        this.setTitle("Траектории - " + name);
+        if (name != null) {
+            this.setTitle(FRAME_TITLE + " - " + name);
+        } else {
+            this.setTitle(FRAME_TITLE);
+        }
+    }
+
+    public void restoreTitle() {
+        this.setTitle(FRAME_TITLE);
     }
 
     public Rectangle getFrameBounds() {

@@ -6,6 +6,8 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,14 +17,16 @@ public class CatalogDisplay {
     private final JPanel background;
     private final JPanel buttonPanel;
     private final TrajectoryFileStorage fileStorage;
+    private final JPopupMenu popupMenu;
     private List<JButton> buttons;
     private ActionListener buttonListener;
 
-    public CatalogDisplay(TrajectoryFileStorage storage, ActionListener listener) {
+    public CatalogDisplay(TrajectoryFileStorage storage, JPopupMenu popup, ActionListener buttonSelectListener) {
         buttons = new ArrayList<>();
         fileStorage = storage;
+        popupMenu = popup;
 
-        buttonListener = listener;
+        buttonListener = buttonSelectListener;
 
         List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
 
@@ -33,6 +37,7 @@ public class CatalogDisplay {
         for (String fileName : fileNames) {
             button = new JButton(fileName);
             button.addActionListener(buttonListener);
+            button.setComponentPopupMenu(popupMenu);
 
             button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
@@ -55,29 +60,40 @@ public class CatalogDisplay {
         return background;
     }
     public void refreshFileList() {
-        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
         buttonPanel.removeAll();
-        buttonPanel.setLayout(new GridLayout(fileNames.size() + 1, 1));
+        buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));
         buttons.clear();
-        // создание кнопок по именам файлов в хранилище и добавление их в бокс
-        JButton button;
-        for (int i = 0; i < fileNames.size(); i++) {
-            String fileName = fileNames.get(i);
+        if (!fileStorage.isEmpty()) {
+            List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
+            // создание кнопок по именам файлов в хранилище и добавление их в бокс
+            JButton button;
+            for (int i = 0; i < fileNames.size(); i++) {
+                String fileName = fileNames.get(i);
 
-            button = new JButton(fileName);
-            button.addActionListener(buttonListener);
+                button = new JButton(fileName);
+                button.addActionListener(buttonListener);
+                button.setComponentPopupMenu(popupMenu);
 
-            button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-            if (i == fileStorage.getCurrentFileIndex()) {
-                button.setBackground(new Color(53, 128, 187));
-                button.setForeground(Color.WHITE);
-            } else {
-                button.setBackground(Color.WHITE);
+                button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+                if (i == fileStorage.getCurrentFileIndex()) {
+                    button.setBackground(new Color(53, 128, 187));
+                    button.setForeground(Color.WHITE);
+                } else {
+                    button.setBackground(Color.WHITE);
+                }
+
+                buttons.add(button);
+                buttonPanel.add(button);
             }
-
-            buttons.add(button);
-            buttonPanel.add(button);
         }
+        background.revalidate();
+        background.repaint();
+    }
+
+    public void restoreDefaultState() {
+        buttonPanel.removeAll();
+        buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));
+        buttons.clear();
         background.revalidate();
         background.repaint();
     }

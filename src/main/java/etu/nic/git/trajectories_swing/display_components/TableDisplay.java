@@ -61,4 +61,8 @@ public class TableDisplay {
         background.revalidate();
         background.repaint();
     }
+
+    public void restoreDefaultState() {
+        model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
+    }
 }

@@ -8,6 +8,7 @@ import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
+import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.tools.FileDataLoader;
@@ -17,6 +18,7 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -27,8 +29,9 @@ public class ApplicationAssembler {
     private TrajectoryRowTableModel model;
     private JFileChooser fileChooser;
     private MainFrame mainFrame;
-    private TopMenuBar menuBar;
+    private TopMenuBar topMenuBar;
     private CatalogDisplay catalogDisplay;
+    private CatalogPopupMenu catalogPopupMenu;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
 
@@ -41,11 +44,13 @@ public class ApplicationAssembler {
         fileChooser = new JFileChooser(new File("./data"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        catalogDisplay = new CatalogDisplay(fileStorage, initCatalogActionListener());
+        catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
+
+        catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         tableDisplay = new TableDisplay(model);
         fileDisplay = new FileDisplay(fileStorage);
 
-        menuBar = new TopMenuBar(initMenuActionListener());
+        topMenuBar = new TopMenuBar(initMenuActionListener());
 
         if (!fileStorage.isEmpty()) {
             model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
@@ -56,10 +61,18 @@ public class ApplicationAssembler {
 
 
     public void updateEntireInfo() {
-        model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
-        tableDisplay.revalidateAndRepaint();
-        fileDisplay.updateDisplayedInfo();
-        catalogDisplay.refreshFileList();
+        if (!fileStorage.isEmpty()) {
+            model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
+            tableDisplay.revalidateAndRepaint();
+            fileDisplay.updateDisplayedInfo();
+            catalogDisplay.refreshFileList();
+        } else {
+            // TODO: возможно, добавить интерфейс Restorable и Updatable для дисплеев
+            tableDisplay.restoreDefaultState();
+            fileDisplay.restoreDefaultState();
+            catalogDisplay.restoreDefaultState();
+            mainFrame.restoreTitle();
+        }
     }
 
 //    // fixme инициализация файлов пока не реализован FileChooser
@@ -85,11 +98,13 @@ public class ApplicationAssembler {
                 TrajectoryRowTableModel model = (TrajectoryRowTableModel) e.getSource();
                 model.sortByTime(); // если было изменение значения ячейки в таблице,
                 // то произойдет сортировка по времени для данных модели
-                fileStorage.updateFileDataByIndex(
-                        fileStorage.getCurrentFileIndex(),
-                        model.getTableDataInString()
-                );    // при изменении данных модели подгрузятся
-                      // изменения и в объект, соответствующий этому файлу
+                if (!fileStorage.isEmpty()) {
+                    fileStorage.updateFileDataByIndex(
+                            fileStorage.getCurrentFileIndex(),
+                            model.getTableDataInString()
+                    );    // при изменении данных модели подгрузятся
+                    // изменения и в объект, соответствующий этому файлу
+                }
                 updateEntireInfo();
             }
         });
@@ -97,7 +112,7 @@ public class ApplicationAssembler {
         return model;
     }
 
-    public ActionListener initCatalogActionListener() {
+    public ActionListener initCatalogSelectActionListener() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -108,6 +123,24 @@ public class ApplicationAssembler {
                 fileStorage.updateCurrentFileIndexByFile(currentFile);
                 updateEntireInfo();
                 mainFrame.appendFileToFrameTitle(currentFile.getName());
+                model.fireTableDataChanged();
+            }
+        };
+    }
+    public ActionListener initCatalogPopupActionListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object source = e.getSource();
+                JButton buttonInvoker = (JButton) catalogPopupMenu.getInvoker();
+
+                fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+                updateEntireInfo();
+                if (!fileStorage.isEmpty()) {
+                    mainFrame.appendFileToFrameTitle(fileStorage.findFileByIndex(fileStorage.getCurrentFileIndex()).getName());
+                } else {
+                    mainFrame.restoreTitle();
+                }
                 model.fireTableDataChanged();
             }
         };
@@ -173,7 +206,7 @@ public class ApplicationAssembler {
     }
 
     public void assemble() {
-        mainFrame = new MainFrame(menuBar.getMenuBar(), catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
+        mainFrame = new MainFrame(topMenuBar.getMenuBar(), catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
     }
 
     public TrajectoryFileStorage getFileStorage() {

@@ -60,7 +60,11 @@ public class FileDisplay {
 
 
     public void updateDisplayedInfo() {
-        loadFileDataToArea(fileStorage.getCurrentFile().getData());
+        if (!fileStorage.isEmpty()) {
+            loadFileDataToArea(fileStorage.getCurrentFile().getData());
+        } else {
+            loadFileDataToArea("");
+        }
     }
 
 
@@ -95,5 +99,10 @@ public class FileDisplay {
         } else {
             filePathLabel.setText(path);
         }
+    }
+
+    public void restoreDefaultState() {
+        filePathLabel.setText("Файл не выбран");
+        fileTextArea.setText("");
     }
 }
