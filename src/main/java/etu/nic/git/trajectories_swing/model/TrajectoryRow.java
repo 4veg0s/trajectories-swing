@@ -3,6 +3,8 @@ package etu.nic.git.trajectories_swing.model;
 // Время, x-координата, y-координата, z-координата, x-составляющая скорости, yсоставляющая скорости, z-составляющая скорости
 // "T, с", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
 
+import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
+
 import java.util.regex.Pattern;
 
 public class TrajectoryRow {
@@ -69,6 +71,25 @@ public class TrajectoryRow {
     }
 
     /**
+     * Метод парсит потенциальную строку с данными траектории и возвращает результат валидации
+     * @throws InvalidAmountOfParametersException если в строке неверное число параметров траектории
+     */
+    // парсит потенциальную строку с данными траектории и возвращает результат валидации данных
+    public static void isValidTrajectoryStringWithExceptions(String rawString) throws InvalidAmountOfParametersException, NumberFormatException {
+
+        // если количество элементов после дробления не соответствует количеству параметров траектории
+        if (!isValidAmountOfParametersInTrajectoryString(rawString)) {
+            throw new InvalidAmountOfParametersException();
+        }
+
+        String[] columns = rawString.split("\\s+");
+
+        for (String column : columns) {
+            Double.parseDouble(column);
+        }
+    }
+
+    /**
      * Метод возвращает -1, если все параметры входной строки валидны, иначе -- индекс первого невалидного параметра
      * (FIXME) Выбрасывает исключение, если количество параметров в строке неверное
      */
@@ -86,7 +107,7 @@ public class TrajectoryRow {
         }
     }
 
-    private static boolean isValidAmountOfParametersInTrajectoryString(String rawString) {
+    public static boolean isValidAmountOfParametersInTrajectoryString(String rawString) {
         String[] columns = rawString.split("\\s+");
         return columns.length == AMOUNT_OF_PARAMETERS;
     }

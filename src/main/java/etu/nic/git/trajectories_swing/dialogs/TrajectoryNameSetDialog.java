@@ -21,6 +21,7 @@ public class TrajectoryNameSetDialog {
         JPanel panelGrid = new JPanel(new GridLayout(3, 1));
 
         JLabel trajectoryNameLabel = new JLabel("Введите название траектории");
+        trajectoryNameLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
         trajectoryNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         trajectoryNameField = new JTextField(TrajectoryFile.TRAJECTORY_NAME_PREFIX + TrajectoryFile.getNextTrajectoryIndex());

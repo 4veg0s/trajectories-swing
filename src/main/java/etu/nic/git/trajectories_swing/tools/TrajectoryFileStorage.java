@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * Хранилище файлов с траекториями
  * содержит индекс файла, открытого на данный момоент
- *
  */
 public class TrajectoryFileStorage {
     private int currentFileIndex;
@@ -18,13 +17,12 @@ public class TrajectoryFileStorage {
         fileList = new ArrayList<>();
     }
 
-    public void add(TrajectoryFile file) throws FileAlreadyExistsException {
-        if (findFileByName(file.getName()) == null) {
-            fileList.add(file);
-            currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
-        } else {
-            throw new FileAlreadyExistsException("Траектория с таким именем уже загружена");
-        }
+    public void add(TrajectoryFile file) {
+//        if (findFileByName(file.getName()) == null) {
+        fileList.add(file);
+        currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
+        TrajectoryFile.incrementTrajectoryIndex();  // увеличиваем приписываемый к имени траектории индекс, если добавили файл
+//        }
     }
 
     public void replaceFileByName(String name, TrajectoryFile newFile) {

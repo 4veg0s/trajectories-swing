@@ -1,12 +1,13 @@
 package etu.nic.git.trajectories_swing;
 
-import etu.nic.git.trajectories_swing.dialogs.FileExceptionDialog;
+import etu.nic.git.trajectories_swing.dialogs.InvalidFileFormatDialog;
 import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryExistsDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
+import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.tools.FileDataLoader;
@@ -16,12 +17,10 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
 
 public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
@@ -125,7 +124,6 @@ public class ApplicationAssembler {
                     case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
                         int returnVal = fileChooser.showOpenDialog(mainFrame);
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
-
                             trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
                             boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
 
@@ -136,8 +134,10 @@ public class ApplicationAssembler {
                                 try {
                                     TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
 
+                                    TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());    // fixme проверка валидности файла
+
                                     TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
-                                    if (existingFile != null) {   // если такая траектория уже загружеан
+                                    if (existingFile != null) {   // если такая траектория уже загружена
                                         if (existingFile.hasChanges()) {
                                             ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);
                                             boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult();
@@ -157,9 +157,8 @@ public class ApplicationAssembler {
                                     mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
                                 } catch (FileNotFoundException ex) {
                                     throw new RuntimeException(ex);
-                                } catch (FileAlreadyExistsException ex) {
-                                    new FileExceptionDialog(trajectoryNameSetDialog.getDialog(), ex).show();
-                                    this.actionPerformed(e);
+                                } catch (InvalidFileFormatException ex) {
+                                    new InvalidFileFormatDialog(mainFrame, ex).show();
                                 }
                             }
                         }

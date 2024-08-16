@@ -13,9 +13,14 @@ public class ReplaceTrajectoryFileDialog {
 
         JPanel panelGrid = new JPanel(new GridLayout(2, 1));
 
-        JLabel dialogPrompt = new JLabel("<HTML>Траектория с таким именем уже открыта и имеет изменения.<br>" +
+        JTextArea dialogPrompt = new JTextArea("Траектория с таким именем уже открыта и имеет изменения.\n" +
                 "Хотите перезаписать траекторию с потерей изменений?");
-        dialogPrompt.setHorizontalTextPosition(SwingConstants.LEFT);
+        dialogPrompt.setOpaque(false);
+        dialogPrompt.setCursor(null);
+        dialogPrompt.setFocusable(false);
+        dialogPrompt.setEditable(false);
+        dialogPrompt.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+
         JButton confirmButton = new JButton("Подтвердить");
         JButton cancelButton = new JButton("Отменить");
         JPanel buttonPanel = new JPanel();
@@ -50,6 +55,7 @@ public class ReplaceTrajectoryFileDialog {
     }
 
     public boolean showWithResult() {
+        dialog.pack();
         dialog.setVisible(true);
         return isClosedOnConfirm();
     }
