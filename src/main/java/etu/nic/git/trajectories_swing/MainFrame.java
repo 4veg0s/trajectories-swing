@@ -1,5 +1,11 @@
 package etu.nic.git.trajectories_swing;
 
+import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
+import etu.nic.git.trajectories_swing.display_components.FileDisplay;
+import etu.nic.git.trajectories_swing.display_components.TableDisplay;
+import etu.nic.git.trajectories_swing.menus.TopMenuBar;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,10 +15,10 @@ public class MainFrame extends JFrame {
     public MainFrame() throws HeadlessException {
         super();
     }
-    public MainFrame(JMenuBar menuBar, JComponent catalogDisplay, JComponent tableDisplay, JComponent fileDisplay) {
+    public MainFrame(TopMenuBar menuBar, CatalogDisplay catalogDisplay, TableDisplay tableDisplay, FileDisplay fileDisplay, ChartDisplay chartDisplay) {
         super("Траектории");
 
-        this.setJMenuBar(menuBar);
+        this.setJMenuBar(menuBar.getMenuBar());
 
         JPanel background = new JPanel(new BorderLayout());
 
@@ -21,15 +27,15 @@ public class MainFrame extends JFrame {
         separator.setOrientation(SwingConstants.HORIZONTAL);
         // верхняя часть окна с каталогом и таблицей
         Box leftRow = new Box(BoxLayout.Y_AXIS);
-        leftRow.add(catalogDisplay);
+        leftRow.add(catalogDisplay.getComponent());
         leftRow.add(separator);
-        leftRow.add(fileDisplay);
+        leftRow.add(fileDisplay.getComponent());
 
         // нижняя часть окна
         Box rightRow = new Box(BoxLayout.Y_AXIS);
-        rightRow.add(tableDisplay);
+        rightRow.add(tableDisplay.getComponent());
         rightRow.add(separator);
-//        TODO: rightRow.add(chartDisplay);
+        rightRow.add(chartDisplay.getComponent());
 
         background.add(BorderLayout.WEST, leftRow);
         background.add(BorderLayout.CENTER, rightRow);

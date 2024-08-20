@@ -5,6 +5,7 @@ import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryExistsDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
 import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
 import etu.nic.git.trajectories_swing.display_components.FileDisplay;
 import etu.nic.git.trajectories_swing.display_components.TableDisplay;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
@@ -34,6 +35,7 @@ public class ApplicationAssembler {
     private CatalogPopupMenu catalogPopupMenu;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
+    private ChartDisplay chartDisplay;
 
     public ApplicationAssembler() {
         model = initModel();
@@ -49,6 +51,7 @@ public class ApplicationAssembler {
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         tableDisplay = new TableDisplay(model);
         fileDisplay = new FileDisplay(fileStorage);
+        chartDisplay = new ChartDisplay(model);
 
         topMenuBar = new TopMenuBar(initMenuActionListener());
 
@@ -206,7 +209,7 @@ public class ApplicationAssembler {
     }
 
     public void assemble() {
-        mainFrame = new MainFrame(topMenuBar.getMenuBar(), catalogDisplay.getComponent(), tableDisplay.getComponent(), fileDisplay.getComponent());
+        mainFrame = new MainFrame(topMenuBar, catalogDisplay, tableDisplay, fileDisplay, chartDisplay);
     }
 
     public TrajectoryFileStorage getFileStorage() {
