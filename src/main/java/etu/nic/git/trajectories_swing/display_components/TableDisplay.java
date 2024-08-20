@@ -9,6 +9,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,10 @@ public class TableDisplay {
 
         table = new JTable(model);
         table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setFont(new Font(Font.DIALOG, Font.BOLD, 16));   // шрифт заголовка таблицы
+        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));   // шрифт данных в таблице
+        table.setRowHeight(20);     // высота строки в таблице
+
 
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
