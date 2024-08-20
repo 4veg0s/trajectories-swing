@@ -30,6 +30,8 @@ public class TableDisplay {
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
 
         table = new JTable(model);
+        table.getTableHeader().setReorderingAllowed(false);
+
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
