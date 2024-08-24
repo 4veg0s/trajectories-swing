@@ -8,7 +8,17 @@ import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersExcept
 import java.util.regex.Pattern;
 
 public class TrajectoryRow {
-    private static final int AMOUNT_OF_PARAMETERS = 7;
+    public static final int AMOUNT_OF_PARAMETERS = 7;
+    public static final String[] PARAMETER_NAMES = new String[]{
+            "time",
+            "X, м",
+            "Y, м",
+            "Z, м",
+            "Vx, м/с",
+            "Vy, м/с",
+            "Vz, м/с"
+    };
+    ;
     private double time;
     private double coordinateX;
     private double coordinateY;
@@ -48,6 +58,18 @@ public class TrajectoryRow {
         );
     }
 
+    public double[] toDoubleArray() {
+        return new double[]{
+                this.time,
+                this.coordinateX,
+                this.coordinateY,
+                this.coordinateZ,
+                this.velocityX,
+                this.velocityY,
+                this.velocityZ
+        };
+    }
+
     /**
      * Метод парсит потенциальную строку с данными траектории и возвращает результат валидации
      */
@@ -72,6 +94,7 @@ public class TrajectoryRow {
 
     /**
      * Метод парсит потенциальную строку с данными траектории и возвращает результат валидации
+     *
      * @throws InvalidAmountOfParametersException если в строке неверное число параметров траектории
      */
     // парсит потенциальную строку с данными траектории и возвращает результат валидации данных

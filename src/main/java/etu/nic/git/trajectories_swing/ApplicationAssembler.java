@@ -69,12 +69,14 @@ public class ApplicationAssembler {
             tableDisplay.revalidateAndRepaint();
             fileDisplay.updateDisplayedInfo();
             catalogDisplay.refreshFileList();
+            chartDisplay.updateChart();
         } else {
             // TODO: возможно, добавить интерфейс Restorable и Updatable для дисплеев
             tableDisplay.restoreDefaultState();
             fileDisplay.restoreDefaultState();
             catalogDisplay.restoreDefaultState();
             mainFrame.restoreTitle();
+            chartDisplay.updateChart();
         }
     }
 
