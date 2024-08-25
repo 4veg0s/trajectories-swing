@@ -19,7 +19,6 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -69,14 +68,14 @@ public class ApplicationAssembler {
             tableDisplay.revalidateAndRepaint();
             fileDisplay.updateDisplayedInfo();
             catalogDisplay.refreshFileList();
-            chartDisplay.updateChart();
+            chartDisplay.updatePlot();
         } else {
             // TODO: возможно, добавить интерфейс Restorable и Updatable для дисплеев
             tableDisplay.restoreDefaultState();
             fileDisplay.restoreDefaultState();
             catalogDisplay.restoreDefaultState();
             mainFrame.restoreTitle();
-            chartDisplay.updateChart();
+            chartDisplay.updatePlot();
         }
     }
 
