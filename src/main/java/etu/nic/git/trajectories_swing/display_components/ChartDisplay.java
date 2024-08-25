@@ -154,6 +154,7 @@ public class ChartDisplay {
         // Настройка первого рендера
         XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, false);
         renderer1.setSeriesPaint(0, Color.BLUE);
+//        renderer1.set
         plot.setRenderer(0, renderer1);
 
         XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
@@ -168,7 +169,7 @@ public class ChartDisplay {
         plot.setDataset(1, velocitiesDataset);
         plot.mapDatasetToRangeAxis(1, 1);
 
-        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, false);
+        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
         renderer2.setSeriesPaint(0, Color.RED);
         plot.setRenderer(1, renderer2);
 
