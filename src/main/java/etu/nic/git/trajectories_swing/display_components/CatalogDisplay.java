@@ -51,6 +51,7 @@ public class CatalogDisplay {
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
+        scrollPane.setBorder(null);
 
         background = new JPanel(new BorderLayout());
         background.setBorder(new LineBorder(Color.GRAY, 1));

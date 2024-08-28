@@ -13,6 +13,7 @@ public class FileDisplay {
     private final JTextArea fileTextArea;
     private final JScrollPane scrollPane;
     private final JPanel filePathAndTextArea;
+    private final JSeparator separator;
     private final TrajectoryFileStorage fileStorage;
 
     public FileDisplay(TrajectoryFileStorage storage) {
@@ -25,7 +26,7 @@ public class FileDisplay {
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
         verticalBox.add(displayHeader);
 
-        JSeparator separator = new JSeparator();
+        separator = new JSeparator();
         separator.setOrientation(SwingConstants.HORIZONTAL);
         verticalBox.add(separator);
 
@@ -49,6 +50,7 @@ public class FileDisplay {
 
         fileTextArea = initFileTextArea();
         scrollPane = initFileTextScrollPane(fileTextArea);
+        scrollPane.setBorder(null);
         hideMainInfo();
 
         filePathAndTextArea = new JPanel(new BorderLayout());
@@ -119,9 +121,11 @@ public class FileDisplay {
     public void hideMainInfo() {
         filePathLabel.setVisible(false);
         scrollPane.setVisible(false);
+        separator.setVisible(false);
     }
     public void showMainInfo() {
         filePathLabel.setVisible(true);
         scrollPane.setVisible(true);
+        separator.setVisible(true);
     }
 }

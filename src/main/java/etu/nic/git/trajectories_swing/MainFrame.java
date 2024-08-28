@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
         background.add(chartDisplay.getComponent(), GridBagLayoutConstraints.chartDisplayConstraints());
 
         this.getContentPane().add(background);
-        this.setBounds(new Rectangle(100, 50, 1300, 900));
+        this.setBounds(new Rectangle(100, 50, 1400, 900));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
