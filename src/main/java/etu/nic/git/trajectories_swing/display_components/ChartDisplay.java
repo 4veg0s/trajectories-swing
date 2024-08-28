@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
@@ -68,7 +69,7 @@ public class ChartDisplay {
 
         background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
-//        background.add(BorderLayout.CENTER, scrollPane);
+        background.setBorder(new LineBorder(Color.GRAY, 1));
 
         chart = createChart();
     }

@@ -4,6 +4,7 @@ import etu.nic.git.trajectories_swing.tools.TrajectoryFile;
 import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -52,6 +53,7 @@ public class CatalogDisplay {
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
 
         background = new JPanel(new BorderLayout());
+        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.NORTH, displayHeader);
         background.add(BorderLayout.CENTER, scrollPane);
     }

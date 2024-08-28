@@ -3,6 +3,7 @@ package etu.nic.git.trajectories_swing.display_components;
 import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class FileDisplay {
@@ -50,6 +51,7 @@ public class FileDisplay {
         scrollPane = initFileTextScrollPane(fileTextArea);
 
         background = new JPanel(new BorderLayout());
+        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.NORTH, header);
         background.add(BorderLayout.CENTER, scrollPane);
     }
@@ -80,7 +82,7 @@ public class FileDisplay {
     private JScrollPane initFileTextScrollPane(JTextArea textArea) {
 
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         return scrollPane;
