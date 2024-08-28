@@ -2,6 +2,7 @@ package etu.nic.git.trajectories_swing.display_components;
 
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
+import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -20,20 +21,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChartDisplay {
+    private final TrajectoryFileStorage fileStorage;
     private final JLabel displayHeader;
     private final JPanel background;
     private final TrajectoryRowTableModel model;
     private ChartPanel chartPanel;
+    private JPanel checkBoxPanel;
+    private final JPanel checksAndChart;
     private JFreeChart chart;
     private XYPlot plot;
 
-    public ChartDisplay(TrajectoryRowTableModel tableModel) {
-        this.model = tableModel;    // TODO: читать данные из модели
+    public ChartDisplay(TrajectoryRowTableModel tableModel, TrajectoryFileStorage fileStorage) {
+        this.model = tableModel;
+        this.fileStorage = fileStorage;
 
-        displayHeader = new JLabel("График");   // TODO: добавить панель с optionButton'ами
+        displayHeader = new JLabel("График");
 
         displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+
+        JLabel coordinatesLabel = new JLabel("Координаты:");
+        JCheckBox coordinateXCheckBox = new JCheckBox("X, м");
+        JCheckBox coordinateYCheckBox = new JCheckBox("Y, м");
+        JCheckBox coordinateZCheckBox = new JCheckBox("Z, м");
+
+        JLabel velocitiesLabel = new JLabel("Проекции скорости:");
+        JCheckBox velocityXCheckBox = new JCheckBox("Vx, м/с");
+        JCheckBox velocityYCheckBox = new JCheckBox("Vy, м/с");
+        JCheckBox velocityZCheckBox = new JCheckBox("Vz, м/с");
+
+        Box horizontalBox = new Box(BoxLayout.X_AXIS);
+        horizontalBox.add(coordinatesLabel);
+        horizontalBox.add(coordinateXCheckBox);
+        horizontalBox.add(coordinateYCheckBox);
+        horizontalBox.add(coordinateZCheckBox);
+        horizontalBox.add(velocitiesLabel);
+        horizontalBox.add(velocityXCheckBox);
+        horizontalBox.add(velocityYCheckBox);
+        horizontalBox.add(velocityZCheckBox);
+
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.add(horizontalBox);
+
+        checksAndChart = new JPanel(new BorderLayout());
+        checksAndChart.add(BorderLayout.NORTH, checkBoxPanel);
 
         background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
@@ -148,13 +179,23 @@ public class ChartDisplay {
      * метод очищает основную панель
      */
     private void replaceChart() {
-        if (chartPanel != null) {
-            background.remove(chartPanel);
-            chartPanel = new ChartPanel(chart);
-            background.add(BorderLayout.CENTER, chartPanel);
-        } else {
-            chartPanel = new ChartPanel(chart);
-            background.add(BorderLayout.CENTER, chartPanel);
+        if (!fileStorage.isEmpty()) {
+            if (chartPanel != null) {
+                checksAndChart.remove(chartPanel);
+                chartPanel = new ChartPanel(chart);
+                checksAndChart.add(BorderLayout.CENTER, chartPanel);
+                background.add(BorderLayout.CENTER, checksAndChart);
+            } else {
+                chartPanel = new ChartPanel(chart);
+                checksAndChart.add(BorderLayout.CENTER, chartPanel);
+                background.add(BorderLayout.CENTER, checksAndChart);
+            }
         }
+    }
+
+    public void restoreDefaultState() {
+        background.remove(checksAndChart);
+        background.revalidate();
+        background.repaint();
     }
 }

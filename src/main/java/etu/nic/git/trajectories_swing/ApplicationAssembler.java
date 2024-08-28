@@ -50,7 +50,7 @@ public class ApplicationAssembler {
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         tableDisplay = new TableDisplay(model);
         fileDisplay = new FileDisplay(fileStorage);
-        chartDisplay = new ChartDisplay(model);
+        chartDisplay = new ChartDisplay(model, fileStorage);
 
         topMenuBar = new TopMenuBar(initMenuActionListener());
 
@@ -74,8 +74,8 @@ public class ApplicationAssembler {
             tableDisplay.restoreDefaultState();
             fileDisplay.restoreDefaultState();
             catalogDisplay.restoreDefaultState();
+            chartDisplay.restoreDefaultState();
             mainFrame.restoreTitle();
-            chartDisplay.updatePlot();
         }
     }
 
