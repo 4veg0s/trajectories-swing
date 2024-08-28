@@ -67,8 +67,11 @@ public class ChartDisplay {
         checksAndChart = new JPanel(new BorderLayout());
         checksAndChart.add(BorderLayout.NORTH, checkBoxPanel);
 
+        hideMainInfo();
+
         background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
+        background.add(BorderLayout.CENTER, checksAndChart);
         background.setBorder(new LineBorder(Color.GRAY, 1));
 
         chart = createChart();
@@ -185,18 +188,24 @@ public class ChartDisplay {
                 checksAndChart.remove(chartPanel);
                 chartPanel = new ChartPanel(chart);
                 checksAndChart.add(BorderLayout.CENTER, chartPanel);
-                background.add(BorderLayout.CENTER, checksAndChart);
             } else {
                 chartPanel = new ChartPanel(chart);
                 checksAndChart.add(BorderLayout.CENTER, chartPanel);
-                background.add(BorderLayout.CENTER, checksAndChart);
             }
+            showMainInfo();
         }
     }
 
     public void restoreDefaultState() {
-        background.remove(checksAndChart);
+        hideMainInfo();
         background.revalidate();
         background.repaint();
+    }
+
+    public void hideMainInfo() {
+        checksAndChart.setVisible(false);
+    }
+    public void showMainInfo() {
+        checksAndChart.setVisible(true);
     }
 }

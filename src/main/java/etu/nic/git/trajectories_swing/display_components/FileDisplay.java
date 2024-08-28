@@ -12,21 +12,22 @@ public class FileDisplay {
     private final JLabel filePathLabel;
     private final JTextArea fileTextArea;
     private final JScrollPane scrollPane;
+    private final JPanel filePathAndTextArea;
     private final TrajectoryFileStorage fileStorage;
 
     public FileDisplay(TrajectoryFileStorage storage) {
         fileStorage = storage;
 
-        Box header = new Box(BoxLayout.Y_AXIS);
+        Box verticalBox = new Box(BoxLayout.Y_AXIS);
 
         displayHeader = new JLabel("Файл");
         displayHeader.setAlignmentX(0.5f);
         displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-        header.add(displayHeader);
+        verticalBox.add(displayHeader);
 
         JSeparator separator = new JSeparator();
         separator.setOrientation(SwingConstants.HORIZONTAL);
-        header.add(separator);
+        verticalBox.add(separator);
 
         if (fileStorage.isEmpty()) {
             filePathLabel = new JLabel("Файл не выбран");
@@ -43,17 +44,21 @@ public class FileDisplay {
                 filePathLabel = new JLabel(path);
             }
         }
-        filePathLabel.setAlignmentX(0.5f);
+        filePathLabel.setHorizontalAlignment(SwingConstants.CENTER);
         filePathLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
-        header.add(filePathLabel);
 
         fileTextArea = initFileTextArea();
         scrollPane = initFileTextScrollPane(fileTextArea);
+        hideMainInfo();
+
+        filePathAndTextArea = new JPanel(new BorderLayout());
+        filePathAndTextArea.add(BorderLayout.NORTH, filePathLabel);
+        filePathAndTextArea.add(BorderLayout.CENTER, scrollPane);
 
         background = new JPanel(new BorderLayout());
         background.setBorder(new LineBorder(Color.GRAY, 1));
-        background.add(BorderLayout.NORTH, header);
-        background.add(BorderLayout.CENTER, scrollPane);
+        verticalBox.add(filePathAndTextArea);
+        background.add(verticalBox);
     }
 
     public JComponent getComponent() {
@@ -64,8 +69,10 @@ public class FileDisplay {
     public void updateDisplayedInfo() {
         if (!fileStorage.isEmpty()) {
             loadFileDataToArea(fileStorage.getCurrentFile().getData());
+            showMainInfo();
         } else {
             loadFileDataToArea("");
+            hideMainInfo();
         }
     }
 
@@ -106,5 +113,15 @@ public class FileDisplay {
     public void restoreDefaultState() {
         filePathLabel.setText("Файл не выбран");
         fileTextArea.setText("");
+        hideMainInfo();
+    }
+
+    public void hideMainInfo() {
+        filePathLabel.setVisible(false);
+        scrollPane.setVisible(false);
+    }
+    public void showMainInfo() {
+        filePathLabel.setVisible(true);
+        scrollPane.setVisible(true);
     }
 }

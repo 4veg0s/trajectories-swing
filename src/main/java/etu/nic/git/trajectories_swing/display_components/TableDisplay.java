@@ -36,9 +36,12 @@ public class TableDisplay {
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        hideMainInfo();
+
         background = new JPanel(new BorderLayout());
         background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.NORTH, displayHeader);
+        background.add(BorderLayout.CENTER, tableScrollPane);
     }
 
     public JComponent getComponent() {
@@ -60,13 +63,20 @@ public class TableDisplay {
     }
 
     public void revalidateAndRepaint() {
-        background.add(BorderLayout.CENTER, tableScrollPane);
+        showMainInfo();
         background.revalidate();
         background.repaint();
     }
 
     public void restoreDefaultState() {
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
-        background.remove(tableScrollPane);
+        hideMainInfo();
+    }
+
+    public void hideMainInfo() {
+        tableScrollPane.setVisible(false);
+    }
+    public void showMainInfo() {
+        tableScrollPane.setVisible(true);
     }
 }
