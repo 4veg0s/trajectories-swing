@@ -34,4 +34,8 @@ public class TopMenuBar {
     public JMenuBar getMenuBar() {
         return this.menuBar;
     }
+    public void fireOpenFileMenuItemClick() {
+        JMenuItem openFileMenuItem = fileMenu.getItem(0);
+        openFileMenuItem.doClick();
+    }
 }

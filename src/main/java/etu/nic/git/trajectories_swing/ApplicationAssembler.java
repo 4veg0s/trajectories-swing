@@ -35,6 +35,7 @@ public class ApplicationAssembler {
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
     private ChartDisplay chartDisplay;
+    private boolean invokeFileChooserWhenNoFilesOpened = true;
 
     public ApplicationAssembler() {
         model = initModel();
@@ -59,6 +60,8 @@ public class ApplicationAssembler {
             fileDisplay.updateDisplayedInfo();
             model.fireTableDataChanged();
         }
+
+        setInvokeFileChooserWhenNoFilesOpened(true);
     }
 
 
@@ -144,6 +147,9 @@ public class ApplicationAssembler {
                     mainFrame.appendFileToFrameTitle(fileStorage.findFileByIndex(fileStorage.getCurrentFileIndex()).getName());
                 } else {
                     mainFrame.restoreTitle();
+                    if (isInvokeFileChooserWhenNoFilesOpened()) {
+                        fileChooserOpen();
+                    }
                 }
                 model.fireTableDataChanged();
             }
@@ -171,7 +177,7 @@ public class ApplicationAssembler {
                                 try {
                                     TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
 
-                                    TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());    // fixme проверка валидности файла
+                                    TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());
 
                                     TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
                                     if (existingFile != null) {   // если такая траектория уже загружена
@@ -205,8 +211,23 @@ public class ApplicationAssembler {
         };
     }
 
+    /**
+     * Метод имитирует клик по пункту файлового меню "Открыть" с соответствующими последствиями
+     * @param isNeeded true, если нужно открыть окно выбора файла при первом запуске приложения, иначе - false
+     */
+    public void fileChooserOnFirstOpen(boolean isNeeded) {
+        if (isNeeded) {
+            fileChooserOpen();
+        }
+    }
+
+    public void fileChooserOpen() {
+        topMenuBar.fireOpenFileMenuItemClick();
+    }
+
     public void showGUI() {
         mainFrame.showMainFrame();
+        fileChooserOnFirstOpen(true);
     }
 
     public void assemble() {
@@ -243,5 +264,12 @@ public class ApplicationAssembler {
 
     public void setFileDisplay(FileDisplay fileDisplay) {
         this.fileDisplay = fileDisplay;
+    }
+    public boolean isInvokeFileChooserWhenNoFilesOpened() {
+        return invokeFileChooserWhenNoFilesOpened;
+    }
+
+    public void setInvokeFileChooserWhenNoFilesOpened(boolean invokeFileChooserWhenNoFilesOpened) {
+        this.invokeFileChooserWhenNoFilesOpened = invokeFileChooserWhenNoFilesOpened;
     }
 }

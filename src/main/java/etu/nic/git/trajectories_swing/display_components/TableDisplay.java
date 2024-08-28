@@ -35,6 +35,7 @@ public class TableDisplay {
         tableScrollPane = new JScrollPane(table);
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        tableScrollPane.setBorder(null);
 
         hideMainInfo();
 
