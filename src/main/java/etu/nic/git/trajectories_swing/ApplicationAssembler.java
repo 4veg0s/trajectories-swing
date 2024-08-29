@@ -63,8 +63,9 @@ public class ApplicationAssembler {
 
         topMenuBar = new TopMenuBar(initMenuActionListener());
 
-        // смотреть JavaDoc метода
+        // смотреть JavaDoc методов
         setInvokeFileChooserWhenNoFilesOpened(true);
+        chartDisplay.setMarkersAsLettersOnChart(true);
     }
 
 
@@ -278,4 +279,5 @@ public class ApplicationAssembler {
     public void setInvokeFileChooserWhenNoFilesOpened(boolean invokeFileChooserWhenNoFilesOpened) {
         this.invokeFileChooserWhenNoFilesOpened = invokeFileChooserWhenNoFilesOpened;
     }
+
 }

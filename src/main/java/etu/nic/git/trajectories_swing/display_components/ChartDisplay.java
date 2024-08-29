@@ -4,6 +4,7 @@ import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 import etu.nic.git.trajectories_swing.tools.ChartCheckBoxToXYSeriesPair;
+import etu.nic.git.trajectories_swing.tools.MarkerShapes;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -43,6 +44,7 @@ public class ChartDisplay extends AbstractDisplay {
     private JFreeChart chart;
     private XYPlot plot;
     private List<ChartCheckBoxToXYSeriesPair> checksToSeriesList;
+    private boolean markersAsLettersOnChart = false;
 
     public ChartDisplay(TrajectoryRowTableModel tableModel, TrajectoryFileStorage fileStorage) {
         super(DISPLAY_NAME);
@@ -88,6 +90,9 @@ public class ChartDisplay extends AbstractDisplay {
         horizontalBox.add(coordinateXCheckBox);
         horizontalBox.add(coordinateYCheckBox);
         horizontalBox.add(coordinateZCheckBox);
+
+        horizontalBox.add(new JLabel("     "));     // болванка - пустое пространство между чекбоксами для координат и скорости
+
         horizontalBox.add(velocitiesLabel);
         horizontalBox.add(velocityXCheckBox);
         horizontalBox.add(velocityYCheckBox);
@@ -162,7 +167,6 @@ public class ChartDisplay extends AbstractDisplay {
         velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeries());
 
         int axisIndex = 0;
-        int seriesIndex = 0;
         // если хоть один чекбокс из серии координат выбран, то будет добавлена ось координат
         NumberAxis axis1 = new NumberAxis("Координата, м");
         axis1.setLabelPaint(Color.BLUE);
@@ -173,20 +177,35 @@ public class ChartDisplay extends AbstractDisplay {
 
         // Настройка первого рендерера
         XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
-        // создание формы круга для маркера координаты
-        Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
+        if (isMarkersAsLettersOnChart()) {
+            // установка маркера в виде соответствующей буквы и цвета для каждой из серий рендерера
+            renderer1.setSeriesPaint(0, Color.BLUE);
+            renderer1.setSeriesShape(0, MarkerShapes.getShapeX());
+            renderer1.setSeriesVisible(0, (checksToSeriesList.get(0).getCheckBox().isSelected()));
 
-        renderer1.setSeriesPaint(0, Color.RED);
-        renderer1.setSeriesShape(0, circle);
-        renderer1.setSeriesVisible(0, (checksToSeriesList.get(0).getCheckBox().isSelected()));
+            renderer1.setSeriesPaint(1, Color.BLUE);
+            renderer1.setSeriesShape(1, MarkerShapes.getShapeY());
+            renderer1.setSeriesVisible(1, (checksToSeriesList.get(1).getCheckBox().isSelected()));
 
-        renderer1.setSeriesPaint(1, Color.BLUE);
-        renderer1.setSeriesShape(1, circle);
-        renderer1.setSeriesVisible(1, (checksToSeriesList.get(1).getCheckBox().isSelected()));
+            renderer1.setSeriesPaint(2, Color.BLUE);
+            renderer1.setSeriesShape(2, MarkerShapes.getShapeZ());
+            renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
+        } else {
+            // создание формы круга для маркера координаты
+            Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
 
-        renderer1.setSeriesPaint(2, new Color(89, 65, 0));
-        renderer1.setSeriesShape(2, circle);
-        renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
+            renderer1.setSeriesPaint(0, Color.RED);
+            renderer1.setSeriesShape(0, circle);
+            renderer1.setSeriesVisible(0, (checksToSeriesList.get(0).getCheckBox().isSelected()));
+
+            renderer1.setSeriesPaint(1, Color.BLUE);
+            renderer1.setSeriesShape(1, circle);
+            renderer1.setSeriesVisible(1, (checksToSeriesList.get(1).getCheckBox().isSelected()));
+
+            renderer1.setSeriesPaint(2, new Color(89, 65, 0));
+            renderer1.setSeriesShape(2, circle);
+            renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
+        }
 
         plot.setRenderer(axisIndex, renderer1);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
@@ -201,25 +220,41 @@ public class ChartDisplay extends AbstractDisplay {
         plot.mapDatasetToRangeAxis(axisIndex, 1);
 
         XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
-        // создание формы треугольника для маркера скорости
-        Path2D.Double triangle = new Path2D.Double();
-        triangle.moveTo(0.0, -3.0);
-        triangle.lineTo(3.0, 0.0);
-        triangle.lineTo(0.0, 3.0);
-        triangle.closePath();
 
-        // установка маркера в виде треугольника и цвета для каждой из серий рендерера
-        renderer2.setSeriesPaint(0, Color.RED);
-        renderer2.setSeriesShape(0, triangle);
-        renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
+        if (isMarkersAsLettersOnChart()) {
+            // установка маркера в виде соответствующей буквы и цвета для каждой из серий рендерера
+            renderer2.setSeriesPaint(0, Color.RED);
+            renderer2.setSeriesShape(0, MarkerShapes.getShapeX());
+            renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
 
-        renderer2.setSeriesPaint(1, Color.BLUE);
-        renderer2.setSeriesShape(1, triangle);
-        renderer2.setSeriesVisible(1, (checksToSeriesList.get(4).getCheckBox().isSelected()));
+            renderer2.setSeriesPaint(1, Color.RED);
+            renderer2.setSeriesShape(1, MarkerShapes.getShapeY());
+            renderer2.setSeriesVisible(1, (checksToSeriesList.get(4).getCheckBox().isSelected()));
 
-        renderer2.setSeriesPaint(2, new Color(89, 65, 0));
-        renderer2.setSeriesShape(2, triangle);
-        renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
+            renderer2.setSeriesPaint(2, Color.RED);
+            renderer2.setSeriesShape(2, MarkerShapes.getShapeZ());
+            renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
+        } else {
+            // создание формы треугольника для маркера скорости
+            Path2D.Double triangle = new Path2D.Double();
+            triangle.moveTo(0.0, -3.0);
+            triangle.lineTo(3.0, 0.0);
+            triangle.lineTo(0.0, 3.0);
+            triangle.closePath();
+
+            // установка маркера в виде треугольника и цвета для каждой из серий рендерера
+            renderer2.setSeriesPaint(0, Color.RED);
+            renderer2.setSeriesShape(0, triangle);
+            renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
+
+            renderer2.setSeriesPaint(1, Color.BLUE);
+            renderer2.setSeriesShape(1, triangle);
+            renderer2.setSeriesVisible(1, (checksToSeriesList.get(4).getCheckBox().isSelected()));
+
+            renderer2.setSeriesPaint(2, new Color(89, 65, 0));
+            renderer2.setSeriesShape(2, triangle);
+            renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
+        }
 
         plot.setRenderer(axisIndex, renderer2);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
@@ -296,5 +331,18 @@ public class ChartDisplay extends AbstractDisplay {
 //        plot.clearDomainAxes(); // Очистка осей X
         plot.clearRangeAxes(); // Очистка осей Y
         plot.setRenderer(null); // Удаление рендерера
+    }
+
+    public boolean isMarkersAsLettersOnChart() {
+        return markersAsLettersOnChart;
+    }
+
+    /**
+     * Устанавливает параметр, отвечающий за отображение маркеров на графике в виде соответствующих параметрам букв X, Y или Z
+     * @param markersAsLettersOnChart true, если необходимо, чтобы при описанных обстоятельствах маркеры отображались как буквы,
+     *                                          false, если необходимо чтобы у датасета соответствующего координатам были одни маркеры, а у проекций скорости - другие
+     */
+    public void setMarkersAsLettersOnChart(boolean markersAsLettersOnChart) {
+        this.markersAsLettersOnChart = markersAsLettersOnChart;
     }
 }
