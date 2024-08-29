@@ -4,10 +4,7 @@ import etu.nic.git.trajectories_swing.dialogs.InvalidFileFormatDialog;
 import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryExistsDialog;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
-import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
-import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
-import etu.nic.git.trajectories_swing.display_components.FileDisplay;
-import etu.nic.git.trajectories_swing.display_components.TableDisplay;
+import etu.nic.git.trajectories_swing.display_components.*;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
@@ -23,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
@@ -36,31 +35,35 @@ public class ApplicationAssembler {
     private FileDisplay fileDisplay;
     private ChartDisplay chartDisplay;
     private boolean invokeFileChooserWhenNoFilesOpened = true;
+    private List<AbstractDisplay> displayList;
 
     public ApplicationAssembler() {
         model = initModel();
 
         fileStorage = new TrajectoryFileStorage();
-//        fileStorage.setCurrentFileIndex(0);  // fixme на время без FileChooser
 
         fileChooser = new JFileChooser(new File("./data"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
 
+        displayList = new ArrayList<>();
+
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
+        displayList.add(catalogDisplay);
+
         tableDisplay = new TableDisplay(model);
+        displayList.add(tableDisplay);
+
         fileDisplay = new FileDisplay(fileStorage);
+        displayList.add(fileDisplay);
+
         chartDisplay = new ChartDisplay(model, fileStorage);
+        displayList.add(chartDisplay);
 
         topMenuBar = new TopMenuBar(initMenuActionListener());
 
-        if (!fileStorage.isEmpty()) {
-            model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
-            fileDisplay.updateDisplayedInfo();
-            model.fireTableDataChanged();
-        }
-
+        // смотреть JavaDoc метода
         setInvokeFileChooserWhenNoFilesOpened(true);
     }
 
@@ -68,16 +71,13 @@ public class ApplicationAssembler {
     public void updateEntireInfo() {
         if (!fileStorage.isEmpty()) {
             model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
-            tableDisplay.revalidateAndRepaint();
-            fileDisplay.updateDisplayedInfo();
-            catalogDisplay.refreshFileList();
-            chartDisplay.updatePlot();
+            for (AbstractDisplay display : displayList) {
+                display.updateComponentView();
+            }
         } else {
-            // TODO: возможно, добавить интерфейс Restorable и Updatable для дисплеев
-            tableDisplay.restoreDefaultState();
-            fileDisplay.restoreDefaultState();
-            catalogDisplay.restoreDefaultState();
-            chartDisplay.restoreDefaultState();
+            for (AbstractDisplay display : displayList) {
+                display.restoreDefaultState();
+            }
             mainFrame.restoreTitle();
         }
     }
@@ -265,10 +265,16 @@ public class ApplicationAssembler {
     public void setFileDisplay(FileDisplay fileDisplay) {
         this.fileDisplay = fileDisplay;
     }
+
     public boolean isInvokeFileChooserWhenNoFilesOpened() {
         return invokeFileChooserWhenNoFilesOpened;
     }
 
+    /**
+     * Устанавливает параметр, отвечающий за открытие окна выбора нового файла при отсутсивии открытых файлов
+     * @param invokeFileChooserWhenNoFilesOpened true, если необходимо, чтобы при описанных обстоятельствах открывалось окно FileChooser'а,
+     *                                          false - иначе
+     */
     public void setInvokeFileChooserWhenNoFilesOpened(boolean invokeFileChooserWhenNoFilesOpened) {
         this.invokeFileChooserWhenNoFilesOpened = invokeFileChooserWhenNoFilesOpened;
     }

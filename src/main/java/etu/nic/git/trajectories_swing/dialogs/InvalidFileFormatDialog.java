@@ -42,7 +42,10 @@ public class InvalidFileFormatDialog {
         buttonPanel.add(okButton);
         okButton.setHorizontalAlignment(SwingConstants.CENTER);
 
-        verticalBox.add(new JScrollPane(dialogPrompt));
+        JScrollPane scrollPane = new JScrollPane(dialogPrompt);
+        scrollPane.setBorder(null);
+
+        verticalBox.add(scrollPane);
         verticalBox.add(buttonPanel);
 
         dialog.add(verticalBox);
