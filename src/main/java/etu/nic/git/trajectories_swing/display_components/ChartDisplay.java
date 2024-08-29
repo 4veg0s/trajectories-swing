@@ -56,12 +56,6 @@ public class ChartDisplay extends AbstractDisplay {
                 updatePlot();
             }
         };
-        ChangeListener checkBoxChangeListener = new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                updatePlot();
-            }
-        };
 
         checksToSeriesList = new ArrayList<>();
 
@@ -146,87 +140,89 @@ public class ChartDisplay extends AbstractDisplay {
 
         XYSeriesCollection coordinatesDataset = new XYSeriesCollection();
 
-        for (int i = 0; i < 3; i++) {
-            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
-            if (series != null) {
-                coordinatesDataset.addSeries(series);
-            }
-        }
-//        coordinatesDataset.addSeries(checksToSeriesList.get(0).getSeriesIfCheckBoxSelectedOrNullOtherwise());
-//        coordinatesDataset.addSeries(checksToSeriesList.get(1).getSeriesIfCheckBoxSelectedOrNullOtherwise());
-//        coordinatesDataset.addSeries(checksToSeriesList.get(2).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        for (int i = 0; i < 3; i++) {
+//            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
+//            if (series != null) {
+//                coordinatesDataset.addSeries(series);
+//            }
+//        }
+        coordinatesDataset.addSeries(checksToSeriesList.get(0).getSeries());
+        coordinatesDataset.addSeries(checksToSeriesList.get(1).getSeries());
+        coordinatesDataset.addSeries(checksToSeriesList.get(2).getSeries());
 
         XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
-        for (int i = 3; i < 6; i++) {
-            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
-            if (series != null) {
-                velocitiesDataset.addSeries(series);
-            }
-        }
-//        velocitiesDataset.addSeries(checksToSeriesList.get(3).getSeriesIfCheckBoxSelectedOrNullOtherwise());
-//        velocitiesDataset.addSeries(checksToSeriesList.get(4).getSeriesIfCheckBoxSelectedOrNullOtherwise());
-//        velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        for (int i = 3; i < 6; i++) {
+//            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
+//            if (series != null) {
+//                velocitiesDataset.addSeries(series);
+//            }
+//        }
+        velocitiesDataset.addSeries(checksToSeriesList.get(3).getSeries());
+        velocitiesDataset.addSeries(checksToSeriesList.get(4).getSeries());
+        velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeries());
 
         int axisIndex = 0;
         int seriesIndex = 0;
         // если хоть один чекбокс из серии координат выбран, то будет добавлена ось координат
-        if (this.shouldHaveCoordinatesAxis()) {
-            NumberAxis axis1 = new NumberAxis("Координата, м");
-            axis1.setLabelPaint(Color.BLUE);
-            axis1.setTickLabelPaint(Color.BLUE);
-            plot.setRangeAxis(axisIndex, axis1);
-            plot.setDataset(axisIndex, coordinatesDataset);
-            plot.mapDatasetToRangeAxis(axisIndex, 0);
+        NumberAxis axis1 = new NumberAxis("Координата, м");
+        axis1.setLabelPaint(Color.BLUE);
+        axis1.setTickLabelPaint(Color.BLUE);
+        plot.setRangeAxis(axisIndex, axis1);
+        plot.setDataset(axisIndex, coordinatesDataset);
+        plot.mapDatasetToRangeAxis(axisIndex, 0);
 
-            // Настройка первого рендерера
-            XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
-            // создание формы круга для маркера координаты
-            Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
+        // Настройка первого рендерера
+        XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
+        // создание формы круга для маркера координаты
+        Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
 
-            renderer1.setSeriesPaint(0, Color.RED);
-            renderer1.setSeriesShape(0, circle);
+        renderer1.setSeriesPaint(0, Color.RED);
+        renderer1.setSeriesShape(0, circle);
+        renderer1.setSeriesVisible(0, (checksToSeriesList.get(0).getCheckBox().isSelected()));
 
-            renderer1.setSeriesPaint(1, Color.BLUE);
-            renderer1.setSeriesShape(1, circle);
+        renderer1.setSeriesPaint(1, Color.BLUE);
+        renderer1.setSeriesShape(1, circle);
+        renderer1.setSeriesVisible(1, (checksToSeriesList.get(1).getCheckBox().isSelected()));
 
-            renderer1.setSeriesPaint(2, new Color(89, 65, 0));
-            renderer1.setSeriesShape(2, circle);
+        renderer1.setSeriesPaint(2, new Color(89, 65, 0));
+        renderer1.setSeriesShape(2, circle);
+        renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
 
-            plot.setRenderer(axisIndex, renderer1);
-            plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
-            axisIndex++;
-        }
+        plot.setRenderer(axisIndex, renderer1);
+        plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
+        axisIndex++;
 
         // если хоть один чекбокс из серии проекций скоростей выбран, то будет добавлена ось координат
-        if (this.shouldHaveVelocitiesAxis()) {
-            NumberAxis axis2 = new NumberAxis("Скорость, м/с");
-            axis2.setLabelPaint(Color.RED);
-            axis2.setTickLabelPaint(Color.RED);
-            plot.setRangeAxis(axisIndex, axis2);
-            plot.setDataset(axisIndex, velocitiesDataset);
-            plot.mapDatasetToRangeAxis(axisIndex, 1);
+        NumberAxis axis2 = new NumberAxis("Скорость, м/с");
+        axis2.setLabelPaint(Color.RED);
+        axis2.setTickLabelPaint(Color.RED);
+        plot.setRangeAxis(axisIndex, axis2);
+        plot.setDataset(axisIndex, velocitiesDataset);
+        plot.mapDatasetToRangeAxis(axisIndex, 1);
 
-            XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
-            // создание формы треугольника для маркера скорости
-            Path2D.Double triangle = new Path2D.Double();
-            triangle.moveTo(0.0, -3.0);
-            triangle.lineTo(3.0, 0.0);
-            triangle.lineTo(0.0, 3.0);
-            triangle.closePath();
+        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
+        // создание формы треугольника для маркера скорости
+        Path2D.Double triangle = new Path2D.Double();
+        triangle.moveTo(0.0, -3.0);
+        triangle.lineTo(3.0, 0.0);
+        triangle.lineTo(0.0, 3.0);
+        triangle.closePath();
 
-            // установка маркера в виде треугольника и цвета для каждой из серий рендерера
-            renderer2.setSeriesPaint(0, Color.RED);
-            renderer2.setSeriesShape(0, triangle);
+        // установка маркера в виде треугольника и цвета для каждой из серий рендерера
+        renderer2.setSeriesPaint(0, Color.RED);
+        renderer2.setSeriesShape(0, triangle);
+        renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
 
-            renderer2.setSeriesPaint(1, Color.BLUE);
-            renderer2.setSeriesShape(1, triangle);
+        renderer2.setSeriesPaint(1, Color.BLUE);
+        renderer2.setSeriesShape(1, triangle);
+        renderer2.setSeriesVisible(1, (checksToSeriesList.get(4).getCheckBox().isSelected()));
 
-            renderer2.setSeriesPaint(2, new Color(89, 65, 0));
-            renderer2.setSeriesShape(2, triangle);
+        renderer2.setSeriesPaint(2, new Color(89, 65, 0));
+        renderer2.setSeriesShape(2, triangle);
+        renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
 
-            plot.setRenderer(axisIndex, renderer2);
-            plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
-        }
+        plot.setRenderer(axisIndex, renderer2);
+        plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
 
         // изменение цвета фона у графика
         plot.setBackgroundPaint(Color.WHITE);
