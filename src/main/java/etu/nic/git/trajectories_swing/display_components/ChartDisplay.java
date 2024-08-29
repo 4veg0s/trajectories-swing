@@ -224,6 +224,10 @@ public class ChartDisplay extends AbstractDisplay {
         plot.setRenderer(axisIndex, renderer2);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
 
+        plot.getRangeAxis(0).setVisible(this.shouldHaveCoordinatesAxis());
+        plot.getRangeAxis(1).setVisible(this.shouldHaveVelocitiesAxis());
+        plot.getDomainAxis().setVisible(this.shouldHaveCoordinatesAxis() || this.shouldHaveVelocitiesAxis());
+
         // изменение цвета фона у графика
         plot.setBackgroundPaint(Color.WHITE);
 
