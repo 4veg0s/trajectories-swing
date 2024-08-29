@@ -6,9 +6,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class FileDisplay {
-    private final JPanel background;
-    private final JLabel displayHeader;
+public class FileDisplay extends AbstractDisplay {
+    private static final String DISPLAY_NAME = "Файл";
     private final JLabel filePathLabel;
     private final JTextArea fileTextArea;
     private final JScrollPane scrollPane;
@@ -17,13 +16,16 @@ public class FileDisplay {
     private final TrajectoryFileStorage fileStorage;
 
     public FileDisplay(TrajectoryFileStorage storage) {
+        super(DISPLAY_NAME);
+
         fileStorage = storage;
 
         Box verticalBox = new Box(BoxLayout.Y_AXIS);
 
-        displayHeader = new JLabel("Файл");
-        displayHeader.setAlignmentX(0.5f);
-        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+//        displayHeader = new JLabel("Файл");
+//        displayHeader.setAlignmentX(0.5f);
+//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+
         verticalBox.add(displayHeader);
 
         separator = new JSeparator();
@@ -57,16 +59,11 @@ public class FileDisplay {
         filePathAndTextArea.add(BorderLayout.NORTH, filePathLabel);
         filePathAndTextArea.add(BorderLayout.CENTER, scrollPane);
 
-        background = new JPanel(new BorderLayout());
-        background.setBorder(new LineBorder(Color.GRAY, 1));
+//        background = new JPanel(new BorderLayout());
+//        background.setBorder(new LineBorder(Color.GRAY, 1));
         verticalBox.add(filePathAndTextArea);
         background.add(verticalBox);
     }
-
-    public JComponent getComponent() {
-        return background;
-    }
-
 
     public void updateDisplayedInfo() {
         if (!fileStorage.isEmpty()) {
@@ -78,6 +75,16 @@ public class FileDisplay {
         }
     }
 
+    @Override
+    public void updateComponentView() {
+        if (!fileStorage.isEmpty()) {
+            loadFileDataToArea(fileStorage.getCurrentFile().getData());
+            showMainInfo();
+        } else {
+            loadFileDataToArea("");
+            hideMainInfo();
+        }
+    }
 
     private JTextArea initFileTextArea() {
         JTextArea textArea = new JTextArea();
@@ -112,6 +119,7 @@ public class FileDisplay {
         }
     }
 
+    @Override
     public void restoreDefaultState() {
         filePathLabel.setText("Файл не выбран");
         fileTextArea.setText("");

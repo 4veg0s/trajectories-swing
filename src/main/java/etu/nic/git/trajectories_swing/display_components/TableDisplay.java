@@ -9,20 +9,21 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.Arrays;
 
-public class TableDisplay {
-    private final JLabel displayHeader;
+public class TableDisplay extends AbstractDisplay {
+    private static final String DISPLAY_NAME = "Таблица";
     private final JTable table;
     private final JScrollPane tableScrollPane;
-    private final JPanel background;
     private final TrajectoryRowTableModel model;
 
     public TableDisplay(TrajectoryRowTableModel tableModel) {
+        super(DISPLAY_NAME);
+
         model = tableModel;
 
         // настройка лейбла-заголовка для компонента
-        displayHeader = new JLabel("Таблица");
-        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+//        displayHeader = new JLabel("Таблица");
+//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
+//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
 
@@ -39,15 +40,16 @@ public class TableDisplay {
 
         hideMainInfo();
 
-        background = new JPanel(new BorderLayout());
-        background.setBorder(new LineBorder(Color.GRAY, 1));
+//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
+
+//        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.CENTER, tableScrollPane);
     }
 
-    public JComponent getComponent() {
-        return background;
-    }
+//    public JComponent getComponent() {
+//        return background;
+//    }
 
     // fixme может пригодиться
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
@@ -69,6 +71,7 @@ public class TableDisplay {
         background.repaint();
     }
 
+    @Override
     public void restoreDefaultState() {
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
         hideMainInfo();
@@ -79,5 +82,12 @@ public class TableDisplay {
     }
     public void showMainInfo() {
         tableScrollPane.setVisible(true);
+    }
+
+    @Override
+    public void updateComponentView() {
+        showMainInfo();
+        background.revalidate();
+        background.repaint();
     }
 }

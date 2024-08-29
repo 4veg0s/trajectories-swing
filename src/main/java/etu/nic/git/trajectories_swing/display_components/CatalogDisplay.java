@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CatalogDisplay {
-    private final JLabel displayHeader;
-    private final JPanel background;
+public class CatalogDisplay extends AbstractDisplay {
+    private static final String DISPLAY_NAME = "Каталог";
     private final JPanel buttonPanel;
     private final TrajectoryFileStorage fileStorage;
     private final JPopupMenu popupMenu;
@@ -23,9 +22,15 @@ public class CatalogDisplay {
     private ActionListener buttonListener;
 
     public CatalogDisplay(TrajectoryFileStorage storage, JPopupMenu popup, ActionListener buttonSelectListener) {
+        super(DISPLAY_NAME);
+
         buttons = new ArrayList<>();
         fileStorage = storage;
         popupMenu = popup;
+
+//        displayHeader = new JLabel("Каталог");
+//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
+//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         buttonListener = buttonSelectListener;
 
@@ -46,22 +51,19 @@ public class CatalogDisplay {
             buttonPanel.add(button);
         }
 
-        displayHeader = new JLabel("Каталог");
-        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
         scrollPane.setBorder(null);
 
-        background = new JPanel(new BorderLayout());
-        background.setBorder(new LineBorder(Color.GRAY, 1));
+//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
+
+//        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.CENTER, scrollPane);
     }
 
-    public JComponent getComponent() {
-        return background;
-    }
+//    public JComponent getComponent() {
+//        return background;
+//    }
     public void refreshFileList() {
         buttonPanel.removeAll();
         buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));
@@ -93,6 +95,12 @@ public class CatalogDisplay {
         background.repaint();
     }
 
+    @Override
+    public void updateComponentView() {
+        refreshFileList();
+    }
+
+    @Override
     public void restoreDefaultState() {
         buttonPanel.removeAll();
         buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));

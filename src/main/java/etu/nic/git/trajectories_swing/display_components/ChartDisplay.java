@@ -21,10 +21,9 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChartDisplay {
+public class ChartDisplay extends AbstractDisplay {
+    private static final String DISPLAY_NAME = "График";
     private final TrajectoryFileStorage fileStorage;
-    private final JLabel displayHeader;
-    private final JPanel background;
     private final TrajectoryRowTableModel model;
     private ChartPanel chartPanel;
     private JPanel checkBoxPanel;
@@ -33,13 +32,15 @@ public class ChartDisplay {
     private XYPlot plot;
 
     public ChartDisplay(TrajectoryRowTableModel tableModel, TrajectoryFileStorage fileStorage) {
+        super(DISPLAY_NAME);
+
         this.model = tableModel;
         this.fileStorage = fileStorage;
 
-        displayHeader = new JLabel("График");
 
-        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+//        displayHeader = new JLabel("График");
+//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
+//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         JLabel coordinatesLabel = new JLabel("Координаты:");
         JCheckBox coordinateXCheckBox = new JCheckBox("X, м");
@@ -69,17 +70,18 @@ public class ChartDisplay {
 
         hideMainInfo();
 
-        background = new JPanel(new BorderLayout());
+//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
+
         background.add(BorderLayout.CENTER, checksAndChart);
-        background.setBorder(new LineBorder(Color.GRAY, 1));
+//        background.setBorder(new LineBorder(Color.GRAY, 1));
 
         chart = createChart();
     }
 
-    public JComponent getComponent() {
-        return background;
-    }
+//    public JComponent getComponent() {
+//        return background;
+//    }
 
     private JFreeChart createChart() {
         // Создаем график с основной осью Y
@@ -196,6 +198,12 @@ public class ChartDisplay {
         }
     }
 
+    @Override
+    public void updateComponentView() {
+        updatePlot();
+    }
+
+    @Override
     public void restoreDefaultState() {
         hideMainInfo();
         background.revalidate();
