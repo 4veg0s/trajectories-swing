@@ -1,8 +1,7 @@
-package etu.nic.git.trajectories_swing.tools;
+package etu.nic.git.trajectories_swing.file_handling;
 
 import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
-import etu.nic.git.trajectories_swing.exceptions.InvalidTrajectoryRowException;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 
 import java.io.File;

@@ -2,7 +2,8 @@ package etu.nic.git.trajectories_swing.display_components;
 
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.tools.ChartCheckBoxToXYSeriesPair;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -14,14 +15,25 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChartDisplay extends AbstractDisplay {
+    public static final Color[] PARAMETER_COLORS = new Color[]{
+            Color.RED,
+            Color.BLUE,
+            new Color(89, 65, 0),
+            Color.RED,
+            Color.BLUE,
+            new Color(89, 65, 0)
+    };
     private static final String DISPLAY_NAME = "График";
     private final TrajectoryFileStorage fileStorage;
     private final TrajectoryRowTableModel model;
@@ -30,6 +42,7 @@ public class ChartDisplay extends AbstractDisplay {
     private final JPanel checksAndChart;
     private JFreeChart chart;
     private XYPlot plot;
+    private List<ChartCheckBoxToXYSeriesPair> checksToSeriesList;
 
     public ChartDisplay(TrajectoryRowTableModel tableModel, TrajectoryFileStorage fileStorage) {
         super(DISPLAY_NAME);
@@ -37,20 +50,44 @@ public class ChartDisplay extends AbstractDisplay {
         this.model = tableModel;
         this.fileStorage = fileStorage;
 
+        ItemListener checkBoxItemListener = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updatePlot();
+            }
+        };
+        ChangeListener checkBoxChangeListener = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updatePlot();
+            }
+        };
 
-//        displayHeader = new JLabel("График");
-//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+        checksToSeriesList = new ArrayList<>();
 
         JLabel coordinatesLabel = new JLabel("Координаты:");
         JCheckBox coordinateXCheckBox = new JCheckBox("X, м");
         JCheckBox coordinateYCheckBox = new JCheckBox("Y, м");
         JCheckBox coordinateZCheckBox = new JCheckBox("Z, м");
 
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateXCheckBox));
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateYCheckBox));
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateZCheckBox));
+
         JLabel velocitiesLabel = new JLabel("Проекции скорости:");
         JCheckBox velocityXCheckBox = new JCheckBox("Vx, м/с");
         JCheckBox velocityYCheckBox = new JCheckBox("Vy, м/с");
         JCheckBox velocityZCheckBox = new JCheckBox("Vz, м/с");
+
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityXCheckBox));
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityYCheckBox));
+        checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityZCheckBox));
+
+        for (ChartCheckBoxToXYSeriesPair pair : checksToSeriesList) {
+            pair.getCheckBox().setSelected(true);
+            pair.getCheckBox().addItemListener(checkBoxItemListener);
+//            pair.getCheckBox().addChangeListener(checkBoxChangeListener);
+        }
 
         Box horizontalBox = new Box(BoxLayout.X_AXIS);
         horizontalBox.add(coordinatesLabel);
@@ -70,18 +107,13 @@ public class ChartDisplay extends AbstractDisplay {
 
         hideMainInfo();
 
-//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
 
         background.add(BorderLayout.CENTER, checksAndChart);
-//        background.setBorder(new LineBorder(Color.GRAY, 1));
 
         chart = createChart();
     }
 
-//    public JComponent getComponent() {
-//        return background;
-//    }
 
     private JFreeChart createChart() {
         // Создаем график с основной осью Y
@@ -97,6 +129,8 @@ public class ChartDisplay extends AbstractDisplay {
     }
 
     public void updatePlot() {
+        clearPlot();
+
         List<TrajectoryRow> trajectoryRowList = model.getTrajectoryRowList();
         List<XYSeries> trajectorySeries = new ArrayList<>();
         XYSeries series;
@@ -107,19 +141,92 @@ public class ChartDisplay extends AbstractDisplay {
                 series.add(rowParameters[0], rowParameters[i]);
             }
             trajectorySeries.add(series);
+            checksToSeriesList.get(i - 1).setSeries(series);
         }
 
         XYSeriesCollection coordinatesDataset = new XYSeriesCollection();
-        coordinatesDataset.addSeries(trajectorySeries.get(0));
-        coordinatesDataset.addSeries(trajectorySeries.get(1));
-        coordinatesDataset.addSeries(trajectorySeries.get(2));
 
-        NumberAxis axis1 = new NumberAxis("Координата, м");
-        axis1.setLabelPaint(Color.BLUE);
-        axis1.setTickLabelPaint(Color.BLUE);
-        plot.setRangeAxis(0, axis1);
-        plot.setDataset(0, coordinatesDataset);
-        plot.mapDatasetToRangeAxis(0, 0);
+        for (int i = 0; i < 3; i++) {
+            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
+            if (series != null) {
+                coordinatesDataset.addSeries(series);
+            }
+        }
+//        coordinatesDataset.addSeries(checksToSeriesList.get(0).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        coordinatesDataset.addSeries(checksToSeriesList.get(1).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        coordinatesDataset.addSeries(checksToSeriesList.get(2).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+
+        XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
+        for (int i = 3; i < 6; i++) {
+            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
+            if (series != null) {
+                velocitiesDataset.addSeries(series);
+            }
+        }
+//        velocitiesDataset.addSeries(checksToSeriesList.get(3).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        velocitiesDataset.addSeries(checksToSeriesList.get(4).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+//        velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeriesIfCheckBoxSelectedOrNullOtherwise());
+
+        int axisIndex = 0;
+        int seriesIndex = 0;
+        // если хоть один чекбокс из серии координат выбран, то будет добавлена ось координат
+        if (this.shouldHaveCoordinatesAxis()) {
+            NumberAxis axis1 = new NumberAxis("Координата, м");
+            axis1.setLabelPaint(Color.BLUE);
+            axis1.setTickLabelPaint(Color.BLUE);
+            plot.setRangeAxis(axisIndex, axis1);
+            plot.setDataset(axisIndex, coordinatesDataset);
+            plot.mapDatasetToRangeAxis(axisIndex, 0);
+
+            // Настройка первого рендерера
+            XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
+            // создание формы круга для маркера координаты
+            Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
+
+            renderer1.setSeriesPaint(0, Color.RED);
+            renderer1.setSeriesShape(0, circle);
+
+            renderer1.setSeriesPaint(1, Color.BLUE);
+            renderer1.setSeriesShape(1, circle);
+
+            renderer1.setSeriesPaint(2, new Color(89, 65, 0));
+            renderer1.setSeriesShape(2, circle);
+
+            plot.setRenderer(axisIndex, renderer1);
+            plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
+            axisIndex++;
+        }
+
+        // если хоть один чекбокс из серии проекций скоростей выбран, то будет добавлена ось координат
+        if (this.shouldHaveVelocitiesAxis()) {
+            NumberAxis axis2 = new NumberAxis("Скорость, м/с");
+            axis2.setLabelPaint(Color.RED);
+            axis2.setTickLabelPaint(Color.RED);
+            plot.setRangeAxis(axisIndex, axis2);
+            plot.setDataset(axisIndex, velocitiesDataset);
+            plot.mapDatasetToRangeAxis(axisIndex, 1);
+
+            XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
+            // создание формы треугольника для маркера скорости
+            Path2D.Double triangle = new Path2D.Double();
+            triangle.moveTo(0.0, -3.0);
+            triangle.lineTo(3.0, 0.0);
+            triangle.lineTo(0.0, 3.0);
+            triangle.closePath();
+
+            // установка маркера в виде треугольника и цвета для каждой из серий рендерера
+            renderer2.setSeriesPaint(0, Color.RED);
+            renderer2.setSeriesShape(0, triangle);
+
+            renderer2.setSeriesPaint(1, Color.BLUE);
+            renderer2.setSeriesShape(1, triangle);
+
+            renderer2.setSeriesPaint(2, new Color(89, 65, 0));
+            renderer2.setSeriesShape(2, triangle);
+
+            plot.setRenderer(axisIndex, renderer2);
+            plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
+        }
 
         // изменение цвета фона у графика
         plot.setBackgroundPaint(Color.WHITE);
@@ -128,61 +235,13 @@ public class ChartDisplay extends AbstractDisplay {
         plot.setRangeGridlinePaint(Color.DARK_GRAY);
         plot.setDomainGridlinePaint(Color.DARK_GRAY);
 
-        // Настройка первого рендера
-        XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
-        renderer1.setSeriesPaint(0, Color.RED);
-        renderer1.setSeriesPaint(1, Color.BLUE);
-        renderer1.setSeriesPaint(2, new Color(89, 65, 0));
-
-        Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
-
-        renderer1.setSeriesShape(0, circle);
-        renderer1.setSeriesShape(1, circle);
-        renderer1.setSeriesShape(2, circle);
-
-        plot.setRenderer(0, renderer1);
-
-        XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
-        velocitiesDataset.addSeries(trajectorySeries.get(3));
-        velocitiesDataset.addSeries(trajectorySeries.get(4));
-        velocitiesDataset.addSeries(trajectorySeries.get(5));
-
-        NumberAxis axis2 = new NumberAxis("Скорость, м/с");
-        axis2.setLabelPaint(Color.RED);
-        axis2.setTickLabelPaint(Color.RED);
-        plot.setRangeAxis(1, axis2);
-        plot.setDataset(1, velocitiesDataset);
-        plot.mapDatasetToRangeAxis(1, 1);
-
-        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
-        renderer2.setSeriesPaint(0, Color.RED);
-        renderer2.setSeriesPaint(1, Color.BLUE);
-        renderer2.setSeriesPaint(2, new Color(89, 65, 0));
-
-        // создание формы треугольника для маркера скорости
-        Path2D.Double triangle = new Path2D.Double();
-        triangle.moveTo(0.0, -3.0);
-        triangle.lineTo(3.0, 0.0);
-        triangle.lineTo(0.0, 3.0);
-        triangle.closePath();
-
-        // установка маркера в виде треугольника для каждой из серий рендерера
-        renderer2.setSeriesShape(0, triangle);
-        renderer2.setSeriesShape(1, triangle);
-        renderer2.setSeriesShape(2, triangle);
-        plot.setRenderer(1, renderer2);
-
-        // Размещение дополнительных осей справа
-        plot.setRangeAxisLocation(0, AxisLocation.BOTTOM_OR_LEFT);
-        plot.setRangeAxisLocation(1, AxisLocation.BOTTOM_OR_RIGHT);
-
         chart.getLegend().setItemFont(new Font(Font.DIALOG, Font.PLAIN, 16));
 
         replaceChart();
     }
 
     /**
-     * метод очищает основную панель
+     * Метод очищает основную панель
      */
     private void replaceChart() {
         if (!fileStorage.isEmpty()) {
@@ -196,6 +255,8 @@ public class ChartDisplay extends AbstractDisplay {
             }
             showMainInfo();
         }
+        background.revalidate();
+        background.repaint();
     }
 
     @Override
@@ -213,7 +274,27 @@ public class ChartDisplay extends AbstractDisplay {
     public void hideMainInfo() {
         checksAndChart.setVisible(false);
     }
+
     public void showMainInfo() {
         checksAndChart.setVisible(true);
+    }
+
+    public boolean shouldHaveCoordinatesAxis() {
+        return checksToSeriesList.get(0).getCheckBox().isSelected() ||
+                checksToSeriesList.get(1).getCheckBox().isSelected() ||
+                checksToSeriesList.get(2).getCheckBox().isSelected();
+    }
+
+    public boolean shouldHaveVelocitiesAxis() {
+        return checksToSeriesList.get(3).getCheckBox().isSelected() ||
+                checksToSeriesList.get(4).getCheckBox().isSelected() ||
+                checksToSeriesList.get(5).getCheckBox().isSelected();
+    }
+
+    private void clearPlot() {
+        plot.setDataset(null); // Удаление всех наборов данных
+//        plot.clearDomainAxes(); // Очистка осей X
+        plot.clearRangeAxes(); // Очистка осей Y
+        plot.setRenderer(null); // Удаление рендерера
     }
 }

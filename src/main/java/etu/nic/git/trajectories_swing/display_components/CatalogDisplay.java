@@ -1,14 +1,11 @@
 package etu.nic.git.trajectories_swing.display_components;
 
-import etu.nic.git.trajectories_swing.tools.TrajectoryFile;
-import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,10 +24,6 @@ public class CatalogDisplay extends AbstractDisplay {
         buttons = new ArrayList<>();
         fileStorage = storage;
         popupMenu = popup;
-
-//        displayHeader = new JLabel("Каталог");
-//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         buttonListener = buttonSelectListener;
 
@@ -54,16 +47,11 @@ public class CatalogDisplay extends AbstractDisplay {
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
         scrollPane.setBorder(null);
 
-//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
 
-//        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.CENTER, scrollPane);
     }
 
-//    public JComponent getComponent() {
-//        return background;
-//    }
     public void refreshFileList() {
         buttonPanel.removeAll();
         buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));

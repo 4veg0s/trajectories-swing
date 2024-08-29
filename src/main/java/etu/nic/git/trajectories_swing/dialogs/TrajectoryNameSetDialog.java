@@ -1,7 +1,7 @@
 package etu.nic.git.trajectories_swing.dialogs;
 
 import etu.nic.git.trajectories_swing.MainFrame;
-import etu.nic.git.trajectories_swing.tools.TrajectoryFile;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
 
 import javax.swing.*;
 import java.awt.*;

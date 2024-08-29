@@ -1,9 +1,8 @@
 package etu.nic.git.trajectories_swing.display_components;
 
-import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class FileDisplay extends AbstractDisplay {
@@ -21,10 +20,6 @@ public class FileDisplay extends AbstractDisplay {
         fileStorage = storage;
 
         Box verticalBox = new Box(BoxLayout.Y_AXIS);
-
-//        displayHeader = new JLabel("Файл");
-//        displayHeader.setAlignmentX(0.5f);
-//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
 
         verticalBox.add(displayHeader);
 
@@ -59,20 +54,8 @@ public class FileDisplay extends AbstractDisplay {
         filePathAndTextArea.add(BorderLayout.NORTH, filePathLabel);
         filePathAndTextArea.add(BorderLayout.CENTER, scrollPane);
 
-//        background = new JPanel(new BorderLayout());
-//        background.setBorder(new LineBorder(Color.GRAY, 1));
         verticalBox.add(filePathAndTextArea);
         background.add(verticalBox);
-    }
-
-    public void updateDisplayedInfo() {
-        if (!fileStorage.isEmpty()) {
-            loadFileDataToArea(fileStorage.getCurrentFile().getData());
-            showMainInfo();
-        } else {
-            loadFileDataToArea("");
-            hideMainInfo();
-        }
     }
 
     @Override

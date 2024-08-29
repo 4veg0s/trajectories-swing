@@ -9,9 +9,9 @@ import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.tools.FileDataLoader;
-import etu.nic.git.trajectories_swing.tools.TrajectoryFile;
-import etu.nic.git.trajectories_swing.tools.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.file_handling.FileDataLoader;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
+import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

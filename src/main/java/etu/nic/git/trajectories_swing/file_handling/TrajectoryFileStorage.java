@@ -1,7 +1,6 @@
-package etu.nic.git.trajectories_swing.tools;
+package etu.nic.git.trajectories_swing.file_handling;
 
 
-import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -18,7 +18,6 @@ public class TrajectoryRow {
             "Vy, м/с",
             "Vz, м/с"
     };
-    ;
     private double time;
     private double coordinateX;
     private double coordinateY;
@@ -193,6 +192,21 @@ public class TrajectoryRow {
 
     public void setVelocityZ(double velocityZ) {
         this.velocityZ = velocityZ;
+    }
+
+    /**
+     * Метод для нахождения индекса параметра траектории по его имени
+     * @param name строка, индекс в массиве параметров которой необходимо найти
+     * @return Индекс найденного параметра.
+     * -1, если такой параметр не был найден
+     */
+    public static int getIndexOfMatchingParameterName(String name) {
+        for (int i = 0; i < PARAMETER_NAMES.length; i++) {
+            if (name.equals(PARAMETER_NAMES[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public String toFileString() {  // "toString", но в том же виде, как и строка из исходного файла

@@ -20,11 +20,6 @@ public class TableDisplay extends AbstractDisplay {
 
         model = tableModel;
 
-        // настройка лейбла-заголовка для компонента
-//        displayHeader = new JLabel("Таблица");
-//        displayHeader.setHorizontalAlignment(SwingConstants.CENTER);
-//        displayHeader.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
 
         table = new JTable(model);
@@ -40,16 +35,10 @@ public class TableDisplay extends AbstractDisplay {
 
         hideMainInfo();
 
-//        background = new JPanel(new BorderLayout());
         background.add(BorderLayout.NORTH, displayHeader);
 
-//        background.setBorder(new LineBorder(Color.GRAY, 1));
         background.add(BorderLayout.CENTER, tableScrollPane);
     }
-
-//    public JComponent getComponent() {
-//        return background;
-//    }
 
     // fixme может пригодиться
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
@@ -63,12 +52,6 @@ public class TableDisplay extends AbstractDisplay {
             TableColumn column = table.getColumnModel().getColumn(i);
             column.setPreferredWidth((int) (tablePreferredWidth * (percentages[i] / total)));
         }
-    }
-
-    public void revalidateAndRepaint() {
-        showMainInfo();
-        background.revalidate();
-        background.repaint();
     }
 
     @Override

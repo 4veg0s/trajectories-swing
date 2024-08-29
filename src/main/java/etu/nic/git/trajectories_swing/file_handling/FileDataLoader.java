@@ -1,4 +1,4 @@
-package etu.nic.git.trajectories_swing.tools;
+package etu.nic.git.trajectories_swing.file_handling;
 
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 
