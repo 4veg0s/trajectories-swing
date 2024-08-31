@@ -21,7 +21,7 @@ public class TrajectoryFile {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
             this.name = name;  // пока имя файла в приложении не переназначили
-            this.data = getDataFromFile(path);
+            this.data = readDataFromFile();
             this.dataOnCreation = this.data;
         } else {
             // fixme случаи если файла не существует
@@ -33,7 +33,7 @@ public class TrajectoryFile {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
             this.name = name;
-            this.data = getDataFromFile(path);
+            this.data = readDataFromFile();
             this.dataOnCreation = this.data;
         } else {
             // fixme случаи если файла не существует
@@ -41,8 +41,14 @@ public class TrajectoryFile {
         }
     }
 
-    public String getDataFromFile(String filePath) {
-        return FileDataLoader.getDataFromFile(filePath);
+    public String readDataFromFile() {
+        return FileDataLoader.readDataFromFile(this.getPath()); // считать данные из этого файла и вернуть их
+    }
+    public void writeCurrentDataToFile() {
+        if (this.hasChanges()) {    // если в файле были изменения
+            FileDataLoader.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
+            this.setDataOnCreation(this.getData()); // устанавливаем данные "до изменения" на новые (текущие)
+        }   // если не было изменений в файле, то и записывать нечего
     }
 
     public String getDataOnCreation() {
