@@ -11,7 +11,9 @@ public class InvalidFileFormatDialog {
     public InvalidFileFormatDialog(Window owner, Exception exception) {
         dialog = new JDialog(owner, "Неверный формат файла", Dialog.ModalityType.DOCUMENT_MODAL);
 
-        Box verticalBox = new Box(BoxLayout.Y_AXIS);
+        JPanel background = new JPanel(
+                new BorderLayout()
+        );
 
         String exceptionMessage = exception.getMessage();
         String[] split = exceptionMessage.split("\n");
@@ -21,14 +23,26 @@ public class InvalidFileFormatDialog {
             lengthOfLongestLine = Math.max(lengthOfLongestLine, line.length());
         }
 
-        JTextArea dialogPrompt = new JTextArea(exceptionMessage);
-        dialogPrompt.setOpaque(false);
-        dialogPrompt.setCursor(null);
-        dialogPrompt.setFocusable(false);
-        dialogPrompt.setEditable(false);
         Font font12 = new Font(Font.DIALOG, Font.PLAIN, 12);
-        dialogPrompt.setFont(font12);
+        if (amountOfLines == 1) {
+            JLabel dialogPrompt = new JLabel(exceptionMessage);
+            dialogPrompt.setHorizontalAlignment(SwingConstants.CENTER);
+            dialogPrompt.setFont(font12);
 
+            background.add(BorderLayout.CENTER, dialogPrompt);
+        } else {
+            JTextArea dialogPrompt = new JTextArea(exceptionMessage);
+            dialogPrompt.setOpaque(false);
+            dialogPrompt.setCursor(null);
+            dialogPrompt.setFocusable(false);
+            dialogPrompt.setEditable(false);
+            dialogPrompt.setMargin(new Insets(5, 5, 5, 5));
+            dialogPrompt.setFont(font12);
+
+            JScrollPane scrollPane = new JScrollPane(dialogPrompt);
+            scrollPane.setBorder(null);
+            background.add(BorderLayout.CENTER, scrollPane);
+        }
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
@@ -42,19 +56,16 @@ public class InvalidFileFormatDialog {
         buttonPanel.add(okButton);
         okButton.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JScrollPane scrollPane = new JScrollPane(dialogPrompt);
-        scrollPane.setBorder(null);
+        background.add(BorderLayout.SOUTH, buttonPanel);
 
-        verticalBox.add(scrollPane);
-        verticalBox.add(buttonPanel);
-
-        dialog.add(verticalBox);
+        dialog.add(background);
 
         Rectangle rectangleBounds = owner.getBounds();
         dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 2,
                 rectangleBounds.y + rectangleBounds.height / 4,
                 lengthOfLongestLine * 10,
-                Math.max(amountOfLines, 20) * font12.getSize() + okButton.getHeight() + 20));
+                Math.max(amountOfLines, 6) * font12.getSize() + okButton.getHeight() + 20)
+        );
     }
 
     public void show() {

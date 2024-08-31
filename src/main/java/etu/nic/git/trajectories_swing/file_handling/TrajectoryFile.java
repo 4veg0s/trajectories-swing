@@ -14,7 +14,7 @@ public class TrajectoryFile {
     private String path;
     private String name;
     private String data;
-    private final String dataOnCreation;
+    private String dataOnCreation;
 
     public TrajectoryFile(String path, String name) throws FileNotFoundException {
         File file = new File(path);
@@ -47,6 +47,10 @@ public class TrajectoryFile {
 
     public String getDataOnCreation() {
         return dataOnCreation;
+    }
+
+    public void setDataOnCreation(String dataOnCreation) {
+        this.dataOnCreation = dataOnCreation;
     }
 
     public String getPath() {
@@ -93,52 +97,56 @@ public class TrajectoryFile {
     }
 
     public static boolean checkTrajectoryDataValidity(String data) throws InvalidFileFormatException {
-        String[] lines = data.split("\n");
-        StringBuilder invalidAmountOfParametersMessage = new StringBuilder();
-        StringBuilder invalidTrajectoryRowMessage = new StringBuilder();
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            try {
-                TrajectoryRow.isValidTrajectoryStringWithExceptions(line);
-            } catch (InvalidAmountOfParametersException e) {
-                if (invalidAmountOfParametersMessage.toString().isEmpty()) {
-                    invalidAmountOfParametersMessage.append("\tСтрока №");
-                    invalidAmountOfParametersMessage.append(i + 1);
-                } else {
-                    invalidAmountOfParametersMessage.append(",\n\tСтрока №");
-                    invalidAmountOfParametersMessage.append(i + 1);
-                }
-            } catch (NumberFormatException e) {
-                if (invalidTrajectoryRowMessage.toString().isEmpty()) {
-                    invalidTrajectoryRowMessage.append("\tСтрока №");
-                    invalidTrajectoryRowMessage.append(i + 1);
-                    invalidTrajectoryRowMessage.append(" (параметр №");
-                    invalidTrajectoryRowMessage.append(TrajectoryRow.indexOfInvalidParameter(line) + 1);
-                    invalidTrajectoryRowMessage.append(")");
+        if (!data.trim().isEmpty()) {
+            String[] lines = data.split("\n");
+            StringBuilder invalidAmountOfParametersMessage = new StringBuilder();
+            StringBuilder invalidTrajectoryRowMessage = new StringBuilder();
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                try {
+                    TrajectoryRow.isValidTrajectoryStringWithExceptions(line);
+                } catch (InvalidAmountOfParametersException e) {
+                    if (invalidAmountOfParametersMessage.toString().isEmpty()) {
+                        invalidAmountOfParametersMessage.append("\tСтрока №");
+                        invalidAmountOfParametersMessage.append(i + 1);
+                    } else {
+                        invalidAmountOfParametersMessage.append(",\n\tСтрока №");
+                        invalidAmountOfParametersMessage.append(i + 1);
+                    }
+                } catch (NumberFormatException e) {
+                    if (invalidTrajectoryRowMessage.toString().isEmpty()) {
+                        invalidTrajectoryRowMessage.append("\tСтрока №");
+                        invalidTrajectoryRowMessage.append(i + 1);
+                        invalidTrajectoryRowMessage.append(" (параметр №");
+                        invalidTrajectoryRowMessage.append(TrajectoryRow.indexOfInvalidParameter(line) + 1);
+                        invalidTrajectoryRowMessage.append(")");
 
-                } else {
-                    invalidTrajectoryRowMessage.append(",\n\tСтрока №");
-                    invalidTrajectoryRowMessage.append(i + 1);
-                    invalidTrajectoryRowMessage.append(" (параметр №");
-                    invalidTrajectoryRowMessage.append(TrajectoryRow.indexOfInvalidParameter(line) + 1);
-                    invalidTrajectoryRowMessage.append(")");
+                    } else {
+                        invalidTrajectoryRowMessage.append(",\n\tСтрока №");
+                        invalidTrajectoryRowMessage.append(i + 1);
+                        invalidTrajectoryRowMessage.append(" (параметр №");
+                        invalidTrajectoryRowMessage.append(TrajectoryRow.indexOfInvalidParameter(line) + 1);
+                        invalidTrajectoryRowMessage.append(")");
+                    }
                 }
             }
-        }
-        if (!invalidAmountOfParametersMessage.toString().isEmpty() || !invalidTrajectoryRowMessage.toString().isEmpty()) {
-            if (!invalidAmountOfParametersMessage.toString().isEmpty()) {
-                invalidAmountOfParametersMessage.insert(0, "Неверное количество параметров:\n");
+            if (!invalidAmountOfParametersMessage.toString().isEmpty() || !invalidTrajectoryRowMessage.toString().isEmpty()) {
+                if (!invalidAmountOfParametersMessage.toString().isEmpty()) {
+                    invalidAmountOfParametersMessage.insert(0, "Неверное количество параметров:\n");
+                }
+                if (!invalidTrajectoryRowMessage.toString().isEmpty()) {
+                    invalidTrajectoryRowMessage.insert(0, "Неверный формат параметров:\n");
+                }
+                if (!invalidAmountOfParametersMessage.toString().isEmpty() && !invalidTrajectoryRowMessage.toString().isEmpty()) {
+                    invalidAmountOfParametersMessage.append("\n\n");
+                }
+                invalidAmountOfParametersMessage.append(invalidTrajectoryRowMessage);
+                throw new InvalidFileFormatException(invalidAmountOfParametersMessage.toString());
+            } else {
+                return true;
             }
-            if (!invalidTrajectoryRowMessage.toString().isEmpty()) {
-                invalidTrajectoryRowMessage.insert(0, "Неверный формат параметров:\n");
-            }
-            if (!invalidAmountOfParametersMessage.toString().isEmpty() && !invalidTrajectoryRowMessage.toString().isEmpty()) {
-                invalidAmountOfParametersMessage.append("\n\n");
-            }
-            invalidAmountOfParametersMessage.append(invalidTrajectoryRowMessage);
-            throw new InvalidFileFormatException(invalidAmountOfParametersMessage.toString());
         } else {
-            return true;
+            throw new InvalidFileFormatException("Данный файл пуст");
         }
 
     }

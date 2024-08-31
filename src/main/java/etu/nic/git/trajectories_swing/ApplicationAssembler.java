@@ -160,10 +160,10 @@ public class ApplicationAssembler {
             public void actionPerformed(ActionEvent e) {
                 String actionCommand = e.getActionCommand();
                 TrajectoryNameSetDialog trajectoryNameSetDialog;
-
+                int returnVal;
                 switch (actionCommand) {
                     case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
-                        int returnVal = fileChooser.showOpenDialog(mainFrame);
+                        returnVal = fileChooser.showOpenDialog(mainFrame);
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
                             trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
                             boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
@@ -202,6 +202,15 @@ public class ApplicationAssembler {
                                     new InvalidFileFormatDialog(mainFrame, ex).show();
                                 }
                             }
+                        }
+                        break;
+                    case TopMenuBar.MENU_SAVE:
+                        returnVal = fileChooser.showOpenDialog(mainFrame);
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            // установить новую dataOnCreation
+                            // записать новые данные в файл
+                            // вызвать рефреш каталога, чтобы убрать звездочку с файла
+
                         }
                         break;
                 }
