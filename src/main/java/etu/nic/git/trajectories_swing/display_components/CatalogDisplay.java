@@ -27,25 +27,11 @@ public class CatalogDisplay extends AbstractDisplay {
 
         buttonListener = buttonSelectListener;
 
-        List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getName).collect(Collectors.toList());
-
-        buttonPanel = new JPanel(new GridLayout(fileNames.size() + 1, 1));
-
-        // создание кнопок по именам файлов в хранилище и добавление их в бокс
-        JButton button;
-        for (String fileName : fileNames) {
-            button = new JButton(fileName);
-            button.addActionListener(buttonListener);
-            button.setComponentPopupMenu(popupMenu);
-
-            button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-
-            buttons.add(button);
-            buttonPanel.add(button);
-        }
+        buttonPanel = new JPanel();
 
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
         scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(30);    // ускорение прокрутки скроллбара
 
         background.add(BorderLayout.NORTH, displayHeader);
 
@@ -53,8 +39,12 @@ public class CatalogDisplay extends AbstractDisplay {
     }
 
     public void refreshFileList() {
-        buttonPanel.removeAll();
-        buttonPanel.setLayout(new GridLayout(fileStorage.getFileList().size() + 1, 1));
+        for (JButton button : buttons) {
+            buttonPanel.remove(button);
+        }
+        buttonPanel.setLayout(
+                new GridLayout(fileStorage.getFileList().size() + Math.max(8 - fileStorage.getFileList().size(), 0), 1)     // чтобы кнопки были невысокими
+        );
         buttons.clear();
         if (!fileStorage.isEmpty()) {
             List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());

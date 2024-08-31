@@ -1,9 +1,6 @@
 package etu.nic.git.trajectories_swing;
 
-import etu.nic.git.trajectories_swing.dialogs.InvalidFileFormatDialog;
-import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
-import etu.nic.git.trajectories_swing.dialogs.TrajectoryExistsDialog;
-import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
+import etu.nic.git.trajectories_swing.dialogs.*;
 import etu.nic.git.trajectories_swing.display_components.*;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
@@ -200,7 +197,7 @@ public class ApplicationAssembler {
                                     updateEntireInfo();
                                     mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
                                 } catch (FileNotFoundException ex) {
-                                    throw new RuntimeException(ex);
+                                    new FileNotFoundDialog(mainFrame).show();
                                 } catch (InvalidFileFormatException ex) {
                                     new InvalidFileFormatDialog(mainFrame, ex).show();
                                 }
