@@ -205,19 +205,23 @@ public class ApplicationAssembler {
                         }
                         break;
                     case TopMenuBar.MENU_SAVE: // пункт меню СОХРАНИТЬ
-                        // TODO: обработать случай, когда открыто несколько траекторий с одного файла, и происходит сохранение в одном из них
-                        TrajectoryFile currentFile = fileStorage.getCurrentFile();
-                        currentFile.writeCurrentDataToFile(); // записываем новые данные в файл
-                        catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                        if (!fileStorage.isEmpty()) {
+                            // TODO: обработать случай, когда открыто несколько траекторий с одного файла, и происходит сохранение в одном из них
+                            TrajectoryFile currentFile = fileStorage.getCurrentFile();
+                            currentFile.writeCurrentDataToFile(); // записываем новые данные в файл
+                            catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                        }
                         break;
                     case TopMenuBar.MENU_SAVE_AS: // пункт меню СОХРАНИТЬ КАК...
-                        returnVal = fileChooser.showSaveDialog(mainFrame);
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            // fixme
-                            // установить новую dataOnCreation
-                            // записать новые данные в файл
-                            // вызвать рефреш каталога, чтобы убрать звездочку с файла
+                        if (!fileStorage.isEmpty()) {
+                            returnVal = fileChooser.showSaveDialog(mainFrame);
+                            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                // fixme
+                                // установить новую dataOnCreation
+                                // записать новые данные в файл
+                                // вызвать рефреш каталога, чтобы убрать звездочку с файла
 
+                            }
                         }
                         break;
                 }

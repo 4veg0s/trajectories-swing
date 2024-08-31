@@ -15,15 +15,18 @@ public class TopMenuBar {
         menuBar = new JMenuBar();
 
         fileMenu = new JMenu("Файл");
-        fileMenu.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+        fileMenu.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 
         menuBar.add(fileMenu);
 
         JMenuItem openMenuItem = new JMenuItem(MENU_OPEN);
+        openMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         openMenuItem.addActionListener(menuActionListener);
         JMenuItem saveMenuItem = new JMenuItem(MENU_SAVE);
+        saveMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveMenuItem.addActionListener(menuActionListener);
         JMenuItem saveAsMenuItem = new JMenuItem(MENU_SAVE_AS);
+        saveAsMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveAsMenuItem.addActionListener(menuActionListener);
 
         fileMenu.add(openMenuItem);
