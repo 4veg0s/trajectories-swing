@@ -96,6 +96,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     public void setTrajectoryRowList(List<TrajectoryRow> trajectoryRowList) {
         this.trajectoryRowList = trajectoryRowList;
+        this.sortByTime();
     }
 
     public void sortByTime() {
