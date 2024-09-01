@@ -13,6 +13,8 @@ import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,25 +24,24 @@ import java.util.List;
 
 public class ApplicationAssembler {
     private TrajectoryFileStorage fileStorage;
-    private TrajectoryRowTableModel model;
-    private JFileChooser fileChooser;
+    private final TrajectoryRowTableModel model;
+    private final JFileChooser fileChooser;
     private MainFrame mainFrame;
-    private TopMenuBar topMenuBar;
-    private CatalogDisplay catalogDisplay;
-    private CatalogPopupMenu catalogPopupMenu;
+    private final TopMenuBar topMenuBar;
+    private final CatalogDisplay catalogDisplay;
+    private final CatalogPopupMenu catalogPopupMenu;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
-    private ChartDisplay chartDisplay;
+    private final ChartDisplay chartDisplay;
     private boolean invokeFileChooserWhenNoFilesOpened = true;
-    private List<AbstractDisplay> displayList;
+    private final List<AbstractDisplay> displayList;
 
     public ApplicationAssembler() {
         model = initModel();
 
         fileStorage = new TrajectoryFileStorage();
 
-        fileChooser = new JFileChooser(new File("./data"));
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser = initFileChooser();
 
         catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
 
@@ -63,6 +64,14 @@ public class ApplicationAssembler {
         // смотреть JavaDoc методов
         setInvokeFileChooserWhenNoFilesOpened(true);
         chartDisplay.setMarkersAsLettersOnChart(true);
+    }
+
+    private JFileChooser initFileChooser() {
+        JFileChooser fileChooser = new JFileChooser(new File("./data"));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filter = new FileNameExtensionFilter("Text file","txt");
+        fileChooser.setFileFilter(filter);
+        return fileChooser;
     }
 
 
@@ -208,7 +217,7 @@ public class ApplicationAssembler {
                         if (!fileStorage.isEmpty()) {
                             // TODO: обработать случай, когда открыто несколько траекторий с одного файла, и происходит сохранение в одном из них
                             TrajectoryFile currentFile = fileStorage.getCurrentFile();
-                            currentFile.writeCurrentDataToFile(); // записываем новые данные в файл
+                            currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
                             catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
                         }
                         break;
@@ -216,11 +225,13 @@ public class ApplicationAssembler {
                         if (!fileStorage.isEmpty()) {
                             returnVal = fileChooser.showSaveDialog(mainFrame);
                             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                                // fixme
-                                // установить новую dataOnCreation
-                                // записать новые данные в файл
-                                // вызвать рефреш каталога, чтобы убрать звездочку с файла
-
+                                File newFile = fileChooser.getSelectedFile();   // получаем выбранный файл
+                                TrajectoryFile currentFile = fileStorage.getCurrentFile();  // получаем текущий открытый в каталоге файл
+                                String oldPath = currentFile.getPath(); // считываем предыдущий путь до файла для последующего сравнения
+                                currentFile.setPath(newFile.getAbsolutePath()); // устанавливаем новый путь до файла траектории (может быть и идентичным, но логику не меняет)
+                                currentFile.writeCurrentDataToFileIfHasChangesOrIsNewFile(oldPath); // записываем данные прошлого файла в новый файл
+                                catalogDisplay.updateComponentView();  // вызываем рефреш каталога, чтобы убрать звездочку с файла, если она есть
+                                fileDisplay.updateComponentView();  // обновляем файловый дисплей, чтобы добиться изменения пути до файла в соответствующем лейбле
                             }
                         }
                         break;

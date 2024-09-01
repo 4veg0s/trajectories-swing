@@ -44,11 +44,23 @@ public class TrajectoryFile {
     public String readDataFromFile() {
         return FileDataLoader.readDataFromFile(this.getPath()); // считать данные из этого файла и вернуть их
     }
-    public void writeCurrentDataToFile() {
+    public void writeCurrentDataToFileIfHasChanges() {
         if (this.hasChanges()) {    // если в файле были изменения
-            FileDataLoader.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
-            this.setDataOnCreation(this.getData()); // устанавливаем данные "до изменения" на новые (текущие)
+            this.writeDataToFileWithNoConditions();
         }   // если не было изменений в файле, то и записывать нечего
+    }
+    public void writeCurrentDataToFileIfHasChangesOrIsNewFile(String oldFilePath) {
+        if (!this.getPath().equals(oldFilePath) || this.hasChanges()) {    // если в файле были изменения или необходимо записать данные по новому пути
+            this.writeDataToFileWithNoConditions();
+        }   // если не было изменений в файле и путь до файла тот же, то и записывать нечего
+    }
+
+    /**
+     * Запись данных в файл без проверок
+     */
+    private void writeDataToFileWithNoConditions() {
+        FileDataLoader.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
+        this.setDataOnCreation(this.getData()); // устанавливаем данные "до изменения" на новые (текущие)
     }
 
     public String getDataOnCreation() {
