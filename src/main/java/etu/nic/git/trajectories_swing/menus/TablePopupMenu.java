@@ -31,8 +31,6 @@ public class TablePopupMenu {
                 //    SwingUtilities.convertPoint(this, new Point(x, y), table));
                 //FilesManager.this.generateTablePopupMenu(rowAtPoint);
                 rowAtPoint = table.rowAtPoint(new Point(x, y));
-
-                System.out.println(rowAtPoint);
                 super.show(invoker, x, y);
             }
         };
@@ -54,6 +52,13 @@ public class TablePopupMenu {
             }
         });
         JMenuItem deleteRowMenuItem = new JMenuItem(MENU_DELETE_ROW);
+        deleteRowMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.deleteRow(rowAtPoint);
+                model.fireTableDataChanged();
+            }
+        });
 
         popupMenu.add(insertRowAboveMenuItem);
         popupMenu.add(insertRowBelowMenuItem);

@@ -162,6 +162,9 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     }
     public void deleteRow(int index) {
+        // fixme
+        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
 
+        trajectoryRowList.remove(index);
     }
 }
