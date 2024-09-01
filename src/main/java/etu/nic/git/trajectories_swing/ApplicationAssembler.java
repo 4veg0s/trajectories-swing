@@ -75,7 +75,7 @@ public class ApplicationAssembler {
     private JFileChooser initFileChooser() {
         JFileChooser fileChooser = new JFileChooser(new File("./data"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        FileFilter filter = new FileNameExtensionFilter("Text file","txt");
+        FileFilter filter = new FileNameExtensionFilter("Text file", "txt");
         fileChooser.setFileFilter(filter);
         return fileChooser;
     }
@@ -132,6 +132,7 @@ public class ApplicationAssembler {
             }
         };
     }
+
     public ActionListener initCatalogPopupActionListener() {
         return new ActionListener() {
             @Override
@@ -183,43 +184,50 @@ public class ApplicationAssembler {
                     case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
                         returnVal = fileChooser.showOpenDialog(mainFrame);
                         if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
-                            boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
+                            File chosenFile = fileChooser.getSelectedFile();
+                            TrajectoryFile existingFileByPath = fileStorage.findFileByPath(chosenFile.getAbsolutePath());
 
-                            if (isTrajectoryNameAccepted) {
-                                String trajectoryName = trajectoryNameSetDialog.getTextFieldString();
+                            if (existingFileByPath == null) { // если такой конкретный файл еще не загружен,
+                                // тогда переходим к заданию имени траектории
+                                trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
+                                boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
 
-                                File chosenFile = fileChooser.getSelectedFile();
-                                try {
-                                    TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
+                                if (isTrajectoryNameAccepted) {
+                                    String trajectoryName = trajectoryNameSetDialog.getTextFieldString();
 
-                                    TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());
+                                    try {
+                                        TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
 
-                                    TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
-                                    if (existingFile != null) {   // если такая траектория уже загружена
-                                        if (existingFile.hasChanges()) {
-                                            ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);
-                                            boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult();
-                                            if (isClosedWithConfirm) {
-                                                fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);
+                                        TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());
+                                        TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
+                                        if (existingFile != null) {   // если такая траектория уже загружена
+                                            if (existingFile.hasChanges()) {
+                                                ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);
+                                                boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult();
+                                                if (isClosedWithConfirm) {
+                                                    fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);
+                                                } else {
+                                                    this.actionPerformed(e);
+                                                }
                                             } else {
-                                                this.actionPerformed(e);
+                                                new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();
+//                                            new TrajectoryExistsDialog(mainFrame).show();
                                             }
                                         } else {
-                                            new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();
-//                                            new TrajectoryExistsDialog(mainFrame).show();
+                                            fileStorage.add(newTrajectoryFile);
                                         }
-                                    } else {
-                                        fileStorage.add(newTrajectoryFile);
-                                    }
 
-                                    updateEntireInfo();
-                                    mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
-                                } catch (FileNotFoundException ex) {
-                                    new FileNotFoundDialog(mainFrame).show();
-                                } catch (InvalidFileFormatException ex) {
-                                    new InvalidFileFormatDialog(mainFrame, ex).show();
+
+                                        updateEntireInfo();
+                                        mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
+                                    } catch (FileNotFoundException ex) {
+                                        new FileNotFoundDialog(mainFrame).show();
+                                    } catch (InvalidFileFormatException ex) {
+                                        new InvalidFileFormatDialog(mainFrame, ex).show();
+                                    }
                                 }
+                            } else {    // если такой файл уже загружен
+                                new DefaultOKDialog(mainFrame, "Выбор файла", "Этот файл уже открыт (" + existingFileByPath.getName() + ")").show();
                             }
                         }
                         break;
@@ -261,6 +269,7 @@ public class ApplicationAssembler {
 
     /**
      * Метод имитирует клик по пункту файлового меню "Открыть" с соответствующими последствиями
+     *
      * @param isNeeded true, если нужно открыть окно выбора файла при первом запуске приложения, иначе - false
      */
     public void fileChooserOnFirstOpen(boolean isNeeded) {
@@ -320,8 +329,9 @@ public class ApplicationAssembler {
 
     /**
      * Устанавливает параметр, отвечающий за открытие окна выбора нового файла при отсутсивии открытых файлов
+     *
      * @param invokeFileChooserWhenNoFilesOpened true, если необходимо, чтобы при описанных обстоятельствах открывалось окно FileChooser'а,
-     *                                          false - иначе
+     *                                           false - иначе
      */
     public void setInvokeFileChooserWhenNoFilesOpened(boolean invokeFileChooserWhenNoFilesOpened) {
         this.invokeFileChooserWhenNoFilesOpened = invokeFileChooserWhenNoFilesOpened;

@@ -30,9 +30,25 @@ public class TrajectoryFileStorage {
         fileList.remove(indexOfFileToReplace);
         fileList.add(indexOfFileToReplace, newFile);
     }
+    public void replaceFileByPath(String path, TrajectoryFile newFile) {
+        TrajectoryFile file = findFileByPath(path);
+        int indexOfFileToReplace = fileList.indexOf(file);
+        fileList.remove(indexOfFileToReplace);
+        fileList.add(indexOfFileToReplace, newFile);
+    }
 
     public void removeFileByName(String name) {
         TrajectoryFile file = findFileByName(name);
+        int indexOfFileToReplace = fileList.indexOf(file);
+        fileList.remove(indexOfFileToReplace);
+        if (fileList.isEmpty()) {
+            currentFileIndex = 0;
+        } else if (currentFileIndex != 0) {
+            currentFileIndex--;
+        }
+    }
+    public void removeFileByPath(String path) {
+        TrajectoryFile file = findFileByPath(path);
         int indexOfFileToReplace = fileList.indexOf(file);
         fileList.remove(indexOfFileToReplace);
         if (fileList.isEmpty()) {
@@ -53,6 +69,15 @@ public class TrajectoryFileStorage {
     public TrajectoryFile findFileByName(String fileName) {
         for (TrajectoryFile file : fileList) {
             if (file.getName().equals(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    public TrajectoryFile findFileByPath(String filePath) {
+        for (TrajectoryFile file : fileList) {
+            if (file.getPath().equals(filePath)) {
                 return file;
             }
         }
