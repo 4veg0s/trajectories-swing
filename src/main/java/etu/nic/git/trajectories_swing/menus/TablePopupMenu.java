@@ -46,6 +46,13 @@ public class TablePopupMenu {
             }
         });
         JMenuItem insertRowBelowMenuItem = new JMenuItem(MENU_INSERT_ROW_BELOW);
+        insertRowBelowMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.insertRowBelow(rowAtPoint);
+                model.fireTableDataChanged();
+            }
+        });
         JMenuItem deleteRowMenuItem = new JMenuItem(MENU_DELETE_ROW);
 
         popupMenu.add(insertRowAboveMenuItem);

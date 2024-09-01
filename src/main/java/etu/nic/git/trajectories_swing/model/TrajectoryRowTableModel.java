@@ -147,6 +147,18 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         trajectoryRowList.add(index, newRow);
     }
     public void insertRowBelow(int index) {
+        // fixme
+        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
+
+        TrajectoryRow newRow = new TrajectoryRow();
+        if (isLastRowAt(index)) {
+            newRow.setTime(trajectoryRowList.get(index).getTime()); // копируем время из ранее крайней строки
+        } else {    // если вставляем строку не на первое место
+            double midTime = (trajectoryRowList.get(index).getTime() +
+                    trajectoryRowList.get(index + 1).getTime()) / 2;    // устанавливаем среднее время от соседних
+            newRow.setTime(midTime);
+        }
+        trajectoryRowList.add(index + 1, newRow);
 
     }
     public void deleteRow(int index) {
