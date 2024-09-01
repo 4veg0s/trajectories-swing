@@ -27,14 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChartDisplay extends AbstractDisplay {
-    public static final Color[] PARAMETER_COLORS = new Color[]{
-            Color.RED,
-            Color.BLUE,
-            new Color(89, 65, 0),
-            Color.RED,
-            Color.BLUE,
-            new Color(89, 65, 0)
-    };
     private static final String DISPLAY_NAME = "График";
     private final TrajectoryFileStorage fileStorage;
     private final TrajectoryRowTableModel model;
@@ -61,19 +53,29 @@ public class ChartDisplay extends AbstractDisplay {
 
         checksToSeriesList = new ArrayList<>();
 
+        Font font14 = new Font(Font.DIALOG, Font.BOLD, 14);
+
         JLabel coordinatesLabel = new JLabel("Координаты:");
+        coordinatesLabel.setFont(font14);
         JCheckBox coordinateXCheckBox = new JCheckBox("X, м");
+        coordinateXCheckBox.setFont(font14);
         JCheckBox coordinateYCheckBox = new JCheckBox("Y, м");
+        coordinateYCheckBox.setFont(font14);
         JCheckBox coordinateZCheckBox = new JCheckBox("Z, м");
+        coordinateZCheckBox.setFont(font14);
 
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateYCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateZCheckBox));
 
         JLabel velocitiesLabel = new JLabel("Проекции скорости:");
+        velocitiesLabel.setFont(font14);
         JCheckBox velocityXCheckBox = new JCheckBox("Vx, м/с");
+        velocityXCheckBox.setFont(font14);
         JCheckBox velocityYCheckBox = new JCheckBox("Vy, м/с");
+        velocityYCheckBox.setFont(font14);
         JCheckBox velocityZCheckBox = new JCheckBox("Vz, м/с");
+        velocityZCheckBox.setFont(font14);
 
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityYCheckBox));
@@ -171,6 +173,7 @@ public class ChartDisplay extends AbstractDisplay {
         NumberAxis axis1 = new NumberAxis("Координата, м");
         axis1.setLabelPaint(Color.BLUE);
         axis1.setTickLabelPaint(Color.BLUE);
+        axis1.setLabelFont(new Font(Font.DIALOG, Font.PLAIN, 14));
         plot.setRangeAxis(axisIndex, axis1);
         plot.setDataset(axisIndex, coordinatesDataset);
         plot.mapDatasetToRangeAxis(axisIndex, 0);
@@ -213,6 +216,7 @@ public class ChartDisplay extends AbstractDisplay {
 
         // если хоть один чекбокс из серии проекций скоростей выбран, то будет добавлена ось координат
         NumberAxis axis2 = new NumberAxis("Скорость, м/с");
+        axis2.setLabelFont(new Font(Font.DIALOG, Font.PLAIN, 14));
         axis2.setLabelPaint(Color.RED);
         axis2.setTickLabelPaint(Color.RED);
         plot.setRangeAxis(axisIndex, axis2);
