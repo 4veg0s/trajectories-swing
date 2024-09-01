@@ -27,9 +27,6 @@ public class TablePopupMenu {
         popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
-                //int rowAtPoint = table.rowAtPoint(
-                //    SwingUtilities.convertPoint(this, new Point(x, y), table));
-                //FilesManager.this.generateTablePopupMenu(rowAtPoint);
                 rowAtPoint = table.rowAtPoint(new Point(x, y));
                 super.show(invoker, x, y);
             }

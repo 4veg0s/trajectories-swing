@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 public class CatalogPopupMenu {
     private static final String MENU_CLOSE_FILE = "Закрыть файл";
     private final JPopupMenu popupMenu;
-    private String chosenFileName;
 
     public CatalogPopupMenu(ActionListener popupMenuActionListener) {
         popupMenu = new JPopupMenu();

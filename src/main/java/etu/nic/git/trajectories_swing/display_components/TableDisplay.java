@@ -1,5 +1,6 @@
 package etu.nic.git.trajectories_swing.display_components;
 
+import etu.nic.git.trajectories_swing.menus.TableDisplayPopupMenu;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
@@ -14,11 +15,13 @@ public class TableDisplay extends AbstractDisplay {
     private final JTable table;
     private final JScrollPane tableScrollPane;
     private final TrajectoryRowTableModel model;
+    private final TableDisplayPopupMenu tableDisplayPopupMenu;
 
-    public TableDisplay(TrajectoryRowTableModel tableModel) {
+    public TableDisplay(TrajectoryRowTableModel tableModel, TableDisplayPopupMenu popupMenu) {
         super(DISPLAY_NAME);
 
         model = tableModel;
+        tableDisplayPopupMenu = popupMenu;
 
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
 
@@ -72,7 +75,17 @@ public class TableDisplay extends AbstractDisplay {
         showMainInfo();
         background.revalidate();
         background.repaint();
+        this.addPopupMenuIfNeeded();
     }
+
+    private void addPopupMenuIfNeeded() {
+        if (model.getTrajectoryRowList().isEmpty()) {
+            tableScrollPane.setComponentPopupMenu(tableDisplayPopupMenu.getPopupMenu());
+        } else {
+            tableScrollPane.setComponentPopupMenu(null);
+        }
+    }
+
     public void setTablePopupMenu(JPopupMenu menu) {
         table.setComponentPopupMenu(menu);
     }
