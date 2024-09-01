@@ -12,7 +12,7 @@ public class MarkerShapes {
             Font.DIALOG,
 //            "SansSerif",
             Font.PLAIN,
-            8);
+            10);
 
     public static Shape createShapeFromText(String text, Font font) {
         // Создание объекта FontRenderContext для получения информации о рендеринге шрифта
