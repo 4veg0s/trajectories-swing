@@ -136,20 +136,38 @@ public class ApplicationAssembler {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object source = e.getSource();
                 JButton buttonInvoker = (JButton) catalogPopupMenu.getInvoker();
 
-                fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
-                updateEntireInfo();
-                if (!fileStorage.isEmpty()) {
-                    mainFrame.appendFileToFrameTitle(fileStorage.findFileByIndex(fileStorage.getCurrentFileIndex()).getName());
-                } else {
-                    mainFrame.restoreTitle();
-                    if (isInvokeFileChooserWhenNoFilesOpened()) {
-                        fileChooserOpen();
+                // получаем файл траектории, на котором было вызвано контекстное меню
+                TrajectoryFile selectedFile = fileStorage.findFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+                if (selectedFile.hasChanges()) {    // если у этого файла есть несохраненные изменения
+                    SaveTrajectoryFileChangesDialog saveTrajectoryFileChangesDialog = new SaveTrajectoryFileChangesDialog(mainFrame);
+                    boolean isClosedWithConfirm = saveTrajectoryFileChangesDialog.showWithResult(); // показываем диалоговое окно и ждем, какую кнопку нажмет пользователь
+                    if (isClosedWithConfirm) {  // если закрылось с нажатием на утвердительный ответ
+                        if (model.getTableDataInString().isEmpty()) {   // если мы собрались записывать в файл пустую строку
+                            new DefaultOKDialog(
+                                    mainFrame,
+                                    "Сохранение файла",
+                                    "Невозможно сохранить пустой файл траектории"
+                            ).show();   // показываем диалоговое окно с ошибкой
+                        } else {
+                            TrajectoryFile currentFile = fileStorage.getCurrentFile();
+                            currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
+                            catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                        }
                     }
                 }
-                model.fireTableDataChanged();
+                fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand())); // удаляем файл из файлового хранилища по имени
+                updateEntireInfo();     // обновляем все компоненты
+                if (!fileStorage.isEmpty()) {
+                    mainFrame.appendFileToFrameTitle(fileStorage.getCurrentFile().getName());   // добавление названия траектории в заголовок главного окна
+                } else {
+                    mainFrame.restoreTitle();   // возврат заголовка к исходному состоянию
+                    if (isInvokeFileChooserWhenNoFilesOpened()) {   // если необходимо показывать JFileChooser при отсутствии файлов в каталоге
+                        fileChooserOpen();  // показываем JFileChooser
+                    }
+                }
+                model.fireTableDataChanged();   // вызываем событие модели, приводящее к обновлению информации во всех компонентах
             }
         };
     }
@@ -188,7 +206,8 @@ public class ApplicationAssembler {
                                                 this.actionPerformed(e);
                                             }
                                         } else {
-                                            new TrajectoryExistsDialog(mainFrame).show();
+                                            new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();
+//                                            new TrajectoryExistsDialog(mainFrame).show();
                                         }
                                     } else {
                                         fileStorage.add(newTrajectoryFile);
