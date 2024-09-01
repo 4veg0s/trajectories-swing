@@ -4,6 +4,7 @@ import etu.nic.git.trajectories_swing.dialogs.*;
 import etu.nic.git.trajectories_swing.display_components.*;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
+import etu.nic.git.trajectories_swing.menus.TableDisplayPopupMenu;
 import etu.nic.git.trajectories_swing.menus.TablePopupMenu;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
@@ -32,6 +33,7 @@ public class ApplicationAssembler {
     private final CatalogDisplay catalogDisplay;
     private final CatalogPopupMenu catalogPopupMenu;
     private final TablePopupMenu tablePopupMenu;
+    private final TableDisplayPopupMenu tableDisplayPopupMenu;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
     private final ChartDisplay chartDisplay;
@@ -51,7 +53,8 @@ public class ApplicationAssembler {
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         displayList.add(catalogDisplay);
 
-        tableDisplay = new TableDisplay(model);
+        tableDisplayPopupMenu = new TableDisplayPopupMenu(fileStorage, model);
+        tableDisplay = new TableDisplay(model, tableDisplayPopupMenu);
         displayList.add(tableDisplay);
         tablePopupMenu = new TablePopupMenu(tableDisplay.getTable());
         tableDisplay.setTablePopupMenu(tablePopupMenu.getPopupMenu());
@@ -91,21 +94,6 @@ public class ApplicationAssembler {
             mainFrame.restoreTitle();
         }
     }
-
-//    // fixme инициализация файлов пока не реализован FileChooser
-//    public TrajectoryFileStorage initFileStorage() {
-//        String filePath1 = "data/traject1.txt";
-////        String filePath2 = "data/traject2.txt";
-//        TrajectoryFileStorage fileStorage = new TrajectoryFileStorage();
-//        try {
-//            fileStorage.add(new TrajectoryFile(filePath1));
-////            fileStorage.add(new TrajectoryFile(filePath2));
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        return fileStorage;
-//    }
 
     public TrajectoryRowTableModel initModel() {
         TrajectoryRowTableModel model = new TrajectoryRowTableModel();
@@ -218,10 +206,19 @@ public class ApplicationAssembler {
                         break;
                     case TopMenuBar.MENU_SAVE: // пункт меню СОХРАНИТЬ
                         if (!fileStorage.isEmpty()) {
+
                             // TODO: обработать случай, когда открыто несколько траекторий с одного файла, и происходит сохранение в одном из них
-                            TrajectoryFile currentFile = fileStorage.getCurrentFile();
-                            currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
-                            catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                            if (model.getTableDataInString().isEmpty()) {
+                                new DefaultOKDialog(
+                                        mainFrame,
+                                        "Сохранение файла",
+                                        "Невозможно сохранить пустой файл траектории"
+                                ).show();
+                            } else {
+                                TrajectoryFile currentFile = fileStorage.getCurrentFile();
+                                currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
+                                catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                            }
                         }
                         break;
                     case TopMenuBar.MENU_SAVE_AS: // пункт меню СОХРАНИТЬ КАК...
