@@ -113,4 +113,43 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         }
         return tableData.toString();
     }
+    /**
+     * Метод проверяет, является ли элемент под данным индексом первым в списке
+     * @param index индекс, для которого необходимо выполнить проверку
+     * @return true, если элемент по данному индексу является первым, false - иначе
+     */
+    public boolean isFirstRowAt(int index) {
+        return !trajectoryRowList.isEmpty() && index == 0;
+    }
+
+    /**
+     * Метод проверяет, является ли элемент под данным индексом последним в списке
+     * @param index индекс, для которого необходимо выполнить проверку
+     * @return true, если элемент по данному индексу является последним, false - иначе
+     */
+    public boolean isLastRowAt(int index) {
+        return !trajectoryRowList.isEmpty() && index == trajectoryRowList.size() - 1;
+    }
+
+    // TODO
+    public void insertRowAbove(int index) {  // сюда не должен попадать несуществующий индекс
+        // fixme
+        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
+
+        TrajectoryRow newRow = new TrajectoryRow();
+        if (isFirstRowAt(index)) {
+            newRow.setTime(trajectoryRowList.get(index).getTime()); // копируем время из ранее крайней строки
+        } else {    // если вставляем строку не на первое место
+            double midTime = (trajectoryRowList.get(index).getTime() +
+                    trajectoryRowList.get(index - 1).getTime()) / 2;    // устанавливаем среднее время от соседних
+            newRow.setTime(midTime);
+        }
+        trajectoryRowList.add(index, newRow);
+    }
+    public void insertRowBelow(int index) {
+
+    }
+    public void deleteRow(int index) {
+
+    }
 }

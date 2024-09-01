@@ -48,7 +48,7 @@ public class CatalogDisplay extends AbstractDisplay {
         buttons.clear();
         if (!fileStorage.isEmpty()) {
             List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
-            // создание кнопок по именам файлов в хранилище и добавление их в бокс
+            // создание кнопок по именам файлов в хранилище и добавление их на панель
             JButton button;
             for (int i = 0; i < fileNames.size(); i++) {
                 String fileName = fileNames.get(i);

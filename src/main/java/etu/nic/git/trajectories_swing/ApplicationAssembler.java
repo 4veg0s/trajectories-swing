@@ -4,6 +4,7 @@ import etu.nic.git.trajectories_swing.dialogs.*;
 import etu.nic.git.trajectories_swing.display_components.*;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
+import etu.nic.git.trajectories_swing.menus.TablePopupMenu;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.file_handling.FileDataLoader;
@@ -30,6 +31,7 @@ public class ApplicationAssembler {
     private final TopMenuBar topMenuBar;
     private final CatalogDisplay catalogDisplay;
     private final CatalogPopupMenu catalogPopupMenu;
+    private final TablePopupMenu tablePopupMenu;
     private TableDisplay tableDisplay;
     private FileDisplay fileDisplay;
     private final ChartDisplay chartDisplay;
@@ -43,15 +45,16 @@ public class ApplicationAssembler {
 
         fileChooser = initFileChooser();
 
-        catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
-
         displayList = new ArrayList<>();
 
+        catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         displayList.add(catalogDisplay);
 
         tableDisplay = new TableDisplay(model);
         displayList.add(tableDisplay);
+        tablePopupMenu = new TablePopupMenu(tableDisplay.getTable());
+        tableDisplay.setTablePopupMenu(tablePopupMenu.getPopupMenu());
 
         fileDisplay = new FileDisplay(fileStorage);
         displayList.add(fileDisplay);

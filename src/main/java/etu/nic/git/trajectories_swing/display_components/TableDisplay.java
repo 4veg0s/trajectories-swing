@@ -73,4 +73,10 @@ public class TableDisplay extends AbstractDisplay {
         background.revalidate();
         background.repaint();
     }
+    public void setTablePopupMenu(JPopupMenu menu) {
+        table.setComponentPopupMenu(menu);
+    }
+    public JTable getTable() {
+        return this.table;
+    }
 }
