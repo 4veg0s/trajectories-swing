@@ -1,5 +1,7 @@
 package etu.nic.git.trajectories_swing.menus;
 
+import etu.nic.git.trajectories_swing.MainFrame;
+import etu.nic.git.trajectories_swing.dialogs.TrajectoryStatisticsDialog;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
 import javax.swing.*;
@@ -12,17 +14,16 @@ public class TablePopupMenu {
     private static final String MENU_INSERT_ROW_ABOVE = "Вставить строку выше";
     private static final String MENU_INSERT_ROW_BELOW = "Вставить строку ниже";
     private static final String MENU_DELETE_ROW = "Удалить строку";
-    // * Вставить строку ниже
-    //  * Вставить строку выше
-    //  * Удалить строку
-    //  * Отобразить статистику:
+    private static final String MENU_SHOW_STATS = "Отобразить статистику";
     private final JPopupMenu popupMenu;
     private final JTable table;
     private final TrajectoryRowTableModel model;
     private int rowAtPoint;
+    private final MainFrame mainFrame;
 
-    public TablePopupMenu(JTable t) {
+    public TablePopupMenu(JTable t, MainFrame frame) {
         this.table = t;
+        this.mainFrame = frame;
         model = (TrajectoryRowTableModel) table.getModel();
         popupMenu = new JPopupMenu() {
             @Override
@@ -56,12 +57,25 @@ public class TablePopupMenu {
                 model.fireTableDataChanged();
             }
         });
+        JMenuItem showStatsMenuItem = new JMenuItem(MENU_SHOW_STATS);
+        showStatsMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TrajectoryStatisticsDialog(SwingUtilities.getWindowAncestor(table), model).show();
+            }
+        });
+
+        Font font14 = new Font(Font.DIALOG, Font.BOLD, 14);
+
+        insertRowAboveMenuItem.setFont(font14);
+        insertRowBelowMenuItem.setFont(font14);
+        deleteRowMenuItem.setFont(font14);
+        showStatsMenuItem.setFont(font14);
 
         popupMenu.add(insertRowAboveMenuItem);
         popupMenu.add(insertRowBelowMenuItem);
         popupMenu.add(deleteRowMenuItem);
-
-
+        popupMenu.add(showStatsMenuItem);
     }
 
     public JPopupMenu getPopupMenu() {

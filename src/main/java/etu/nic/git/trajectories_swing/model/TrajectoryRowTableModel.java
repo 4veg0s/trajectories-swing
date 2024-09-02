@@ -99,6 +99,19 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         this.sortByTime();
     }
 
+    /**
+     * Метод получает из списка строк траекторной информации конкретный столбец по индексу его параметра в траектории
+     * @param index индекс параметра траектории (их 7, см. {@link TrajectoryRow#AMOUNT_OF_PARAMETERS}, {@link TrajectoryRow#PARAMETER_NAMES})
+     * @return столбец данных
+     */
+    public double[] getTrajectoryColumnByParameterIndex(int index) {
+        double[] column = new double[trajectoryRowList.size()];
+        for (int i = 0; i < trajectoryRowList.size(); i++) {
+            column[i] = trajectoryRowList.get(i).toDoubleArray()[index];
+        }
+        return column;
+    }
+
     public void sortByTime() {
         trajectoryRowList = trajectoryRowList.stream()
                 .sorted(((o1, o2) -> Double.compare(o1.getTime(), o2.getTime())))
@@ -131,7 +144,6 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return !trajectoryRowList.isEmpty() && index == trajectoryRowList.size() - 1;
     }
 
-    // TODO
     public void insertRowAbove(int index) {  // сюда не должен попадать несуществующий индекс
         // fixme
         if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");

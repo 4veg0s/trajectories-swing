@@ -17,7 +17,6 @@ public class FileNotFoundDialog {
 
         Box verticalBox = new Box(BoxLayout.Y_AXIS);
 
-
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
