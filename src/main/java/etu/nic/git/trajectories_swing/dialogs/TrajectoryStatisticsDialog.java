@@ -61,7 +61,7 @@ public class TrajectoryStatisticsDialog {
 //        background.add(tableScrollPane);
 //        dialog.add(background);
         Rectangle rectangleBounds = owner.getBounds();
-        dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 2,
+        dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 4,
                 rectangleBounds.y + rectangleBounds.height / 2, 1100, 200));
     }
 
