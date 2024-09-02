@@ -14,9 +14,7 @@ public class DefaultOKDialog {
         JLabel dialogLabel = new JLabel(oneLineMessage);
         dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-//        JPanel background = new JPanel(new GridLayout(2, 1));
         Box verticalBox = new Box(BoxLayout.Y_AXIS);
-
 
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
@@ -34,19 +32,14 @@ public class DefaultOKDialog {
 
         verticalBox.add(dialogLabel);
         verticalBox.add(buttonPanel);
-//        background.add(dialogLabel);
-//        background.add(buttonPanel);
-
-//        dialog.add(background);
         dialog.add(verticalBox);
 
         Rectangle rectangleBounds = owner.getBounds();
         dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 2,
-                rectangleBounds.y + rectangleBounds.height / 2, dialogLabel.getText().length() * 8, 90));
+                rectangleBounds.y + rectangleBounds.height / 2, dialogLabel.getText().length() * 8, 95));
     }
 
     public void show() {
-//        dialog.pack();
         dialog.setVisible(true);
     }
 }

@@ -6,8 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SaveTrajectoryFileChangesDialog {
+    public static final int EXIT_ON_SAVE = 1;
+    public static final int EXIT_ON_DONT_SAVE = 2;
+    public static final int EXIT_ON_CANCEL = 0;
     private final JDialog dialog;
     private boolean closedOnConfirm;
+    private int closingResult = EXIT_ON_CANCEL;
     public SaveTrajectoryFileChangesDialog(Window owner) {
         dialog = new JDialog(owner, "Файл траекторной информации", Dialog.ModalityType.DOCUMENT_MODAL);
 
@@ -18,28 +22,30 @@ public class SaveTrajectoryFileChangesDialog {
         dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
         dialogLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 
-        JButton confirmButton = new JButton("Сохранить");
-        JButton cancelButton = new JButton("Не сохранять");
+        JButton saveButton = new JButton("Сохранить");
+        JButton dontSaveButton = new JButton("Не сохранять");
         JPanel buttonPanel = new JPanel();
 
-        confirmButton.addActionListener(new ActionListener() {
+        saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setClosingResult(EXIT_ON_SAVE);
                 closedOnConfirm = true;
                 dialog.setVisible(false);
             }
         });
-        cancelButton.addActionListener(new ActionListener() {
+        dontSaveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setClosingResult(EXIT_ON_DONT_SAVE);
                 closedOnConfirm = false;
                 dialog.setVisible(false);
             }
         });
 
-        buttonPanel.add(confirmButton);
-        buttonPanel.add(cancelButton);
-        confirmButton.setHorizontalAlignment(SwingConstants.CENTER);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(dontSaveButton);
+        saveButton.setHorizontalAlignment(SwingConstants.CENTER);
 
         panelGrid.add(dialogLabel);
         panelGrid.add(buttonPanel);
@@ -51,13 +57,21 @@ public class SaveTrajectoryFileChangesDialog {
                 rectangleBounds.y + rectangleBounds.height / 2, 400, 200));
     }
 
-    public boolean showWithResult() {
+    public int showWithResult() {
         dialog.pack();
         dialog.setVisible(true);
-        return isClosedOnConfirm();
+        return getClosingResult();
     }
 
     public boolean isClosedOnConfirm() {
         return closedOnConfirm;
+    }
+
+    public int getClosingResult() {
+        return closingResult;
+    }
+
+    public void setClosingResult(int closingResult) {
+        this.closingResult = closingResult;
     }
 }

@@ -143,8 +143,8 @@ public class ApplicationAssembler {
                 TrajectoryFile selectedFile = fileStorage.findFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
                 if (selectedFile.hasChanges()) {    // если у этого файла есть несохраненные изменения
                     SaveTrajectoryFileChangesDialog saveTrajectoryFileChangesDialog = new SaveTrajectoryFileChangesDialog(mainFrame);
-                    boolean isClosedWithConfirm = saveTrajectoryFileChangesDialog.showWithResult(); // показываем диалоговое окно и ждем, какую кнопку нажмет пользователь
-                    if (isClosedWithConfirm) {  // если закрылось с нажатием на утвердительный ответ
+                    int closingResult = saveTrajectoryFileChangesDialog.showWithResult(); // показываем диалоговое окно и ждем, какую кнопку нажмет пользователь
+                    if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_SAVE) {  // если закрылось с нажатием на утвердительный ответ
                         if (model.getTableDataInString().isEmpty()) {   // если мы собрались записывать в файл пустую строку
                             new DefaultOKDialog(
                                     mainFrame,
@@ -156,6 +156,8 @@ public class ApplicationAssembler {
                             currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
                             catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
                         }
+                    } else if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_CANCEL) {
+                        return;
                     }
                 }
                 fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand())); // удаляем файл из файлового хранилища по имени
