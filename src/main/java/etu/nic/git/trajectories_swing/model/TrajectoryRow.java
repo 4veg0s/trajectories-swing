@@ -5,6 +5,7 @@ package etu.nic.git.trajectories_swing.model;
 
 import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class TrajectoryRow {
@@ -230,5 +231,18 @@ public class TrajectoryRow {
                 ", velocityY=" + velocityY +
                 ", velocityZ=" + velocityZ +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrajectoryRow row = (TrajectoryRow) o;
+        return Double.compare(time, row.time) == 0 && Double.compare(coordinateX, row.coordinateX) == 0 && Double.compare(coordinateY, row.coordinateY) == 0 && Double.compare(coordinateZ, row.coordinateZ) == 0 && Double.compare(velocityX, row.velocityX) == 0 && Double.compare(velocityY, row.velocityY) == 0 && Double.compare(velocityZ, row.velocityZ) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(time, coordinateX, coordinateY, coordinateZ, velocityX, velocityY, velocityZ);
     }
 }
