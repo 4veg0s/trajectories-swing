@@ -1,10 +1,14 @@
 package etu.nic.git.trajectories_swing.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TrajectoryRowTableModel extends AbstractTableModel {
+    private static final Logger logger = LoggerFactory.getLogger(TrajectoryRowTableModel.class);
     private List<TrajectoryRow> trajectoryRowList;
 
     private final String[] columnNames = new String[]{
@@ -146,7 +150,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     public void insertRowAbove(int index) {  // сюда не должен попадать несуществующий индекс
         // fixme
-        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
+        if (index > trajectoryRowList.size() - 1) {
+            logger.error("Как сюда попал такой индекс");
+//            throw new RuntimeException("Как сюда попал такой индекс");
+        }
 
         TrajectoryRow newRow = new TrajectoryRow();
         if (isFirstRowAt(index)) {
@@ -160,7 +167,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     }
     public void insertRowBelow(int index) {
         // fixme
-        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
+        if (index > trajectoryRowList.size() - 1) {
+            logger.error("Как сюда попал такой индекс");
+//            throw new RuntimeException("Как сюда попал такой индекс");
+        }
 
         TrajectoryRow newRow = new TrajectoryRow();
         if (isLastRowAt(index)) {
@@ -175,7 +185,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     }
     public void deleteRow(int index) {
         // fixme
-        if (index > trajectoryRowList.size() - 1) throw new RuntimeException("Как сюда попал такой индекс");
+        if (index > trajectoryRowList.size() - 1) {
+            logger.error("Как сюда попал такой индекс");
+//            throw new RuntimeException("Как сюда попал такой индекс");
+        }
 
         trajectoryRowList.remove(index);
     }

@@ -11,6 +11,9 @@ import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.file_handling.FileDataLoader;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
+import org.apache.log4j.PropertyConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationAssembler {
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationAssembler.class);
     private TrajectoryFileStorage fileStorage;
     private final TrajectoryRowTableModel model;
     private final JFileChooser fileChooser;
@@ -41,6 +45,8 @@ public class ApplicationAssembler {
     private final List<AbstractDisplay> displayList;
 
     public ApplicationAssembler() {
+//        PropertyConfigurator.configure("./src/main/resources/log4j.properties");
+
         model = initModel();
 
         fileStorage = new TrajectoryFileStorage();
@@ -69,7 +75,7 @@ public class ApplicationAssembler {
 
         // смотреть JavaDoc методов
         setInvokeFileChooserWhenNoFilesOpened(true);
-        chartDisplay.setMarkersAsLettersOnChart(true);
+        chartDisplay.setMarkersAsLettersOnChart(false);
     }
 
     private JFileChooser initFileChooser() {
@@ -146,6 +152,7 @@ public class ApplicationAssembler {
                     int closingResult = saveTrajectoryFileChangesDialog.showWithResult(); // показываем диалоговое окно и ждем, какую кнопку нажмет пользователь
                     if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_SAVE) {  // если закрылось с нажатием на утвердительный ответ
                         if (model.getTableDataInString().isEmpty()) {   // если мы собрались записывать в файл пустую строку
+                            logger.info("Попытка сохранения пустого файла траектории");
                             new DefaultOKDialog(
                                     mainFrame,
                                     "Сохранение файла",
@@ -212,6 +219,7 @@ public class ApplicationAssembler {
                                                     this.actionPerformed(e);
                                                 }
                                             } else {
+                                                logger.info("Попытка загрузки траектории с уже существующем в приложении именем");
                                                 new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();
 //                                            new TrajectoryExistsDialog(mainFrame).show();
                                             }
@@ -223,21 +231,23 @@ public class ApplicationAssembler {
                                         updateEntireInfo();
                                         mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
                                     } catch (FileNotFoundException ex) {
+                                        logger.info("Попытка загрузки несуществующего файла");
                                         new FileNotFoundDialog(mainFrame).show();
                                     } catch (InvalidFileFormatException ex) {
+                                        logger.info("Попытка загрузки файла неверного формата");
                                         new InvalidFileFormatDialog(mainFrame, ex).show();
                                     }
                                 }
                             } else {    // если такой файл уже загружен
+                                logger.info("Попытка загрузки уже открытого под именем {} файла", existingFileByPath.getName());
                                 new DefaultOKDialog(mainFrame, "Выбор файла", "Этот файл уже открыт (" + existingFileByPath.getName() + ")").show();
                             }
                         }
                         break;
                     case TopMenuBar.MENU_SAVE: // пункт меню СОХРАНИТЬ
                         if (!fileStorage.isEmpty()) {
-
-                            // TODO: обработать случай, когда открыто несколько траекторий с одного файла, и происходит сохранение в одном из них
                             if (model.getTableDataInString().isEmpty()) {
+                                logger.info("Попытка сохранения пустого файла траектории");
                                 new DefaultOKDialog(
                                         mainFrame,
                                         "Сохранение файла",
@@ -278,6 +288,7 @@ public class ApplicationAssembler {
         if (isNeeded) {
             fileChooserOpen();
         }
+        logger.debug("fileChooserOnFirstOpen: " + isNeeded);
     }
 
     public void fileChooserOpen() {
@@ -291,6 +302,7 @@ public class ApplicationAssembler {
 
     public void assemble() {
         mainFrame = new MainFrame(topMenuBar, catalogDisplay, tableDisplay, fileDisplay, chartDisplay);
+        logger.info("mainFrame успешно создан");
     }
 
     public TrajectoryFileStorage getFileStorage() {

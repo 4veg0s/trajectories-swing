@@ -3,12 +3,15 @@ package etu.nic.git.trajectories_swing.file_handling;
 import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Objects;
 
 public class TrajectoryFile {
+    private static final Logger logger = LoggerFactory.getLogger(TrajectoryFile.class);
     public static final String TRAJECTORY_NAME_PREFIX = "Траектория ";
     private static int nextTrajectoryIndex = 1;
     private String path;
@@ -24,7 +27,7 @@ public class TrajectoryFile {
             this.data = readDataFromFile();
             this.dataOnCreation = this.data;
         } else {
-            // fixme случаи если файла не существует
+            logger.info("Попытка создать несуществующий файл траектории: {}", file.getAbsolutePath());
             throw new FileNotFoundException();
         }
     }
@@ -36,7 +39,7 @@ public class TrajectoryFile {
             this.data = readDataFromFile();
             this.dataOnCreation = this.data;
         } else {
-            // fixme случаи если файла не существует
+            logger.info("Попытка создать несуществующий файл траектории: {}", file.getAbsolutePath());
             throw new FileNotFoundException();
         }
     }

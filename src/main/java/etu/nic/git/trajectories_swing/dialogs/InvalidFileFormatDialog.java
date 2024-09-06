@@ -64,7 +64,7 @@ public class InvalidFileFormatDialog {
         dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 2,
                 rectangleBounds.y + rectangleBounds.height / 4,
                 lengthOfLongestLine * 10,
-                Math.min(Math.max(amountOfLines, 6) * font12.getSize() + okButton.getHeight() + 20, 600))   // высота диалогового окна не более 600 пикселей
+                Math.min(Math.max(amountOfLines, 6) * font12.getSize() + okButton.getHeight() + 30, 600))   // высота диалогового окна не более 600 пикселей
         );
     }
 
