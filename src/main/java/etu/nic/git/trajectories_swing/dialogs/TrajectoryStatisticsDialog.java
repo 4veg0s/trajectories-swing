@@ -16,12 +16,22 @@ public class TrajectoryStatisticsDialog {
     private final JDialog dialog;
     private final TrajectoryRowTableModel model;
 
+    /**
+     * Диалоговое окно, всплывающее в случае, если пользователь выбрал пункт контекстного меню таблицы
+     * "Отобразить статистику"
+     * Окно содержит таблицу с вычисленными (по возможности) требуемыми статистическими данными:
+     * среднее, дисперсия, выборочный момент 2-го порядка, выборочный момент 3-го порядка
+     * @param owner
+     * @param tableModel модель таблицы, отображающей данные драектории из файла
+     */
     public TrajectoryStatisticsDialog(Window owner, TrajectoryRowTableModel tableModel) {
         this.model = tableModel;
         dialog = new JDialog(owner, DIALOG_TITLE, Dialog.ModalityType.DOCUMENT_MODAL);
 
+        // создание модели таблицы со статистической информацией
         StatisticsTableModel statisticsTableModel = new StatisticsTableModel(model);
 
+        // создание таблицы со статистической информацией на основе соответствующей модели
         JTable table = new JTable(statisticsTableModel);
         setJTableColumnsWidth(table, 1000, 20, 10, 10, 10, 10, 10, 10);
         table.getTableHeader().setReorderingAllowed(false);
@@ -65,6 +75,12 @@ public class TrajectoryStatisticsDialog {
                 rectangleBounds.y + rectangleBounds.height / 2, 1100, 200));
     }
 
+    /**
+     * Метод устанавливает ширины столбцов в таблице в процентном соотношении, передаваемом в аргументах
+     * @param table таблица, для которой будет выполнятся изменение ширин столбцов
+     * @param tablePreferredWidth полная ширина таблицы в пикселях
+     * @param percentages проценты от полной ширины таблицы для каждого из столбцов
+     */
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
                                              double... percentages) {
         double total = 0;
@@ -78,6 +94,9 @@ public class TrajectoryStatisticsDialog {
         }
     }
 
+    /**
+     * Метод показывает диалоговое окно
+     */
     public void show() {
         dialog.pack();
         dialog.setVisible(true);

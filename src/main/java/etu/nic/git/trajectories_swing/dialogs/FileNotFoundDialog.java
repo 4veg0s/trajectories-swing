@@ -8,6 +8,10 @@ import java.awt.event.ActionListener;
 public class FileNotFoundDialog {
     private final JDialog dialog;
 
+    /**
+     * Диалоговое окно для показа диалогового окна с текстом "Файл с таким именем не найден"
+     * @param owner
+     */
     public FileNotFoundDialog(Window owner) {
         dialog = new JDialog(owner, "Выбор файла", Dialog.ModalityType.DOCUMENT_MODAL);
 
@@ -20,6 +24,7 @@ public class FileNotFoundDialog {
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
+        // слушатель, скрывающий диалоговое окно при нажатии на кнопку
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -40,6 +45,9 @@ public class FileNotFoundDialog {
                 rectangleBounds.y + rectangleBounds.height / 2, 300, 100));
     }
 
+    /**
+     * Метод показывает диалоговое окно
+     */
     public void show() {
         dialog.setVisible(true);
     }

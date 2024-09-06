@@ -14,6 +14,12 @@ public class TrajectoryNameSetDialog {
     private final JButton okButton;
     private final JTextField trajectoryNameField;
     private boolean closedOnOk;
+
+    /**
+     * Диалоговое окно, всплывающее в случае, если пользователь хочет открыть новый файл в приложении
+     * Окно служит для задания имени траектории, которое в дальнейшем будет отображено в компоненте каталога
+     * @param frame
+     */
     public TrajectoryNameSetDialog(MainFrame frame) {
         mainFrame = frame;
         dialog = new JDialog(mainFrame, "Файл траекторной информации", Dialog.ModalityType.DOCUMENT_MODAL);
@@ -24,6 +30,7 @@ public class TrajectoryNameSetDialog {
         trajectoryNameLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
         trajectoryNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        // в текстовое поле устанавливается значение по умолчанию: "Траектория" + индекс, инкрементирующийся при открытии нового файла
         trajectoryNameField = new JTextField(TrajectoryFile.TRAJECTORY_NAME_PREFIX + TrajectoryFile.getNextTrajectoryIndex());
 
         okButton = new JButton("OK");
@@ -52,7 +59,7 @@ public class TrajectoryNameSetDialog {
     }
 
     /**
-     *
+     * Метод делает диалоговое окно видимым
      * @return true, если диалог закрылся кнопкой "OK", иначе - false
      */
     public boolean showWithResult() {

@@ -5,6 +5,12 @@ import java.awt.*;
 
 public class TrajectoryExistsDialog {
     private JDialog dialog;
+
+    /**
+     * Диалоговое окно, всплывающее в случае, если пользователь пытается открыть новый файл и задает название траектории,
+     * которое уже содержится в приложении
+     * @param owner
+     */
     public TrajectoryExistsDialog(Window owner) {
         dialog = new JDialog(owner, "Выбор файла", Dialog.ModalityType.DOCUMENT_MODAL);
 

@@ -12,6 +12,13 @@ public class SaveTrajectoryFileChangesDialog {
     private final JDialog dialog;
     private boolean closedOnConfirm;
     private int closingResult = EXIT_ON_CANCEL;
+
+    /**
+     * Диалоговое окно, всплывающее в случае, если пользователь пытается закрыть файл,
+     * который имеет несохраненные изменения.
+     * Окно предлагает два варианта открытия: закрыть с сохранением или без него
+     * @param owner
+     */
     public SaveTrajectoryFileChangesDialog(Window owner) {
         dialog = new JDialog(owner, "Файл траекторной информации", Dialog.ModalityType.DOCUMENT_MODAL);
 
@@ -57,6 +64,12 @@ public class SaveTrajectoryFileChangesDialog {
                 rectangleBounds.y + rectangleBounds.height / 2, 400, 200));
     }
 
+    /**
+     * Метод делает видимым диалоговое окно
+     * @return 1, если пользователь захотел сохранить изменения перед закрытием
+     * 2, если пользователь захотел выйти без сохранения изменений
+     * 3, если пользователь закрыл диалоговое окно, прервав тем самым закрытие файла
+     */
     public int showWithResult() {
         dialog.pack();
         dialog.setVisible(true);

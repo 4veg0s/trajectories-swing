@@ -8,6 +8,12 @@ import java.awt.event.ActionListener;
 public class ReplaceTrajectoryFileDialog {
     private final JDialog dialog;
     private boolean closedOnConfirm;
+
+    /**
+     * Диалоговое окно, всплывающее в случае, если пользователь пытается задать файлу с траекторной информацией
+     * имя, которое уже есть в приложении
+     * @param owner
+     */
     public ReplaceTrajectoryFileDialog(Window owner) {
         dialog = new JDialog(owner, "Файл траекторной информации", Dialog.ModalityType.DOCUMENT_MODAL);
 
@@ -54,6 +60,10 @@ public class ReplaceTrajectoryFileDialog {
                 rectangleBounds.y + rectangleBounds.height / 2, 400, 200));
     }
 
+    /**
+     * Метод делает видимым диалоговое окно
+     * @return true, если диалоговое окно было закрыто кнопкой утверждения, false, если кнопкой отрицания
+     */
     public boolean showWithResult() {
         dialog.pack();
         dialog.setVisible(true);
