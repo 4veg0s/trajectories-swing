@@ -5,7 +5,7 @@ import etu.nic.git.trajectories_swing.tools.StatisticsTool;
 import javax.swing.table.AbstractTableModel;
 
 public class StatisticsTableModel extends AbstractTableModel {
-    private final String[] ROW_NAMES = new String[] {
+    private final String[] ROW_NAMES = new String[]{
             "Среднее",
             "Дисперсия",
             "Выбор. момент 2-го порядка",
@@ -15,7 +15,7 @@ public class StatisticsTableModel extends AbstractTableModel {
             "", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
     };
     private final Class[] columnClass = new Class[]{
-            String.class, Double.class, Double.class, Double.class, Double.class, Double.class, Double.class
+            String.class, String.class, String.class, String.class, String.class, String.class, String.class
     };
     private Object[][] data;
     private TrajectoryRowTableModel model;
@@ -28,22 +28,28 @@ public class StatisticsTableModel extends AbstractTableModel {
 
         final int AMOUNT_OF_COLUMNS = 7;
         final int AMOUNT_OF_ROWS = 4;
+
+        double value;
         data = new Object[AMOUNT_OF_ROWS][AMOUNT_OF_COLUMNS];
         for (int i = 0; i < AMOUNT_OF_ROWS; i++) {
             data[i][0] = ROW_NAMES[i];
             for (int j = 1; j < AMOUNT_OF_COLUMNS; j++) {
                 switch (i) {
                     case 0:
-                        data[i][j] = StatisticsTool.getAverageOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        value = StatisticsTool.getAverageOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        data[i][j] = (Double.isNaN(value)) ? "--" : (value < Math.pow(10, -8)) ? 0 : String.format("%.8f", value);
                         break;
                     case 1:
-                        data[i][j] = StatisticsTool.getDispersionOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        value = StatisticsTool.getDispersionOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        data[i][j] = (Double.isNaN(value)) ? "--" : (value < Math.pow(10, -8)) ? 0 : String.format("%.8f", value);
                         break;
                     case 2:
-                        data[i][j] = StatisticsTool.getSecondMomentOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        value = StatisticsTool.getSecondMomentOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        data[i][j] = (Double.isNaN(value)) ? "--" : (value < Math.pow(10, -8)) ? 0 : String.format("%.8f", value);
                         break;
                     case 3:
-                        data[i][j] = StatisticsTool.getThirdMomentOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        value = StatisticsTool.getThirdMomentOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        data[i][j] = (Double.isNaN(value)) ? "--" : (value < Math.pow(10, -8)) ? 0 : String.format("%.8f", value);
                         break;
                 }
             }
@@ -54,6 +60,7 @@ public class StatisticsTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         return columnNames[column];
     }
+
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return columnClass[columnIndex];

@@ -6,7 +6,6 @@ import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import java.util.Arrays;
 import java.util.List;
 
-// fixme ограничить вычисление статистических параметров при малом количестве строк в таблице
 public class StatisticsTool {
     /**
      * Метод вычисляющий <b>среднее значение</b> в массиве
