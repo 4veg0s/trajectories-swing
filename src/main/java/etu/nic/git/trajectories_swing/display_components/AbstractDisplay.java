@@ -4,10 +4,17 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * Абстрактный класс, являющийся основой для всех компонент-дисплеев в приложении,
+ * содержащий повторяющуюся логику
+ */
 public abstract class AbstractDisplay implements Restorable, Updatable {
     protected final JLabel displayHeader;
     protected final JPanel background;
 
+    /**
+     * @param displayHeaderCaption заголовок компоненты-дисплея
+     */
     public AbstractDisplay(String displayHeaderCaption) {
         this.displayHeader = new JLabel(displayHeaderCaption);
 
@@ -20,6 +27,11 @@ public abstract class AbstractDisplay implements Restorable, Updatable {
         background.setBorder(new LineBorder(Color.GRAY, 1));
     }
 
+    /**
+     * Метод для получения панели, которая содержит все элементы,
+     * отображаемые на соответствующем дисплее
+     * @return компонент, содержащий все элементы дисплея (на практике - всегда JPanel)
+     */
     public JComponent getComponent() {
         return background;
     }

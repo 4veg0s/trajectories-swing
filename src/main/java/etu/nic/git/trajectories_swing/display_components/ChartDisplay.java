@@ -26,6 +26,9 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс содержащий все необходимое для отображения графика с панелью чекбоксов
+ */
 public class ChartDisplay extends AbstractDisplay {
     private static final String DISPLAY_NAME = "График";
     private final TrajectoryFileStorage fileStorage;
@@ -38,12 +41,18 @@ public class ChartDisplay extends AbstractDisplay {
     private List<ChartCheckBoxToXYSeriesPair> checksToSeriesList;
     private boolean markersAsLettersOnChart = false;
 
+    /**
+     * Создает объект и внедряет зависимости
+     * @param tableModel модель таблицы траекторной информации
+     * @param fileStorage хранилище файлов траекторий
+     */
     public ChartDisplay(TrajectoryRowTableModel tableModel, TrajectoryFileStorage fileStorage) {
         super(DISPLAY_NAME);
 
         this.model = tableModel;
         this.fileStorage = fileStorage;
 
+        // создание слушателя изменения значения в чекбоксе, при срабатывании которого происходит перерисовка графика
         ItemListener checkBoxItemListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -64,6 +73,7 @@ public class ChartDisplay extends AbstractDisplay {
         JCheckBox coordinateZCheckBox = new JCheckBox("Z, м");
         coordinateZCheckBox.setFont(font14);
 
+        // заполнение списка объектов-пар чекбокса и серии данных с графика
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateYCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateZCheckBox));
@@ -77,14 +87,16 @@ public class ChartDisplay extends AbstractDisplay {
         JCheckBox velocityZCheckBox = new JCheckBox("Vz, м/с");
         velocityZCheckBox.setFont(font14);
 
+        // заполнение списка объектов-пар чекбокса и серии данных с графика
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityYCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityZCheckBox));
 
+        // при создании панели с чекбоксами все будут установлены на selected
         for (ChartCheckBoxToXYSeriesPair pair : checksToSeriesList) {
             pair.getCheckBox().setSelected(true);
-            pair.getCheckBox().addItemListener(checkBoxItemListener);
-//            pair.getCheckBox().addChangeListener(checkBoxChangeListener);
+            pair.getCheckBox().addItemListener(checkBoxItemListener);   // добавление слушателя на чекбокс после установки selected,
+                                                                        // чтобы не стриггерить событие раньше времени
         }
 
         Box horizontalBox = new Box(BoxLayout.X_AXIS);
@@ -100,6 +112,7 @@ public class ChartDisplay extends AbstractDisplay {
         horizontalBox.add(velocityYCheckBox);
         horizontalBox.add(velocityZCheckBox);
 
+        // панель чекбоксов с горизонтальным BoxLayout'ом
         checkBoxPanel = new JPanel();
         checkBoxPanel.add(horizontalBox);
 
@@ -116,6 +129,10 @@ public class ChartDisplay extends AbstractDisplay {
     }
 
 
+    /**
+     * Создает объект графика, инициализирует поле plot
+     * @return соответствующий объект с инициализированной осью абсцисс
+     */
     private JFreeChart createChart() {
         // Создаем график с основной осью Y
         JFreeChart chart = ChartFactory.createXYLineChart(
@@ -129,11 +146,14 @@ public class ChartDisplay extends AbstractDisplay {
         return chart;
     }
 
+    /**
+     * Обновляет информацию на графике, в соответствии с данными модели таблицы и выбранными чекбоксами
+     */
     public void updatePlot() {
         clearPlot();
 
         List<TrajectoryRow> trajectoryRowList = model.getTrajectoryRowList();
-        List<XYSeries> trajectorySeries = new ArrayList<>();
+
         XYSeries series;
         for (int i = 1; i < TrajectoryRow.AMOUNT_OF_PARAMETERS; i++) {
             series = new XYSeries(TrajectoryRow.PARAMETER_NAMES[i]);
@@ -141,29 +161,20 @@ public class ChartDisplay extends AbstractDisplay {
                 double[] rowParameters = trajectoryRowList.get(j).toDoubleArray();
                 series.add(rowParameters[0], rowParameters[i]);
             }
-            trajectorySeries.add(series);
             checksToSeriesList.get(i - 1).setSeries(series);
         }
 
+        // датасет координат
         XYSeriesCollection coordinatesDataset = new XYSeriesCollection();
-
-//        for (int i = 0; i < 3; i++) {
-//            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
-//            if (series != null) {
-//                coordinatesDataset.addSeries(series);
-//            }
-//        }
+        // добавляем в датасет координаты
         coordinatesDataset.addSeries(checksToSeriesList.get(0).getSeries());
         coordinatesDataset.addSeries(checksToSeriesList.get(1).getSeries());
         coordinatesDataset.addSeries(checksToSeriesList.get(2).getSeries());
 
+        // датасет проекций скоростей
         XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
-//        for (int i = 3; i < 6; i++) {
-//            series = checksToSeriesList.get(i).getSeriesIfCheckBoxSelectedOrNullOtherwise();
-//            if (series != null) {
-//                velocitiesDataset.addSeries(series);
-//            }
-//        }
+
+        // добавляем в датасет проекции скоростей
         velocitiesDataset.addSeries(checksToSeriesList.get(3).getSeries());
         velocitiesDataset.addSeries(checksToSeriesList.get(4).getSeries());
         velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeries());
@@ -210,6 +221,7 @@ public class ChartDisplay extends AbstractDisplay {
             renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
         }
 
+        // добавляем в график рендерер координат
         plot.setRenderer(axisIndex, renderer1);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
         axisIndex++;
@@ -260,11 +272,14 @@ public class ChartDisplay extends AbstractDisplay {
             renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
         }
 
+        // добавляем в график рендерер проекций скорости
         plot.setRenderer(axisIndex, renderer2);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
 
+        // установка видимости осей ординат, в зависимости от условий
         plot.getRangeAxis(0).setVisible(this.shouldHaveCoordinatesAxis());
         plot.getRangeAxis(1).setVisible(this.shouldHaveVelocitiesAxis());
+        // установка видимости оси абсцисс, в зависимости от условий
         plot.getDomainAxis().setVisible(this.shouldHaveCoordinatesAxis() || this.shouldHaveVelocitiesAxis());
 
         // изменение цвета фона у графика
@@ -274,13 +289,14 @@ public class ChartDisplay extends AbstractDisplay {
         plot.setRangeGridlinePaint(Color.DARK_GRAY);
         plot.setDomainGridlinePaint(Color.DARK_GRAY);
 
+        // установка шрифта для легенды под графиком
         chart.getLegend().setItemFont(new Font(Font.DIALOG, Font.PLAIN, 16));
 
         replaceChart();
     }
 
     /**
-     * Метод очищает основную панель
+     * Метод удаляет предыдущую панель графика и добавляет новую с перерисовкой компонента
      */
     private void replaceChart() {
         if (!fileStorage.isEmpty()) {
@@ -318,18 +334,29 @@ public class ChartDisplay extends AbstractDisplay {
         checksAndChart.setVisible(true);
     }
 
+    /**
+     * Метод сообщает: нужно ли графику иметь ось координат
+     * @return true, если хоть одна из координат выбрана, false, если все галочки координат отключены
+     */
     public boolean shouldHaveCoordinatesAxis() {
         return checksToSeriesList.get(0).getCheckBox().isSelected() ||
                 checksToSeriesList.get(1).getCheckBox().isSelected() ||
                 checksToSeriesList.get(2).getCheckBox().isSelected();
     }
 
+    /**
+     * Метод сообщает: нужно ли графику иметь ось проекций скорости
+     * @return true, если хоть одна из проекций выбрана, false, если все галочки проекций скорости отключены
+     */
     public boolean shouldHaveVelocitiesAxis() {
         return checksToSeriesList.get(3).getCheckBox().isSelected() ||
                 checksToSeriesList.get(4).getCheckBox().isSelected() ||
                 checksToSeriesList.get(5).getCheckBox().isSelected();
     }
 
+    /**
+     * Очищает график от предыдущих датасетов
+     */
     private void clearPlot() {
         plot.setDataset(null); // Удаление всех наборов данных
 //        plot.clearDomainAxes(); // Очистка осей X
