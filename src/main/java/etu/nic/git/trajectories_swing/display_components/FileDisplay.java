@@ -5,6 +5,9 @@ import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Класс содержащий все необходимое для отображения информации из файла в текстовой области
+ */
 public class FileDisplay extends AbstractDisplay {
     private static final String DISPLAY_NAME = "Файл";
     private final JLabel filePathLabel;
@@ -14,6 +17,10 @@ public class FileDisplay extends AbstractDisplay {
     private final JSeparator separator;
     private final TrajectoryFileStorage fileStorage;
 
+    /**
+     * Создает объект дисплея и внедряет зависимость
+     * @param storage хранилище Файлов траекторий
+     */
     public FileDisplay(TrajectoryFileStorage storage) {
         super(DISPLAY_NAME);
 
@@ -23,13 +30,14 @@ public class FileDisplay extends AbstractDisplay {
 
         verticalBox.add(displayHeader);
 
+        // разделитель между двумя лейблами
         separator = new JSeparator();
         separator.setOrientation(SwingConstants.HORIZONTAL);
         verticalBox.add(separator);
 
-        if (fileStorage.isEmpty()) {
+        if (fileStorage.isEmpty()) {    // если хранилище пустое
             filePathLabel = new JLabel("Файл не выбран");
-        } else {
+        } else {    // если хранилище не пустое, то в лейбл записываем сокращенный путь к файлу
             String path = fileStorage.getCurrentFile().getPath();
             if (path.length() > 30) {
                 String shortenedPath =
@@ -37,7 +45,8 @@ public class FileDisplay extends AbstractDisplay {
                         "..." +
                         path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
                 filePathLabel = new JLabel(shortenedPath);
-                filePathLabel.setToolTipText(path);
+                filePathLabel.setToolTipText(path); // если путь до файла слишком длинный, то урезаем его
+                                                    // и устанавливаем тултип для лейбла с полным путем до файла
             } else {
                 filePathLabel = new JLabel(path);
             }
@@ -48,6 +57,7 @@ public class FileDisplay extends AbstractDisplay {
         fileTextArea = initFileTextArea();
         scrollPane = initFileTextScrollPane(fileTextArea);
         scrollPane.setBorder(null);
+
         hideMainInfo();
 
         filePathAndTextArea = new JPanel(new BorderLayout());
@@ -69,6 +79,10 @@ public class FileDisplay extends AbstractDisplay {
         }
     }
 
+    /**
+     * Инициализирует текстовую область для отображения файла
+     * @return текстовая область
+     */
     private JTextArea initFileTextArea() {
         JTextArea textArea = new JTextArea();
         textArea.setEditable(false);
@@ -78,6 +92,11 @@ public class FileDisplay extends AbstractDisplay {
         return textArea;
     }
 
+    /**
+     * Инициализирует скролл панель для текстовой области
+     * @param textArea текстовая область
+     * @return скролл панель
+     */
     private JScrollPane initFileTextScrollPane(JTextArea textArea) {
 
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -87,6 +106,10 @@ public class FileDisplay extends AbstractDisplay {
         return scrollPane;
     }
 
+    /**
+     * Загружает данные из файла в текстовую область
+     * @param fileData данные из файла
+     */
     private void loadFileDataToArea(String fileData) {
         this.fileTextArea.setText(fileData);
         String path = fileStorage.getCurrentFile().getPath();
@@ -109,11 +132,18 @@ public class FileDisplay extends AbstractDisplay {
         hideMainInfo();
     }
 
+    /**
+     * Скрывает компоненты дисплея
+     */
     public void hideMainInfo() {
         filePathLabel.setVisible(false);
         scrollPane.setVisible(false);
         separator.setVisible(false);
     }
+
+    /**
+     * Показывает компоненты дисплея
+     */
     public void showMainInfo() {
         filePathLabel.setVisible(true);
         scrollPane.setVisible(true);

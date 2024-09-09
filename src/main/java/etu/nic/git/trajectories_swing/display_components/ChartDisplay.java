@@ -326,10 +326,16 @@ public class ChartDisplay extends AbstractDisplay {
         background.repaint();
     }
 
+    /**
+     * Скрывает компоненты дисплея
+     */
     public void hideMainInfo() {
         checksAndChart.setVisible(false);
     }
 
+    /**
+     * Показывает компоненты дисплея
+     */
     public void showMainInfo() {
         checksAndChart.setVisible(true);
     }
@@ -359,7 +365,6 @@ public class ChartDisplay extends AbstractDisplay {
      */
     private void clearPlot() {
         plot.setDataset(null); // Удаление всех наборов данных
-//        plot.clearDomainAxes(); // Очистка осей X
         plot.clearRangeAxes(); // Очистка осей Y
         plot.setRenderer(null); // Удаление рендерера
     }
