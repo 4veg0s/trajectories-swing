@@ -10,28 +10,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Objects;
 
+/**
+ * Класс, характеризующий файл траекторной информации
+ */
 public class TrajectoryFile {
     private static final Logger logger = LoggerFactory.getLogger(TrajectoryFile.class);
     public static final String TRAJECTORY_NAME_PREFIX = "Траектория ";
-    private static int nextTrajectoryIndex = 1;
+    private static int nextTrajectoryIndex = 1;     // индекс, подставляющийся в текстовое поле задания наименования траектории
     private String path;
     private String name;
     private String data;
     private String dataOnCreation;
 
-    public TrajectoryFile(String path, String name) throws FileNotFoundException {
-        File file = new File(path);
-        if (file.exists()) {
-            this.path = file.getAbsolutePath();
-            this.name = name;  // пока имя файла в приложении не переназначили
-            this.data = readDataFromFile();
-            this.dataOnCreation = this.data;
-        } else {
-            logger.info("Попытка создать несуществующий файл траектории: {}", file.getAbsolutePath());
-            throw new FileNotFoundException();
-        }
-    }
-
+    /**
+     * Создает объект файла траекторной информации на основе файла из системы
+     * @param file файл траектории
+     * @param name имя траектории (например, "Траектория 1")
+     * @throws FileNotFoundException
+     */
     public TrajectoryFile(File file, String name) throws FileNotFoundException {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
@@ -44,14 +40,26 @@ public class TrajectoryFile {
         }
     }
 
+    /**
+     * Читает данные из этого файла
+     * @return
+     */
     public String readDataFromFile() {
         return FileDataLoader.readDataFromFile(this.getPath()); // считать данные из этого файла и вернуть их
     }
+
+    /**
+     * Записывает данные в соответсвующий файл, если приложение изменяло их
+     */
     public void writeCurrentDataToFileIfHasChanges() {
         if (this.hasChanges()) {    // если в файле были изменения
             this.writeDataToFileWithNoConditions();
         }   // если не было изменений в файле, то и записывать нечего
     }
+
+    /**
+     * Записывает данные в соответсвующий файл, если приложение изменяло их или создается новый файл (через "Сохранить как...")
+     */
     public void writeCurrentDataToFileIfHasChangesOrIsNewFile(String oldFilePath) {
         if (!this.getPath().equals(oldFilePath) || this.hasChanges()) {    // если в файле были изменения или необходимо записать данные по новому пути
             this.writeDataToFileWithNoConditions();
@@ -64,10 +72,6 @@ public class TrajectoryFile {
     private void writeDataToFileWithNoConditions() {
         FileDataLoader.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
         this.setDataOnCreation(this.getData()); // устанавливаем данные "до изменения" на новые (текущие)
-    }
-
-    public String getDataOnCreation() {
-        return dataOnCreation;
     }
 
     public void setDataOnCreation(String dataOnCreation) {
@@ -97,10 +101,6 @@ public class TrajectoryFile {
         return rawName.replace("*", "");
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getData() {
         return data;
     }
@@ -117,6 +117,12 @@ public class TrajectoryFile {
         return !dataOnCreation.equals(data);
     }
 
+    /**
+     * Проверяет валидность текстовой информации, потенциально являющейся траекторией
+     * @param data данные, которые необходимо проверить
+     * @return true, если траекторная информация валидна, false - иначе
+     * @throws InvalidFileFormatException
+     */
     public static boolean checkTrajectoryDataValidity(String data) throws InvalidFileFormatException {
         if (!data.trim().isEmpty()) {
             String[] lines = data.split("\n");
@@ -171,7 +177,7 @@ public class TrajectoryFile {
         }
 
     }
-
+    
     public static void incrementTrajectoryIndex() {
         nextTrajectoryIndex++;
     }
