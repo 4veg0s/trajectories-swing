@@ -62,7 +62,7 @@ public class ApplicationAssembler {
         tableDisplayPopupMenu = new TableDisplayPopupMenu(fileStorage, model);
         tableDisplay = new TableDisplay(model, tableDisplayPopupMenu);
         displayList.add(tableDisplay);
-        tablePopupMenu = new TablePopupMenu(tableDisplay.getTable(), mainFrame);
+        tablePopupMenu = new TablePopupMenu(tableDisplay.getTable());
         tableDisplay.setTablePopupMenu(tablePopupMenu.getPopupMenu());
 
         fileDisplay = new FileDisplay(fileStorage);

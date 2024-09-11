@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Класс, содержащий все необходимое для контекстного меню таблицы
+ */
 public class TablePopupMenu {
     private static final String MENU_INSERT_ROW_ABOVE = "Вставить строку выше";
     private static final String MENU_INSERT_ROW_BELOW = "Вставить строку ниже";
@@ -19,20 +22,23 @@ public class TablePopupMenu {
     private final JTable table;
     private final TrajectoryRowTableModel model;
     private int rowAtPoint;
-    private final MainFrame mainFrame;
 
-    public TablePopupMenu(JTable t, MainFrame frame) {
+    /**
+     * Создает контекстное меню для таблицы
+     * @param t таблица, для которой будет создано контекстное меню
+     */
+    public TablePopupMenu(JTable t) {
         this.table = t;
-        this.mainFrame = frame;
-        model = (TrajectoryRowTableModel) table.getModel();
+        model = (TrajectoryRowTableModel) table.getModel();  // достаем модель данных из таблицы
         popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
-                rowAtPoint = table.rowAtPoint(new Point(x, y));
-                super.show(invoker, x, y);
+                rowAtPoint = table.rowAtPoint(new Point(x, y));  // номер строки таблицы по соответствующим координатам
+                super.show(invoker, x, y);  // отображение контекстного меню
             }
         };
 
+        // элемент меню для вставки строки выше выбранной
         JMenuItem insertRowAboveMenuItem = new JMenuItem(MENU_INSERT_ROW_ABOVE);
         insertRowAboveMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -41,6 +47,8 @@ public class TablePopupMenu {
                 model.fireTableDataChanged();
             }
         });
+
+        // элемент меню для вставки строки ниже выбранной
         JMenuItem insertRowBelowMenuItem = new JMenuItem(MENU_INSERT_ROW_BELOW);
         insertRowBelowMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -49,6 +57,8 @@ public class TablePopupMenu {
                 model.fireTableDataChanged();
             }
         });
+
+        // элемент меню для удаления выбранной строки
         JMenuItem deleteRowMenuItem = new JMenuItem(MENU_DELETE_ROW);
         deleteRowMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -57,6 +67,8 @@ public class TablePopupMenu {
                 model.fireTableDataChanged();
             }
         });
+
+        // элемент меню для отображения статистической информации
         JMenuItem showStatsMenuItem = new JMenuItem(MENU_SHOW_STATS);
         showStatsMenuItem.addActionListener(new ActionListener() {
             @Override
