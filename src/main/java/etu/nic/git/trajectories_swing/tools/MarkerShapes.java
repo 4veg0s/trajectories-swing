@@ -7,13 +7,21 @@ import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 
+/**
+ * Класс, содержащий формы для маркеров в виде букв (X, Y и Z)
+ */
 public class MarkerShapes {
     private static final Font font = new Font(
             Font.DIALOG,
-//            "SansSerif",
             Font.PLAIN,
             10);
 
+    /**
+     * Создание объекта {@link Shape} из текста
+     * @param text текст, который станет формой
+     * @param font шрифт для текста
+     * @return форма в виде переданного текста
+     */
     public static Shape createShapeFromText(String text, Font font) {
         // Создание объекта FontRenderContext для получения информации о рендеринге шрифта
         FontRenderContext frc = new FontRenderContext(null, true, true);

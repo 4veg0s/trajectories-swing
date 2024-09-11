@@ -2,6 +2,9 @@ package etu.nic.git.trajectories_swing.tools;
 
 import java.awt.*;
 
+/**
+ * Класс, содержащий константы констрейнтов расположения дисплеев в главном окне для {@link GridBagLayout}
+ */
 public class GridBagLayoutConstraints {
     private static final int FRAME_RESOLUTION_X = 16;
     private static final int FRAME_RESOLUTION_Y = 9;
@@ -9,6 +12,11 @@ public class GridBagLayoutConstraints {
     private static final int TOP_ROW_HEIGHT = 2;
     private static final int RIGHT_COLUMN_WIDTH = FRAME_RESOLUTION_X - LEFT_COLUMN_WIDTH;
     private static final int BOTTOM_ROW_HEIGHT = FRAME_RESOLUTION_Y - TOP_ROW_HEIGHT;
+
+    /**
+     * Получение констрейнтов для каталога
+     * @return констрейнты для {@link GridBagLayout}
+     */
     public static GridBagConstraints catalogDisplayConstraints() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
@@ -21,6 +29,10 @@ public class GridBagLayoutConstraints {
         return constraints;
     }
 
+    /**
+     * Получение констрейнтов для таблицы
+     * @return констрейнты для {@link GridBagLayout}
+     */
     public static GridBagConstraints tableDisplayConstraints() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
@@ -32,6 +44,11 @@ public class GridBagLayoutConstraints {
         constraints.gridheight = TOP_ROW_HEIGHT;
         return constraints;
     }
+
+    /**
+     * Получение констрейнтов для компоненты отображения файла
+     * @return констрейнты для {@link GridBagLayout}
+     */
     public static GridBagConstraints fileDisplayConstraints() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
@@ -43,6 +60,11 @@ public class GridBagLayoutConstraints {
         constraints.gridheight = BOTTOM_ROW_HEIGHT;
         return constraints;
     }
+
+    /**
+     * Получение констрейнтов для компоненты отображения графика
+     * @return констрейнты для {@link GridBagLayout}
+     */
     public static GridBagConstraints chartDisplayConstraints() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;

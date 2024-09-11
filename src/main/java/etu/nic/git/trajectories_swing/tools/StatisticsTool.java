@@ -6,6 +6,9 @@ import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Класс для вычисления статистических характеристик массивов чисел
+ */
 public class StatisticsTool {
     /**
      * Метод вычисляющий <b>среднее значение</b> в массиве

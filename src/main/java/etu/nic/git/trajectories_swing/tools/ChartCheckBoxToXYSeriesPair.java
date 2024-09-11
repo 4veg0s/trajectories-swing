@@ -4,6 +4,9 @@ import org.jfree.data.xy.XYSeries;
 
 import javax.swing.*;
 
+/**
+ * Пара объекта чекбокса и соответствующей ему серии с графика
+ */
 public class ChartCheckBoxToXYSeriesPair {
     private JCheckBox checkBox;
     private XYSeries series;
@@ -31,13 +34,5 @@ public class ChartCheckBoxToXYSeriesPair {
 
     public XYSeries getSeries() {
         return series;
-    }
-
-    public XYSeries getSeriesIfCheckBoxSelectedOrNullOtherwise() {
-        if (this.checkBox.isSelected()) {
-            return this.series;
-        } else {
-            return null;
-        }
     }
 }
