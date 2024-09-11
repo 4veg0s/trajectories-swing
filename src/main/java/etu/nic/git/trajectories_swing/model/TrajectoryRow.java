@@ -1,14 +1,17 @@
 package etu.nic.git.trajectories_swing.model;
 
-// Время, x-координата, y-координата, z-координата, x-составляющая скорости, yсоставляющая скорости, z-составляющая скорости
-// "T, с", "X, м", "Y, м", "Z, м", "Vx, м/с", "Vy, м/с", "Vz, м/с"
-
 import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * Класс траекторной информации в конкретную секунду времени (одна строка таблицы траекторной информации)
+ */
 public class TrajectoryRow {
+    private static final Logger logger = LoggerFactory.getLogger(TrajectoryRow.class);
     public static final int AMOUNT_OF_PARAMETERS = 7;
     public static final String[] PARAMETER_NAMES = new String[]{
             "time",
@@ -40,6 +43,11 @@ public class TrajectoryRow {
         this.velocityZ = VelocityZ;
     }
 
+    /**
+     * Метод создает объект на основе строки
+     * @param rawString строка, потенциально являющаяся строкой траектории
+     * @return объект траекторной строки
+     */
     public static TrajectoryRow buildTrajectoryRowFromString(String rawString) {
         String[] columns = rawString.split("\\s+");
         Double[] convertedValues = new Double[columns.length];
@@ -58,6 +66,10 @@ public class TrajectoryRow {
         );
     }
 
+    /**
+     * Получение массива double из траектории
+     * @return массив double, соответствующий траекторной строке
+     */
     public double[] toDoubleArray() {
         return new double[]{
                 this.time,
@@ -113,8 +125,8 @@ public class TrajectoryRow {
     }
 
     /**
-     * Метод возвращает -1, если все параметры входной строки валидны, иначе -- индекс первого невалидного параметра
-     * (FIXME) Выбрасывает исключение, если количество параметров в строке неверное
+     * Метод возвращает -1, если все параметры входной строки валидны, иначе - индекс первого невалидного параметра.
+     * Выбрасывает исключение, если количество параметров в строке неверное
      */
     public static int indexOfInvalidParameter(String rawString) {
         if (isValidAmountOfParametersInTrajectoryString(rawString)) {
@@ -126,15 +138,26 @@ public class TrajectoryRow {
             }
             return -1;
         } else {
-            throw new RuntimeException("Как сюда попало неверное число параметров?");   // FIXME
+            logger.error("Как сюда попало неверное число параметров?");
+            throw new RuntimeException("Как сюда попало неверное число параметров?");
         }
     }
 
+    /**
+     * Проверяет строку на соответствие количеству параметров в траектории
+     * @param rawString строка для проверки
+     * @return
+     */
     public static boolean isValidAmountOfParametersInTrajectoryString(String rawString) {
         String[] columns = rawString.split("\\s+");
         return columns.length == AMOUNT_OF_PARAMETERS;
     }
 
+    /**
+     * Проверяет строку на соответствие формату числа с плавающей точкой, в том числе - в научном формате (число содержит E)
+     * @param stringToCheck строка для проверки
+     * @return true, если строка соответствует критерию, иначе - false
+     */
     public static boolean isDoubleOrSciDouble(String stringToCheck) {
         return Pattern.matches("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$", stringToCheck);
     }
@@ -210,7 +233,11 @@ public class TrajectoryRow {
         return -1;
     }
 
-    public String toFileString() {  // "toString", но в том же виде, как и строка из исходного файла
+    /**
+     * "toString", но в формате, как строка из исходного файла
+     * @return строка с параметрами траектории через два пробела
+     */
+    public String toFileString() {  //
         return String.format("%.3f", time).replace(",", ".") + "  " +
                 String.format("%.1f", coordinateX).replace(",", ".") + "  " +
                 String.format("%.1f", coordinateY).replace(",", ".") + "  " +

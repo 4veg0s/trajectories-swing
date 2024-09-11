@@ -7,6 +7,9 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Модель данных таблицы траекторной информации
+ */
 public class TrajectoryRowTableModel extends AbstractTableModel {
     private static final Logger logger = LoggerFactory.getLogger(TrajectoryRowTableModel.class);
     private List<TrajectoryRow> trajectoryRowList;
@@ -21,6 +24,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     public TrajectoryRowTableModel() {
     }
 
+    /**
+     * Создает модель данных на основе списка строк траектории
+     * @param trajectoryRowList список строк траектории
+     */
     public TrajectoryRowTableModel(List<TrajectoryRow> trajectoryRowList) {
         this.trajectoryRowList = trajectoryRowList;
     }
@@ -45,7 +52,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return trajectoryRowList.size();
     }
 
-    // Время, x-координата, y-координата, z-координата, x-составляющая скорости, yсоставляющая скорости, z-составляющая скорости
+    // Время, x-координата, y-координата, z-координата, x-составляющая скорости, y-составляющая скорости, z-составляющая скорости
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         TrajectoryRow row = trajectoryRowList.get(rowIndex);
@@ -98,6 +105,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return trajectoryRowList;
     }
 
+    /**
+     * Сеттер списка траекторных строк с сортировкой по времени
+     * @param trajectoryRowList список траекторных строк
+     */
     public void setTrajectoryRowList(List<TrajectoryRow> trajectoryRowList) {
         this.trajectoryRowList = trajectoryRowList;
         this.sortByTime();
@@ -116,12 +127,19 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return column;
     }
 
+    /**
+     * Сортирует список строк траектории по времени
+     */
     public void sortByTime() {
         trajectoryRowList = trajectoryRowList.stream()
                 .sorted(((o1, o2) -> Double.compare(o1.getTime(), o2.getTime())))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Получает всю информацию из таблицы в формате файла траекторной информации
+     * @return траекторная информация из списка в виде строки
+     */
     public String getTableDataInString() {
         StringBuilder tableData = new StringBuilder();
         for (TrajectoryRow row : trajectoryRowList) {
@@ -148,11 +166,13 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return !trajectoryRowList.isEmpty() && index == trajectoryRowList.size() - 1;
     }
 
+    /**
+     * Вставляет новую строку траектории выше заданного индекса
+     * @param index индекс выбранной строки
+     */
     public void insertRowAbove(int index) {  // сюда не должен попадать несуществующий индекс
-        // fixme
         if (index > trajectoryRowList.size() - 1) {
             logger.error("Как сюда попал такой индекс");
-//            throw new RuntimeException("Как сюда попал такой индекс");
         }
 
         TrajectoryRow newRow = new TrajectoryRow();
@@ -165,11 +185,14 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         }
         trajectoryRowList.add(index, newRow);
     }
+
+    /**
+     * Вставляет новую строку траектории ниже заданного индекса
+     * @param index индекс выбранной строки
+     */
     public void insertRowBelow(int index) {
-        // fixme
         if (index > trajectoryRowList.size() - 1) {
             logger.error("Как сюда попал такой индекс");
-//            throw new RuntimeException("Как сюда попал такой индекс");
         }
 
         TrajectoryRow newRow = new TrajectoryRow();
@@ -183,11 +206,14 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         trajectoryRowList.add(index + 1, newRow);
 
     }
+
+    /**
+     * Удаляет строку траектории по заданному индексу
+     * @param index индекс выбранной строки
+     */
     public void deleteRow(int index) {
-        // fixme
         if (index > trajectoryRowList.size() - 1) {
             logger.error("Как сюда попал такой индекс");
-//            throw new RuntimeException("Как сюда попал такой индекс");
         }
 
         trajectoryRowList.remove(index);

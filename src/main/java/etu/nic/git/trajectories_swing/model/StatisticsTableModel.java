@@ -4,6 +4,9 @@ import etu.nic.git.trajectories_swing.tools.StatisticsTool;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Модель данных таблицы статистической информации
+ */
 public class StatisticsTableModel extends AbstractTableModel {
     private final String[] ROW_NAMES = new String[]{
             "Среднее",
@@ -23,6 +26,10 @@ public class StatisticsTableModel extends AbstractTableModel {
     public StatisticsTableModel() {
     }
 
+    /**
+     * Создает модель данных таблицы со статистической информацией
+     * @param tableModel модель данных таблицы траекторной информации
+     */
     public StatisticsTableModel(TrajectoryRowTableModel tableModel) {
         this.model = tableModel;
 
@@ -31,12 +38,15 @@ public class StatisticsTableModel extends AbstractTableModel {
 
         double value;
         data = new Object[AMOUNT_OF_ROWS][AMOUNT_OF_COLUMNS];
+
+        // заполнение ячеек таблицы с первым столбцом в качестве наименований характеристик
         for (int i = 0; i < AMOUNT_OF_ROWS; i++) {
             data[i][0] = ROW_NAMES[i];
             for (int j = 1; j < AMOUNT_OF_COLUMNS; j++) {
                 switch (i) {
                     case 0:
                         value = StatisticsTool.getAverageOfArray(model.getTrajectoryColumnByParameterIndex(j));
+                        // если пришел NaN, то в таблицу попадет прочерк, иначе число с 8 знаками после запятой или ноль
                         data[i][j] = (Double.isNaN(value)) ? "--" : (value < Math.pow(10, -8)) ? 0 : String.format("%.8f", value);
                         break;
                     case 1:
