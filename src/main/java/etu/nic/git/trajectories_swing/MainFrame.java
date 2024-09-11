@@ -10,37 +10,31 @@ import etu.nic.git.trajectories_swing.tools.GridBagLayoutConstraints;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Главное окно приложения
+ */
 public class MainFrame extends JFrame {
     private static final String FRAME_TITLE = "Траектории";
 
     public MainFrame() throws HeadlessException {
         super();
     }
+
+    /**
+     * Создает объект фрейма и добавляет на него дисплеи и меню
+     *
+     * @param menuBar        меню-бар
+     * @param catalogDisplay компонента отображающая каталог
+     * @param tableDisplay   компонента отображающая таблицу
+     * @param fileDisplay    компонента отображающая файл
+     * @param chartDisplay   компонента отображающая график
+     */
     public MainFrame(TopMenuBar menuBar, CatalogDisplay catalogDisplay, TableDisplay tableDisplay, FileDisplay fileDisplay, ChartDisplay chartDisplay) {
         super("Траектории");
 
         this.setJMenuBar(menuBar.getMenuBar());
 
         JPanel background = new JPanel(new GridBagLayout());
-//        JPanel background = new JPanel(new BorderLayout());
-
-//        // разделитель для гуи
-//        JSeparator separator = new JSeparator();
-//        separator.setOrientation(SwingConstants.HORIZONTAL);
-//        // верхняя часть окна с каталогом и таблицей
-//        Box leftRow = new Box(BoxLayout.Y_AXIS);
-//        leftRow.add(catalogDisplay.getComponent());
-//        leftRow.add(separator);
-//        leftRow.add(fileDisplay.getComponent());
-//
-//        // нижняя часть окна
-//        Box rightRow = new Box(BoxLayout.Y_AXIS);
-//        rightRow.add(tableDisplay.getComponent());
-//        rightRow.add(separator);
-//        rightRow.add(chartDisplay.getComponent());
-//
-//        background.add(BorderLayout.WEST, leftRow);
-//        background.add(BorderLayout.CENTER, rightRow);
 
         background.add(catalogDisplay.getComponent(), GridBagLayoutConstraints.catalogDisplayConstraints());
         background.add(tableDisplay.getComponent(), GridBagLayoutConstraints.tableDisplayConstraints());
@@ -56,18 +50,31 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * Добавление имени траектории к заголовку окна, если оно не null, иначе - возвращает к дефолтному состоянию
+     *
+     * @param name имя траектории
+     */
     public void appendFileToFrameTitle(String name) {
         if (name != null) {
             this.setTitle(FRAME_TITLE + " - " + name);
         } else {
-            this.setTitle(FRAME_TITLE);
+            restoreTitle();
         }
     }
 
+    /**
+     * Восстанавливает дефолтное значение заголовка окна
+     */
     public void restoreTitle() {
         this.setTitle(FRAME_TITLE);
     }
 
+    /**
+     * Получает границы отображаемого главного окна приложения
+     *
+     * @return границы
+     */
     public Rectangle getFrameBounds() {
         return this.getBounds();
     }
