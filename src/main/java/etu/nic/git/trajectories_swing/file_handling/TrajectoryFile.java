@@ -131,7 +131,7 @@ public class TrajectoryFile {
             for (int i = 0; i < lines.length; i++) {
                 String line = lines[i];
                 try {
-                    TrajectoryRow.isValidTrajectoryStringWithExceptions(line);
+                    TrajectoryRow.isValidTrajectoryStringWithExceptions(line);  // проверка валидности строчки с выбросом исключений
                 } catch (InvalidAmountOfParametersException e) {
                     if (invalidAmountOfParametersMessage.toString().isEmpty()) {
                         invalidAmountOfParametersMessage.append("\tСтрока №");
