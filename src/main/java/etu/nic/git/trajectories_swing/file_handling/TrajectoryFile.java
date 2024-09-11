@@ -97,6 +97,11 @@ public class TrajectoryFile {
         return name + ((dataOnCreation.equals(data)) ? "" : "*");
     }
 
+    /**
+     * Метод обрезает звездочку после имени файла
+     * @param rawName имя, в котором может быть звездочка
+     * @return имя без звездочки
+     */
     public static String stripAsteriskFromNameString(String rawName) {
         return rawName.replace("*", "");
     }
