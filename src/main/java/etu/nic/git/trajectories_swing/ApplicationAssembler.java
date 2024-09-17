@@ -1,7 +1,17 @@
 package etu.nic.git.trajectories_swing;
 
-import etu.nic.git.trajectories_swing.dialogs.*;
-import etu.nic.git.trajectories_swing.display_components.*;
+
+import etu.nic.git.trajectories_swing.dialogs.DefaultOKDialog;
+import etu.nic.git.trajectories_swing.dialogs.FileNotFoundDialog;
+import etu.nic.git.trajectories_swing.dialogs.InvalidFileFormatDialog;
+import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
+import etu.nic.git.trajectories_swing.dialogs.SaveTrajectoryFileChangesDialog;
+import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
+import etu.nic.git.trajectories_swing.display_components.AbstractDisplay;
+import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
+import etu.nic.git.trajectories_swing.display_components.FileDisplay;
+import etu.nic.git.trajectories_swing.display_components.TableDisplay;
 import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
 import etu.nic.git.trajectories_swing.menus.TableDisplayPopupMenu;
@@ -11,11 +21,11 @@ import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 import etu.nic.git.trajectories_swing.file_handling.FileDataLoader;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;

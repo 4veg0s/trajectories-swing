@@ -1,9 +1,7 @@
 package etu.nic.git.trajectories_swing.dialogs;
 
 import etu.nic.git.trajectories_swing.model.StatisticsTableModel;
-import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.tools.StatisticsTool;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;

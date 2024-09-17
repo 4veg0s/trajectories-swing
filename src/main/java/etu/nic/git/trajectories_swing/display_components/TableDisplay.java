@@ -4,10 +4,13 @@ import etu.nic.git.trajectories_swing.menus.TableDisplayPopupMenu;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.table.*;
-import java.awt.*;
+
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import java.awt.Font;
+import java.awt.BorderLayout;
 import java.util.Arrays;
 
 /**
@@ -50,20 +53,6 @@ public class TableDisplay extends AbstractDisplay {
         background.add(BorderLayout.NORTH, displayHeader);
 
         background.add(BorderLayout.CENTER, tableScrollPane);
-    }
-
-    // fixme может пригодиться
-    public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
-                                             double... percentages) {
-        double total = 0;
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-            total += percentages[i];
-        }
-
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-            TableColumn column = table.getColumnModel().getColumn(i);
-            column.setPreferredWidth((int) (tablePreferredWidth * (percentages[i] / total)));
-        }
     }
 
     @Override

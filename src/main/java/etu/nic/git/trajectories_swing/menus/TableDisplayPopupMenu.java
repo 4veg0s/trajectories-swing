@@ -4,7 +4,8 @@ import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
-import javax.swing.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;

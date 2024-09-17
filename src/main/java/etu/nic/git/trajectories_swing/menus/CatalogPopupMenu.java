@@ -1,10 +1,10 @@
 package etu.nic.git.trajectories_swing.menus;
 
-import javax.swing.*;
-import java.awt.*;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * Класс, содержащий все необходимое для контекстного меню каталога

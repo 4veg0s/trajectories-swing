@@ -1,7 +1,11 @@
 package etu.nic.git.trajectories_swing.dialogs;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Dialog;
+import java.awt.Rectangle;
+import java.awt.Window;
 
 public class TrajectoryExistsDialog {
     private JDialog dialog;

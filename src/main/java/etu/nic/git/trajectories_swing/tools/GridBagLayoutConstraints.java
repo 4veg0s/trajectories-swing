@@ -1,6 +1,8 @@
 package etu.nic.git.trajectories_swing.tools;
 
-import java.awt.*;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 /**
  * Класс, содержащий константы констрейнтов расположения дисплеев в главном окне для {@link GridBagLayout}

@@ -3,8 +3,14 @@ package etu.nic.git.trajectories_swing.display_components;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;

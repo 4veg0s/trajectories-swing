@@ -2,8 +2,19 @@ package etu.nic.git.trajectories_swing.display_components;
 
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Insets;
+
 
 /**
  * Класс содержащий все необходимое для отображения информации из файла в текстовой области

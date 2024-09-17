@@ -1,10 +1,7 @@
 package etu.nic.git.trajectories_swing.tools;
 
-import etu.nic.git.trajectories_swing.model.TrajectoryRow;
-import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Класс для вычисления статистических характеристик массивов чисел
@@ -12,6 +9,7 @@ import java.util.List;
 public class StatisticsTool {
     /**
      * Метод вычисляющий <b>среднее значение</b> в массиве
+     *
      * @param array массив, для которого необходимо посчитать среднее
      * @return число - среднее по массиву
      */
@@ -24,6 +22,7 @@ public class StatisticsTool {
 
     /**
      * Метод вычисляющий значение <b>дисперсии</b> в массиве
+     *
      * @param array массив, для которого необходимо посчитать дисперсию
      * @return число - дисперсия массива
      */
@@ -37,6 +36,7 @@ public class StatisticsTool {
 
     /**
      * Метод вычисляющий значение <b>выборочного момента второго порядка</b> в массиве
+     *
      * @param array массив, для которого необходимо посчитать выборочный момент второго порядка
      * @return число - выборочный момент второго порядка
      */
@@ -47,8 +47,10 @@ public class StatisticsTool {
                         0, (subtotal, element) -> subtotal + (element - average) * (element - average)
                 ) / (array.length - 1);
     }
+
     /**
      * Метод вычисляющий значение <b>выборочного момента третьего порядка</b> в массиве
+     *
      * @param array массив, для которого необходимо посчитать выборочный момент третьего порядка
      * @return число - выборочный момент третьего порядка
      */

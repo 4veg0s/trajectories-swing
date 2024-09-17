@@ -2,7 +2,8 @@ package etu.nic.git.trajectories_swing.tools;
 
 import org.jfree.data.xy.XYSeries;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+
 
 /**
  * Пара объекта чекбокса и соответствующей ему серии с графика

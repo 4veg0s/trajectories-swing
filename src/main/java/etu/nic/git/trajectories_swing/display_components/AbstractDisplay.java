@@ -1,8 +1,13 @@
 package etu.nic.git.trajectories_swing.display_components;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
  * Абстрактный класс, являющийся основой для всех компонент-дисплеев в приложении,

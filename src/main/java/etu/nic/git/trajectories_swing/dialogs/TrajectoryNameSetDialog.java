@@ -3,8 +3,16 @@ package etu.nic.git.trajectories_swing.dialogs;
 import etu.nic.git.trajectories_swing.MainFrame;
 import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.Dialog;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

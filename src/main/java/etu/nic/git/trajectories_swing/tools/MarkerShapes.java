@@ -23,19 +23,14 @@ public class MarkerShapes {
      * @return форма в виде переданного текста
      */
     public static Shape createShapeFromText(String text, Font font) {
-        // Создание объекта FontRenderContext для получения информации о рендеринге шрифта
         FontRenderContext frc = new FontRenderContext(null, true, true);
 
-        // Создание объекта TextLayout для текста
         TextLayout textLayout = new TextLayout(text, font, frc);
 
-        // Преобразование TextLayout в Shape
         Shape shape = textLayout.getOutline(null);
 
-        // Получение габаритов объекта Shape
         java.awt.Rectangle bounds = shape.getBounds();
 
-        // Смещение объекта Shape так, чтобы его центр был в точке (0, 0)
         AffineTransform transform = AffineTransform.getTranslateInstance(-bounds.getCenterX(), -bounds.getCenterY());
         Shape centeredShape = transform.createTransformedShape(shape);
 

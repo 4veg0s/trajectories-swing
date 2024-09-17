@@ -7,8 +7,12 @@ import etu.nic.git.trajectories_swing.display_components.TableDisplay;
 import etu.nic.git.trajectories_swing.menus.TopMenuBar;
 import etu.nic.git.trajectories_swing.tools.GridBagLayoutConstraints;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
+import java.awt.Rectangle;
+
 
 /**
  * Главное окно приложения

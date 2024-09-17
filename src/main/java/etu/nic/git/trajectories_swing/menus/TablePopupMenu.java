@@ -1,12 +1,16 @@
 package etu.nic.git.trajectories_swing.menus;
 
-import etu.nic.git.trajectories_swing.MainFrame;
 import etu.nic.git.trajectories_swing.dialogs.TrajectoryStatisticsDialog;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
 
-import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.awt.*;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
