@@ -56,22 +56,24 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         TrajectoryRow row = trajectoryRowList.get(rowIndex);
-        if (0 == columnIndex) {
-            return row.getTime();
-        } else if (1 == columnIndex) {
-            return row.getCoordinateX();
-        } else if (2 == columnIndex) {
-            return row.getCoordinateY();
-        } else if (3 == columnIndex) {
-            return row.getCoordinateZ();
-        } else if (4 == columnIndex) {
-            return row.getVelocityX();
-        } else if (5 == columnIndex) {
-            return row.getVelocityY();
-        } else if (6 == columnIndex) {
-            return row.getVelocityZ();
+        switch (columnIndex) {
+            case 0:
+                return row.getTime();
+            case 1:
+                return row.getCoordinateX();
+            case 2:
+                return row.getCoordinateY();
+            case 3:
+                return row.getCoordinateZ();
+            case 4:
+                return row.getVelocityX();
+            case 5:
+                return row.getVelocityY();
+            case 6:
+                return row.getVelocityZ();
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override

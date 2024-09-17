@@ -24,9 +24,9 @@ public class TrajectoryFile {
 
     /**
      * Создает объект файла траекторной информации на основе файла из системы
+     *
      * @param file файл траектории
      * @param name имя траектории (например, "Траектория 1")
-     * @throws FileNotFoundException
      */
     public TrajectoryFile(File file, String name) throws FileNotFoundException {
         if (file.exists()) {
@@ -34,14 +34,12 @@ public class TrajectoryFile {
             this.name = name;
             this.data = readDataFromFile();
             this.dataOnCreation = this.data;
-        } else {
-            logger.info("Попытка создать несуществующий файл траектории: {}", file.getAbsolutePath());
-            throw new FileNotFoundException();
         }
     }
 
     /**
      * Читает данные из этого файла
+     *
      * @return
      */
     public String readDataFromFile() {
@@ -99,6 +97,7 @@ public class TrajectoryFile {
 
     /**
      * Метод обрезает звездочку после имени файла
+     *
      * @param rawName имя, в котором может быть звездочка
      * @return имя без звездочки
      */
@@ -124,6 +123,7 @@ public class TrajectoryFile {
 
     /**
      * Проверяет валидность текстовой информации, потенциально являющейся траекторией
+     *
      * @param data данные, которые необходимо проверить
      * @return true, если траекторная информация валидна, false - иначе
      * @throws InvalidFileFormatException
@@ -182,7 +182,7 @@ public class TrajectoryFile {
         }
 
     }
-    
+
     public static void incrementTrajectoryIndex() {
         nextTrajectoryIndex++;
     }

@@ -243,34 +243,38 @@ public class ApplicationAssembler {
                                     String trajectoryName = trajectoryNameSetDialog.getTextFieldString();
 
                                     try {
-                                        TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);  // создаем новый файл траектории
-                                        // на основе текстового файла и введенного имени
-
-                                        TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());    // проверка валидности данных в выбранном файле
-                                        TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);   // если проверка пройдена, то пытаемся найти файл с таким же именем
-                                        if (existingFile != null) {   // если такая траектория уже загружена
-                                            if (existingFile.hasChanges()) {    // и если она имеет несохраненные изменения
-                                                ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);   // показ диалогового окна замены файла
-                                                boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult(); // получение результата закрытия диалогового окна
-                                                if (isClosedWithConfirm) {  // если окно закрылось на утверждении
-                                                    fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);   // заменяем существующий файл с таким именем на новый
-                                                } else {
-                                                    this.actionPerformed(e);    // вызываем повторное открытие окна JFileChooser'а с выбором файла
+                                        if (chosenFile.exists()) {
+                                            TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);  // создаем новый файл траектории
+                                            // на основе текстового файла и введенного имени
+                                            TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());    // проверка валидности данных в выбранном файле
+                                            TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);   // если проверка пройдена, то пытаемся найти файл с таким же именем
+                                            if (existingFile != null) {   // если такая траектория уже загружена
+                                                if (existingFile.hasChanges()) {    // и если она имеет несохраненные изменения
+                                                    ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);   // показ диалогового окна замены файла
+                                                    boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult(); // получение результата закрытия диалогового окна
+                                                    if (isClosedWithConfirm) {  // если окно закрылось на утверждении
+                                                        fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);   // заменяем существующий файл с таким именем на новый
+                                                    } else {
+                                                        this.actionPerformed(e);    // вызываем повторное открытие окна JFileChooser'а с выбором файла
+                                                    }
+                                                } else {  // если траектория с таким именем не имеет изменений
+                                                    logger.info("Попытка загрузки траектории с уже существующем в приложении именем");
+                                                    new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();  // показ диалога
                                                 }
-                                            } else {  // если траектория с таким именем не имеет изменений
-                                                logger.info("Попытка загрузки траектории с уже существующем в приложении именем");
-                                                new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();  // показ диалога
+                                            } else {  // если такой траектории не загружено
+                                                fileStorage.add(newTrajectoryFile);     // добавляем в хранилище
                                             }
-                                        } else {  // если такой траектории не загружено
-                                            fileStorage.add(newTrajectoryFile);     // добавляем в хранилище
+                                            updateEntireInfo();
+                                            mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());  // добавление имени траектории в заголовок главного окна
+                                        } else {
+                                            logger.info("Попытка создать несуществующий файл траектории: {}", chosenFile.getAbsolutePath());
+                                            throw new FileNotFoundException();
                                         }
-                                        updateEntireInfo();
-                                        mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());  // добавление имени траектории в заголовок главного окна
+
                                     } catch (FileNotFoundException ex) {    // если указан путь до несуществующего файла
                                         logger.info("Попытка загрузки несуществующего файла");
                                         new FileNotFoundDialog(mainFrame).show();   // показ диалога "Файл с таким именем не найден"
-                                    } catch (
-                                            InvalidFileFormatException ex) {   // если файл содержит данные, не соответствующие формату траекторной информации
+                                    } catch (InvalidFileFormatException ex) {   // если файл содержит данные, не соответствующие формату траекторной информации
                                         logger.info("Попытка загрузки файла неверного формата");
                                         new InvalidFileFormatDialog(mainFrame, ex).show();  // показ диалога "Неверный формат файла
                                     }

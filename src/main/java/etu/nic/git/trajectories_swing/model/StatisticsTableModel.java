@@ -8,6 +8,8 @@ import javax.swing.table.AbstractTableModel;
  * Модель данных таблицы статистической информации
  */
 public class StatisticsTableModel extends AbstractTableModel {
+    private static final int AMOUNT_OF_COLUMNS = 7;
+    private static final int AMOUNT_OF_ROWS = 4;
     private final String[] ROW_NAMES = new String[]{
             "Среднее",
             "Дисперсия",
@@ -28,13 +30,11 @@ public class StatisticsTableModel extends AbstractTableModel {
 
     /**
      * Создает модель данных таблицы со статистической информацией
+     *
      * @param tableModel модель данных таблицы траекторной информации
      */
     public StatisticsTableModel(TrajectoryRowTableModel tableModel) {
         this.model = tableModel;
-
-        final int AMOUNT_OF_COLUMNS = 7;
-        final int AMOUNT_OF_ROWS = 4;
 
         double value;
         data = new Object[AMOUNT_OF_ROWS][AMOUNT_OF_COLUMNS];

@@ -1,6 +1,7 @@
 package etu.nic.git.trajectories_swing.tools;
 
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -29,7 +30,7 @@ public class MarkerShapes {
 
         Shape shape = textLayout.getOutline(null);
 
-        java.awt.Rectangle bounds = shape.getBounds();
+        Rectangle bounds = shape.getBounds();
 
         AffineTransform transform = AffineTransform.getTranslateInstance(-bounds.getCenterX(), -bounds.getCenterY());
         Shape centeredShape = transform.createTransformedShape(shape);
