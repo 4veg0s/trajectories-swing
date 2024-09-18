@@ -1,11 +1,11 @@
 package etu.nic.git.trajectories_swing;
 
-import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
-import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
-import etu.nic.git.trajectories_swing.display_components.FileDisplay;
-import etu.nic.git.trajectories_swing.display_components.TableDisplay;
-import etu.nic.git.trajectories_swing.menus.TopMenuBar;
-import etu.nic.git.trajectories_swing.tools.GridBagLayoutConstraints;
+import etu.nic.git.trajectories_swing.display.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display.ChartDisplay;
+import etu.nic.git.trajectories_swing.display.FileDisplay;
+import etu.nic.git.trajectories_swing.display.TableDisplay;
+import etu.nic.git.trajectories_swing.menu.TopMenuBar;
+import etu.nic.git.trajectories_swing.tool.GridBagLayoutConstraints;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

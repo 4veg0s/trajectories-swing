@@ -1,6 +1,6 @@
 package etu.nic.git.trajectories_swing.model;
 
-import etu.nic.git.trajectories_swing.exceptions.InvalidAmountOfParametersException;
+import etu.nic.git.trajectories_swing.exception.InvalidAmountOfParametersException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

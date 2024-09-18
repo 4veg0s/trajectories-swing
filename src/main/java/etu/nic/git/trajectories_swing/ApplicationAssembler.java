@@ -1,26 +1,26 @@
 package etu.nic.git.trajectories_swing;
 
 
-import etu.nic.git.trajectories_swing.dialogs.DefaultOKDialog;
-import etu.nic.git.trajectories_swing.dialogs.FileNotFoundDialog;
-import etu.nic.git.trajectories_swing.dialogs.InvalidFileFormatDialog;
-import etu.nic.git.trajectories_swing.dialogs.ReplaceTrajectoryFileDialog;
-import etu.nic.git.trajectories_swing.dialogs.SaveTrajectoryFileChangesDialog;
-import etu.nic.git.trajectories_swing.dialogs.TrajectoryNameSetDialog;
-import etu.nic.git.trajectories_swing.display_components.AbstractDisplay;
-import etu.nic.git.trajectories_swing.display_components.CatalogDisplay;
-import etu.nic.git.trajectories_swing.display_components.ChartDisplay;
-import etu.nic.git.trajectories_swing.display_components.FileDisplay;
-import etu.nic.git.trajectories_swing.display_components.TableDisplay;
-import etu.nic.git.trajectories_swing.exceptions.InvalidFileFormatException;
-import etu.nic.git.trajectories_swing.menus.CatalogPopupMenu;
-import etu.nic.git.trajectories_swing.menus.TableDisplayPopupMenu;
-import etu.nic.git.trajectories_swing.menus.TablePopupMenu;
-import etu.nic.git.trajectories_swing.menus.TopMenuBar;
+import etu.nic.git.trajectories_swing.dialog.DefaultOKDialog;
+import etu.nic.git.trajectories_swing.dialog.FileNotFoundDialog;
+import etu.nic.git.trajectories_swing.dialog.InvalidFileFormatDialog;
+import etu.nic.git.trajectories_swing.dialog.ReplaceTrajectoryFileDialog;
+import etu.nic.git.trajectories_swing.dialog.SaveTrajectoryFileChangesDialog;
+import etu.nic.git.trajectories_swing.dialog.TrajectoryNameSetDialog;
+import etu.nic.git.trajectories_swing.display.AbstractDisplay;
+import etu.nic.git.trajectories_swing.display.CatalogDisplay;
+import etu.nic.git.trajectories_swing.display.ChartDisplay;
+import etu.nic.git.trajectories_swing.display.FileDisplay;
+import etu.nic.git.trajectories_swing.display.TableDisplay;
+import etu.nic.git.trajectories_swing.exception.InvalidFileFormatException;
+import etu.nic.git.trajectories_swing.menu.CatalogPopupMenu;
+import etu.nic.git.trajectories_swing.menu.TableDisplayPopupMenu;
+import etu.nic.git.trajectories_swing.menu.TablePopupMenu;
+import etu.nic.git.trajectories_swing.menu.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.file_handling.FileDataLoader;
-import etu.nic.git.trajectories_swing.file_handling.TrajectoryFile;
-import etu.nic.git.trajectories_swing.file_handling.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.file.FileDataLoader;
+import etu.nic.git.trajectories_swing.file.TrajectoryFile;
+import etu.nic.git.trajectories_swing.file.TrajectoryFileStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

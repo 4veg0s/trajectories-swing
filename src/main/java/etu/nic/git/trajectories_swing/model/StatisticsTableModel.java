@@ -1,6 +1,6 @@
 package etu.nic.git.trajectories_swing.model;
 
-import etu.nic.git.trajectories_swing.tools.StatisticsTool;
+import etu.nic.git.trajectories_swing.tool.StatisticsTool;
 
 import javax.swing.table.AbstractTableModel;
 
