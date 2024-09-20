@@ -79,20 +79,28 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         TrajectoryRow row = trajectoryRowList.get(rowIndex);
-        if (0 == columnIndex) {
-            row.setTime((Double) aValue);
-        } else if (1 == columnIndex) {
-            row.setCoordinateX((Double) aValue);
-        } else if (2 == columnIndex) {
-            row.setCoordinateY((Double) aValue);
-        } else if (3 == columnIndex) {
-            row.setCoordinateZ((Double) aValue);
-        } else if (4 == columnIndex) {
-            row.setVelocityX((Double) aValue);
-        } else if (5 == columnIndex) {
-            row.setVelocityY((Double) aValue);
-        } else if (6 == columnIndex) {
-            row.setVelocityZ((Double) aValue);
+        switch (columnIndex) {
+            case 0:
+                row.setTime((Double) aValue);
+                break;
+            case 1:
+                row.setCoordinateX((Double) aValue);
+                break;
+            case 2:
+                row.setCoordinateY((Double) aValue);
+                break;
+            case 3:
+                row.setCoordinateZ((Double) aValue);
+                break;
+            case 4:
+                row.setVelocityX((Double) aValue);
+                break;
+            case 5:
+                row.setVelocityY((Double) aValue);
+                break;
+            case 6:
+                row.setVelocityZ((Double) aValue);
+                break;
         }
         fireTableDataChanged();
     }
