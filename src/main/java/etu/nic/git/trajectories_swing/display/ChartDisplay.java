@@ -58,7 +58,6 @@ public class ChartDisplay extends AbstractDisplay {
         this.model = tableModel;
         this.fileStorage = fileStorage;
 
-        // создание слушателя изменения значения в чекбоксе, при срабатывании которого происходит перерисовка графика
         ItemListener checkBoxItemListener = new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -79,7 +78,6 @@ public class ChartDisplay extends AbstractDisplay {
         JCheckBox coordinateZCheckBox = new JCheckBox("Z, м");
         coordinateZCheckBox.setFont(font14);
 
-        // заполнение списка объектов-пар чекбокса и серии данных с графика
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateYCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(coordinateZCheckBox));
@@ -93,16 +91,13 @@ public class ChartDisplay extends AbstractDisplay {
         JCheckBox velocityZCheckBox = new JCheckBox("Vz, м/с");
         velocityZCheckBox.setFont(font14);
 
-        // заполнение списка объектов-пар чекбокса и серии данных с графика
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityXCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityYCheckBox));
         checksToSeriesList.add(new ChartCheckBoxToXYSeriesPair(velocityZCheckBox));
 
-        // при создании панели с чекбоксами все будут установлены на selected
         for (ChartCheckBoxToXYSeriesPair pair : checksToSeriesList) {
             pair.getCheckBox().setSelected(true);
-            pair.getCheckBox().addItemListener(checkBoxItemListener);   // добавление слушателя на чекбокс после установки selected,
-                                                                        // чтобы не стриггерить событие раньше времени
+            pair.getCheckBox().addItemListener(checkBoxItemListener);
         }
 
         Box horizontalBox = new Box(BoxLayout.X_AXIS);
@@ -111,14 +106,13 @@ public class ChartDisplay extends AbstractDisplay {
         horizontalBox.add(coordinateYCheckBox);
         horizontalBox.add(coordinateZCheckBox);
 
-        horizontalBox.add(new JLabel("     "));     // болванка - пустое пространство между чекбоксами для координат и скорости
+        horizontalBox.add(new JLabel("     "));
 
         horizontalBox.add(velocitiesLabel);
         horizontalBox.add(velocityXCheckBox);
         horizontalBox.add(velocityYCheckBox);
         horizontalBox.add(velocityZCheckBox);
 
-        // панель чекбоксов с горизонтальным BoxLayout'ом
         checkBoxPanel = new JPanel();
         checkBoxPanel.add(horizontalBox);
 
@@ -140,7 +134,6 @@ public class ChartDisplay extends AbstractDisplay {
      * @return соответствующий объект с инициализированной осью абсцисс
      */
     private JFreeChart createChart() {
-        // Создаем график с основной осью Y
         JFreeChart chart = ChartFactory.createXYLineChart(
                 null,
                 "Время, с",
@@ -163,30 +156,25 @@ public class ChartDisplay extends AbstractDisplay {
         XYSeries series;
         for (int i = 1; i < TrajectoryRow.AMOUNT_OF_PARAMETERS; i++) {
             series = new XYSeries(TrajectoryRow.PARAMETER_NAMES[i]);
-            for (int j = 0; j < trajectoryRowList.size(); j++) {  // для каждого из параметров траектории, кроме времени
+            for (int j = 0; j < trajectoryRowList.size(); j++) {
                 double[] rowParameters = trajectoryRowList.get(j).toDoubleArray();
                 series.add(rowParameters[0], rowParameters[i]);
             }
             checksToSeriesList.get(i - 1).setSeries(series);
         }
 
-        // датасет координат
         XYSeriesCollection coordinatesDataset = new XYSeriesCollection();
-        // добавляем в датасет координаты
         coordinatesDataset.addSeries(checksToSeriesList.get(0).getSeries());
         coordinatesDataset.addSeries(checksToSeriesList.get(1).getSeries());
         coordinatesDataset.addSeries(checksToSeriesList.get(2).getSeries());
 
-        // датасет проекций скоростей
         XYSeriesCollection velocitiesDataset = new XYSeriesCollection();
 
-        // добавляем в датасет проекции скоростей
         velocitiesDataset.addSeries(checksToSeriesList.get(3).getSeries());
         velocitiesDataset.addSeries(checksToSeriesList.get(4).getSeries());
         velocitiesDataset.addSeries(checksToSeriesList.get(5).getSeries());
 
         int axisIndex = 0;
-        // если хоть один чекбокс из серии координат выбран, то будет добавлена ось координат
         NumberAxis axis1 = new NumberAxis("Координата, м");
         axis1.setLabelPaint(Color.BLUE);
         axis1.setTickLabelPaint(Color.BLUE);
@@ -195,10 +183,8 @@ public class ChartDisplay extends AbstractDisplay {
         plot.setDataset(axisIndex, coordinatesDataset);
         plot.mapDatasetToRangeAxis(axisIndex, 0);
 
-        // Настройка первого рендерера
         XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer(true, true);
         if (isMarkersAsLettersOnChart()) {
-            // установка маркера в виде соответствующей буквы и цвета для каждой из серий рендерера
             renderer1.setSeriesPaint(0, Color.BLUE);
             renderer1.setSeriesShape(0, MarkerShapes.getShapeX());
             renderer1.setSeriesVisible(0, (checksToSeriesList.get(0).getCheckBox().isSelected()));
@@ -211,7 +197,6 @@ public class ChartDisplay extends AbstractDisplay {
             renderer1.setSeriesShape(2, MarkerShapes.getShapeZ());
             renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
         } else {
-            // создание формы круга для маркера координаты
             Shape circle = new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0);
 
             renderer1.setSeriesPaint(0, Color.RED);
@@ -227,12 +212,10 @@ public class ChartDisplay extends AbstractDisplay {
             renderer1.setSeriesVisible(2, (checksToSeriesList.get(2).getCheckBox().isSelected()));
         }
 
-        // добавляем в график рендерер координат
         plot.setRenderer(axisIndex, renderer1);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_LEFT);
         axisIndex++;
 
-        // если хоть один чекбокс из серии проекций скоростей выбран, то будет добавлена ось координат
         NumberAxis axis2 = new NumberAxis("Скорость, м/с");
         axis2.setLabelFont(new Font(Font.DIALOG, Font.PLAIN, 14));
         axis2.setLabelPaint(Color.RED);
@@ -244,7 +227,6 @@ public class ChartDisplay extends AbstractDisplay {
         XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer(true, true);
 
         if (isMarkersAsLettersOnChart()) {
-            // установка маркера в виде соответствующей буквы и цвета для каждой из серий рендерера
             renderer2.setSeriesPaint(0, Color.RED);
             renderer2.setSeriesShape(0, MarkerShapes.getShapeX());
             renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
@@ -257,14 +239,12 @@ public class ChartDisplay extends AbstractDisplay {
             renderer2.setSeriesShape(2, MarkerShapes.getShapeZ());
             renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
         } else {
-            // создание формы треугольника для маркера скорости
             Path2D.Double triangle = new Path2D.Double();
-            triangle.moveTo(0.0, -3.0);
+            triangle.moveTo(-3.0, -3.0);
             triangle.lineTo(3.0, 0.0);
-            triangle.lineTo(0.0, 3.0);
+            triangle.lineTo(-3.0, 3.0);
             triangle.closePath();
 
-            // установка маркера в виде треугольника и цвета для каждой из серий рендерера
             renderer2.setSeriesPaint(0, Color.RED);
             renderer2.setSeriesShape(0, triangle);
             renderer2.setSeriesVisible(0, (checksToSeriesList.get(3).getCheckBox().isSelected()));
@@ -278,24 +258,18 @@ public class ChartDisplay extends AbstractDisplay {
             renderer2.setSeriesVisible(2, (checksToSeriesList.get(5).getCheckBox().isSelected()));
         }
 
-        // добавляем в график рендерер проекций скорости
         plot.setRenderer(axisIndex, renderer2);
         plot.setRangeAxisLocation(axisIndex, AxisLocation.BOTTOM_OR_RIGHT);
 
-        // установка видимости осей ординат, в зависимости от условий
         plot.getRangeAxis(0).setVisible(this.shouldHaveCoordinatesAxis());
         plot.getRangeAxis(1).setVisible(this.shouldHaveVelocitiesAxis());
-        // установка видимости оси абсцисс, в зависимости от условий
         plot.getDomainAxis().setVisible(this.shouldHaveCoordinatesAxis() || this.shouldHaveVelocitiesAxis());
 
-        // изменение цвета фона у графика
         plot.setBackgroundPaint(Color.WHITE);
 
-        // изменение цвета сетки
         plot.setRangeGridlinePaint(Color.DARK_GRAY);
         plot.setDomainGridlinePaint(Color.DARK_GRAY);
 
-        // установка шрифта для легенды под графиком
         chart.getLegend().setItemFont(new Font(Font.DIALOG, Font.PLAIN, 16));
 
         replaceChart();
@@ -370,9 +344,9 @@ public class ChartDisplay extends AbstractDisplay {
      * Очищает график от предыдущих датасетов
      */
     private void clearPlot() {
-        plot.setDataset(null); // Удаление всех наборов данных
-        plot.clearRangeAxes(); // Очистка осей Y
-        plot.setRenderer(null); // Удаление рендерера
+        plot.setDataset(null);
+        plot.clearRangeAxes();
+        plot.setRenderer(null);
     }
 
     public boolean isMarkersAsLettersOnChart() {

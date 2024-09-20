@@ -38,7 +38,6 @@ public class TrajectoryNameSetDialog {
         trajectoryNameLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
         trajectoryNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // в текстовое поле устанавливается значение по умолчанию: "Траектория" + индекс, инкрементирующийся при открытии нового файла
         trajectoryNameField = new JTextField(TrajectoryFile.TRAJECTORY_NAME_PREFIX + TrajectoryFile.getNextTrajectoryIndex());
 
         okButton = new JButton("OK");

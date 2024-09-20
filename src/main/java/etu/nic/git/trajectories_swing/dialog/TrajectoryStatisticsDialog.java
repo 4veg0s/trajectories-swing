@@ -26,16 +26,14 @@ public class TrajectoryStatisticsDialog {
         this.model = tableModel;
         dialog = new JDialog(owner, DIALOG_TITLE, Dialog.ModalityType.DOCUMENT_MODAL);
 
-        // создание модели таблицы со статистической информацией
         StatisticsTableModel statisticsTableModel = new StatisticsTableModel(model);
 
-        // создание таблицы со статистической информацией на основе соответствующей модели
         JTable table = new JTable(statisticsTableModel);
         setJTableColumnsWidth(table, 1000, 20, 10, 10, 10, 10, 10, 10);
         table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setFont(new Font(Font.DIALOG, Font.BOLD, 16));   // шрифт заголовка таблицы
-        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));   // шрифт данных в таблице
-        table.setRowHeight(20);     // высота строки в таблице
+        table.getTableHeader().setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        table.setRowHeight(20);
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
 
         JScrollPane tableScrollPane = new JScrollPane(table);
@@ -65,9 +63,6 @@ public class TrajectoryStatisticsDialog {
 
         dialog.add(verticalBox);
 
-//        JPanel background = new JPanel();
-//        background.add(tableScrollPane);
-//        dialog.add(background);
         Rectangle rectangleBounds = owner.getBounds();
         dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 4,
                 rectangleBounds.y + rectangleBounds.height / 2, 1100, 200));

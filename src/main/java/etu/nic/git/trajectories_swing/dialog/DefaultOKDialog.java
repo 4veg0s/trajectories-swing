@@ -26,16 +26,14 @@ public class DefaultOKDialog {
     public DefaultOKDialog(Window owner, String title, String oneLineMessage) {
         dialog = new JDialog(owner, title, Dialog.ModalityType.DOCUMENT_MODAL);
 
-        // установка сообщения диалогового окна в лейбл
         JLabel dialogLabel = new JLabel(oneLineMessage);
-        dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);  // выравнивание информации в лейбле по центру
+        dialogLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         Box verticalBox = new Box(BoxLayout.Y_AXIS);
 
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
-        // слушатель, скрывающий диалоговое окно при нажатии на кнопку
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

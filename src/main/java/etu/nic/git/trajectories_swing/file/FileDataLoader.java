@@ -17,17 +17,18 @@ import java.util.List;
 public class FileDataLoader {
     /**
      * Метод считывает данные из файла
+     *
      * @param filePath путь до файла
      * @return данные из файла в виде строки
      */
     public static String readDataFromFile(String filePath) {
         List<String> rawFileLines = new ArrayList<>();
         StringBuilder fileText = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {  // создание ридера
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while (reader.ready()) {
-                rawFileLines.add(reader.readLine());    // чтение строк из файла и запись их в список
+                rawFileLines.add(reader.readLine());
             }
-            for (String line : rawFileLines) {  // конкатенация к строке общей файловой информации
+            for (String line : rawFileLines) {
                 fileText.append(line);
                 fileText.append("\n");
             }
@@ -39,12 +40,13 @@ public class FileDataLoader {
 
     /**
      * Метод записывает данные в файл
+     *
      * @param filePath путь до файла
-     * @param data данные, которые необходимо записать
+     * @param data     данные, которые необходимо записать
      */
     public static void writeDataToFile(String filePath, String data) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {    // создание райтера
-            writer.write(data);  // запись всех данных
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -52,6 +54,7 @@ public class FileDataLoader {
 
     /**
      * Метод парсит строку файловых данных и выдает список траекторной информации на ее основе
+     *
      * @param fileData данные файла
      * @return список строк траектории
      */

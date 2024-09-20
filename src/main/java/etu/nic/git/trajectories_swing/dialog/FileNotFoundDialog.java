@@ -33,7 +33,6 @@ public class FileNotFoundDialog {
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
-        // слушатель, скрывающий диалоговое окно при нажатии на кнопку
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

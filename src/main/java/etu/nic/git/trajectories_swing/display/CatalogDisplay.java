@@ -47,7 +47,7 @@ public class CatalogDisplay extends AbstractDisplay {
 
         JScrollPane scrollPane = new JScrollPane(buttonPanel);
         scrollPane.setBorder(null);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(30);    // ускорение прокрутки скроллбара
+        scrollPane.getVerticalScrollBar().setUnitIncrement(30);
 
         background.add(BorderLayout.NORTH, displayHeader);
 
@@ -63,33 +63,31 @@ public class CatalogDisplay extends AbstractDisplay {
             buttonPanel.remove(button);
         }
         buttonPanel.setLayout(
-                new GridLayout(fileStorage.getFileList().size() + Math.max(8 - fileStorage.getFileList().size(), 0), 1)     // чтобы кнопки были невысокими
+                new GridLayout(fileStorage.getFileList().size() + Math.max(8 - fileStorage.getFileList().size(), 0), 1)
         );
-        buttons.clear();    // очистка списка кнопок
-        if (!fileStorage.isEmpty()) {   // если в хранилище есть файлы
+        buttons.clear();
+        if (!fileStorage.isEmpty()) {
             List<String> fileNames = fileStorage.getFileList().stream().map(TrajectoryFile::getNameWithAsterisk).collect(Collectors.toList());
-            // создание кнопок по именам файлов в хранилище и добавление их на панель
             JButton button;
             for (int i = 0; i < fileNames.size(); i++) {
                 String fileName = fileNames.get(i);
 
                 button = new JButton(fileName);
-                button.addActionListener(buttonListener);   // слушатель нажатия на кнопку
-                button.setComponentPopupMenu(popupMenu);    // контекстное меню "закрыть файл"
+                button.addActionListener(buttonListener);
+                button.setComponentPopupMenu(popupMenu);
 
                 button.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-                if (i == fileStorage.getCurrentFileIndex()) {   // кнопка текущего выбранного файла окрашивается в синий
+                if (i == fileStorage.getCurrentFileIndex()) {
                     button.setBackground(new Color(53, 128, 187));
                     button.setForeground(Color.WHITE);
                 } else {
-                    button.setBackground(Color.WHITE);  // остальные кнопки окрашиваются в белый
+                    button.setBackground(Color.WHITE);
                 }
 
                 buttons.add(button);
                 buttonPanel.add(button);
             }
         }
-        // ревалидация и перерисовка панели с кнопками и лейблом
         background.revalidate();
         background.repaint();
     }

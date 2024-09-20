@@ -33,23 +33,23 @@ public class InvalidFileFormatDialog {
         );
 
         String exceptionMessage = exception.getMessage();
-        String[] split = exceptionMessage.split("\n");  // разделение сообщения из эксепшена на строки
-        int amountOfLines = split.length;   // получение количества строк в ошибке
-        int lengthOfLongestLine = 0;    // в этой переменной окажется длина максимально длинной строки
+        String[] split = exceptionMessage.split("\n");
+        int amountOfLines = split.length;
+        int lengthOfLongestLine = 0;
         for (String line : split) {
             lengthOfLongestLine = Math.max(lengthOfLongestLine, line.length());
         }
 
         Font font12 = new Font(Font.DIALOG, Font.PLAIN, 12);
-        if (amountOfLines == 1) {   // если неверный формат файла = файл пуст = однострочное сообщение
+        if (amountOfLines == 1) {
             JLabel dialogPrompt = new JLabel(exceptionMessage);
             dialogPrompt.setHorizontalAlignment(SwingConstants.CENTER);
             dialogPrompt.setFont(font12);
 
             background.add(BorderLayout.CENTER, dialogPrompt);
-        } else {    // если сообщение многострочное
-            JTextArea dialogPrompt = new JTextArea(exceptionMessage);   // записываем его в текстовую область,
-            dialogPrompt.setOpaque(false);  // которую превращаем в компонент отображения информации без возможности редактирования
+        } else {
+            JTextArea dialogPrompt = new JTextArea(exceptionMessage);
+            dialogPrompt.setOpaque(false);
             dialogPrompt.setCursor(null);
             dialogPrompt.setFocusable(false);
             dialogPrompt.setEditable(false);
@@ -57,13 +57,12 @@ public class InvalidFileFormatDialog {
             dialogPrompt.setFont(font12);
 
             JScrollPane scrollPane = new JScrollPane(dialogPrompt);
-            scrollPane.setBorder(null);     // удаление границы у скролл-панели
+            scrollPane.setBorder(null);
             background.add(BorderLayout.CENTER, scrollPane);
         }
         JButton okButton = new JButton("OK");
         JPanel buttonPanel = new JPanel();
 
-        // слушатель, скрывающий диалоговое окно при нажатии на кнопку
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,7 +77,6 @@ public class InvalidFileFormatDialog {
 
         dialog.add(background);
 
-        // получение границ окна-владельца для этого диалога (на практике - mainFrame'а
         Rectangle rectangleBounds = owner.getBounds();
         dialog.setBounds(new Rectangle(rectangleBounds.x + rectangleBounds.width / 2,
                 rectangleBounds.y + rectangleBounds.height / 4,

@@ -25,8 +25,9 @@ public class TableDisplay extends AbstractDisplay {
 
     /**
      * Создает объект и внедряет зависимости
+     *
      * @param tableModel модель данных траекторной таблицы
-     * @param popupMenu контекстное меню таблицы
+     * @param popupMenu  контекстное меню таблицы
      */
     public TableDisplay(TrajectoryRowTableModel tableModel, TableDisplayPopupMenu popupMenu) {
         super(DISPLAY_NAME);
@@ -34,19 +35,18 @@ public class TableDisplay extends AbstractDisplay {
         model = tableModel;
         tableDisplayPopupMenu = popupMenu;
 
-        // инициализируем данные в модели списком из одной пустой траектории
         model.setTrajectoryRowList(Arrays.asList(new TrajectoryRow()));
 
-        table = new JTable(model); // создание таблицы на основе модели данных
-        table.getTableHeader().setReorderingAllowed(false);     // запрещаем перетаскивание столбцов
-        table.getTableHeader().setFont(new Font(Font.DIALOG, Font.BOLD, 16));   // шрифт заголовка таблицы
-        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));   // шрифт данных в таблице
-        table.setRowHeight(20);     // высота строки в таблице
+        table = new JTable(model);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+        table.setRowHeight(20);
 
         tableScrollPane = new JScrollPane(table);
         tableScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tableScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        tableScrollPane.setBorder(null);    // удаление границы у скролл-панели
+        tableScrollPane.setBorder(null);
 
         hideMainInfo();
 
@@ -98,6 +98,7 @@ public class TableDisplay extends AbstractDisplay {
     public void setTablePopupMenu(JPopupMenu menu) {
         table.setComponentPopupMenu(menu);
     }
+
     public JTable getTable() {
         return this.table;
     }

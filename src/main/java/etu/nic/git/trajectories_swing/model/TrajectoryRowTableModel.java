@@ -26,6 +26,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Создает модель данных на основе списка строк траектории
+     *
      * @param trajectoryRowList список строк траектории
      */
     public TrajectoryRowTableModel(List<TrajectoryRow> trajectoryRowList) {
@@ -52,7 +53,6 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         return trajectoryRowList.size();
     }
 
-    // Время, x-координата, y-координата, z-координата, x-составляющая скорости, y-составляющая скорости, z-составляющая скорости
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         TrajectoryRow row = trajectoryRowList.get(rowIndex);
@@ -106,8 +106,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex)
-    {
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }
 
@@ -117,6 +116,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Сеттер списка траекторных строк с сортировкой по времени
+     *
      * @param trajectoryRowList список траекторных строк
      */
     public void setTrajectoryRowList(List<TrajectoryRow> trajectoryRowList) {
@@ -126,6 +126,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Метод получает из списка строк траекторной информации конкретный столбец по индексу его параметра в траектории
+     *
      * @param index индекс параметра траектории (их 7, см. {@link TrajectoryRow#AMOUNT_OF_PARAMETERS}, {@link TrajectoryRow#PARAMETER_NAMES})
      * @return столбец данных
      */
@@ -148,6 +149,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Получает всю информацию из таблицы в формате файла траекторной информации
+     *
      * @return траекторная информация из списка в виде строки
      */
     public String getTableDataInString() {
@@ -158,8 +160,10 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
         }
         return tableData.toString();
     }
+
     /**
      * Метод проверяет, является ли элемент под данным индексом первым в списке
+     *
      * @param index индекс, для которого необходимо выполнить проверку
      * @return true, если элемент по данному индексу является первым, false - иначе
      */
@@ -169,6 +173,7 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Метод проверяет, является ли элемент под данным индексом последним в списке
+     *
      * @param index индекс, для которого необходимо выполнить проверку
      * @return true, если элемент по данному индексу является последним, false - иначе
      */
@@ -178,19 +183,21 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Вставляет новую строку траектории выше заданного индекса
+     *
      * @param index индекс выбранной строки
      */
-    public void insertRowAbove(int index) {  // сюда не должен попадать несуществующий индекс
+    public void insertRowAbove(int index) {
         if (index > trajectoryRowList.size() - 1) {
-            logger.error("Как сюда попал такой индекс");
+            logger.error("Как сюда попал такой индекс? index = " + index);
+            return;
         }
 
         TrajectoryRow newRow = new TrajectoryRow();
         if (isFirstRowAt(index)) {
-            newRow.setTime(trajectoryRowList.get(index).getTime()); // копируем время из ранее крайней строки
-        } else {    // если вставляем строку не на первое место
+            newRow.setTime(trajectoryRowList.get(index).getTime());
+        } else {
             double midTime = (trajectoryRowList.get(index).getTime() +
-                    trajectoryRowList.get(index - 1).getTime()) / 2;    // устанавливаем среднее время от соседних
+                    trajectoryRowList.get(index - 1).getTime()) / 2;
             newRow.setTime(midTime);
         }
         trajectoryRowList.add(index, newRow);
@@ -198,19 +205,21 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Вставляет новую строку траектории ниже заданного индекса
+     *
      * @param index индекс выбранной строки
      */
     public void insertRowBelow(int index) {
         if (index > trajectoryRowList.size() - 1) {
-            logger.error("Как сюда попал такой индекс");
+            logger.error("Как сюда попал такой индекс? index = " + index);
+            return;
         }
 
         TrajectoryRow newRow = new TrajectoryRow();
         if (isLastRowAt(index)) {
-            newRow.setTime(trajectoryRowList.get(index).getTime()); // копируем время из ранее крайней строки
-        } else {    // если вставляем строку не на первое место
+            newRow.setTime(trajectoryRowList.get(index).getTime());
+        } else {
             double midTime = (trajectoryRowList.get(index).getTime() +
-                    trajectoryRowList.get(index + 1).getTime()) / 2;    // устанавливаем среднее время от соседних
+                    trajectoryRowList.get(index + 1).getTime()) / 2;
             newRow.setTime(midTime);
         }
         trajectoryRowList.add(index + 1, newRow);
@@ -219,11 +228,13 @@ public class TrajectoryRowTableModel extends AbstractTableModel {
 
     /**
      * Удаляет строку траектории по заданному индексу
+     *
      * @param index индекс выбранной строки
      */
     public void deleteRow(int index) {
         if (index > trajectoryRowList.size() - 1) {
-            logger.error("Как сюда попал такой индекс");
+            logger.error("Как сюда попал такой индекс? index = " + index);
+            return;
         }
 
         trajectoryRowList.remove(index);

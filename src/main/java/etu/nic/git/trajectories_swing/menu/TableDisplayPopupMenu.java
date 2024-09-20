@@ -37,7 +37,6 @@ public class TableDisplayPopupMenu {
             public void actionPerformed(ActionEvent e) {
                 List<TrajectoryRow> trajectoryRowList = model.getTrajectoryRowList();
 
-                // если в открытом файле не осталось строк у таблицы (их все удалили), то станет доступно добавление пустой строки в таблицу
                 if (!fileStorage.isEmpty() && trajectoryRowList.isEmpty()) {
                     trajectoryRowList.add(new TrajectoryRow());
                 }

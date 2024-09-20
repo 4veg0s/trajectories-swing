@@ -33,16 +33,15 @@ public class TablePopupMenu {
      */
     public TablePopupMenu(JTable t) {
         this.table = t;
-        model = (TrajectoryRowTableModel) table.getModel();  // достаем модель данных из таблицы
+        model = (TrajectoryRowTableModel) table.getModel();
         popupMenu = new JPopupMenu() {
             @Override
             public void show(Component invoker, int x, int y) {
-                rowAtPoint = table.rowAtPoint(new Point(x, y));  // номер строки таблицы по соответствующим координатам
-                super.show(invoker, x, y);  // отображение контекстного меню
+                rowAtPoint = table.rowAtPoint(new Point(x, y));
+                super.show(invoker, x, y);
             }
         };
 
-        // элемент меню для вставки строки выше выбранной
         JMenuItem insertRowAboveMenuItem = new JMenuItem(MENU_INSERT_ROW_ABOVE);
         insertRowAboveMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -52,7 +51,6 @@ public class TablePopupMenu {
             }
         });
 
-        // элемент меню для вставки строки ниже выбранной
         JMenuItem insertRowBelowMenuItem = new JMenuItem(MENU_INSERT_ROW_BELOW);
         insertRowBelowMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -62,7 +60,6 @@ public class TablePopupMenu {
             }
         });
 
-        // элемент меню для удаления выбранной строки
         JMenuItem deleteRowMenuItem = new JMenuItem(MENU_DELETE_ROW);
         deleteRowMenuItem.addActionListener(new ActionListener() {
             @Override
@@ -72,7 +69,6 @@ public class TablePopupMenu {
             }
         });
 
-        // элемент меню для отображения статистической информации
         JMenuItem showStatsMenuItem = new JMenuItem(MENU_SHOW_STATS);
         showStatsMenuItem.addActionListener(new ActionListener() {
             @Override

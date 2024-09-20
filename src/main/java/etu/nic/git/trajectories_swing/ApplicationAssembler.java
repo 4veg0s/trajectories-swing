@@ -130,14 +130,12 @@ public class ApplicationAssembler {
             @Override
             public void tableChanged(TableModelEvent e) {
                 TrajectoryRowTableModel model = (TrajectoryRowTableModel) e.getSource();
-                model.sortByTime(); // если было изменение значения ячейки в таблице,
-                // то произойдет сортировка по времени для данных модели
+                model.sortByTime();
                 if (!fileStorage.isEmpty()) {
                     fileStorage.updateFileDataByIndex(
                             fileStorage.getCurrentFileIndex(),
                             model.getTableDataInString()
-                    );    // при изменении данных модели подгрузятся
-                    // изменения и в объект, соответствующий этому файлу
+                    );
                 }
                 updateEntireInfo();
             }
@@ -155,14 +153,14 @@ public class ApplicationAssembler {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String actionCommand = e.getActionCommand();    // получение надписи на нажатой кнопке (имени файла траектории)
+                String actionCommand = e.getActionCommand();
                 TrajectoryFile currentFile = fileStorage.findFileByName(
-                        TrajectoryFile.stripAsteriskFromNameString(actionCommand)   // если к имени приписана звездочка, то обрезаем ее
-                );  // поиск файла в хранилище с таким именем
-                fileStorage.updateCurrentFileIndexByFile(currentFile);  // устанавливаем соответствующий файл текущим в хранилище
+                        TrajectoryFile.stripAsteriskFromNameString(actionCommand)
+                );
+                fileStorage.updateCurrentFileIndexByFile(currentFile);
                 updateEntireInfo();
-                mainFrame.appendFileToFrameTitle(currentFile.getName());    // добавляем в заголовок главного окна название выбранного файла траектории
-                model.fireTableDataChanged();  // оповещаем слушатели изменений в модели
+                mainFrame.appendFileToFrameTitle(currentFile.getName());
+                model.fireTableDataChanged();
             }
         };
     }
@@ -178,39 +176,38 @@ public class ApplicationAssembler {
             public void actionPerformed(ActionEvent e) {
                 JButton buttonInvoker = (JButton) catalogPopupMenu.getInvoker();
 
-                // получаем файл траектории, на котором было вызвано контекстное меню
                 TrajectoryFile selectedFile = fileStorage.findFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
-                if (selectedFile.hasChanges()) {    // если у этого файла есть несохраненные изменения
+                if (selectedFile.hasChanges()) {
                     SaveTrajectoryFileChangesDialog saveTrajectoryFileChangesDialog = new SaveTrajectoryFileChangesDialog(mainFrame);
-                    int closingResult = saveTrajectoryFileChangesDialog.showWithResult(); // показываем диалоговое окно и ждем, какую кнопку нажмет пользователь
-                    if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_SAVE) {  // если закрылось с нажатием на утвердительный ответ
-                        if (model.getTableDataInString().isEmpty()) {   // если мы собрались записывать в файл пустую строку
+                    int closingResult = saveTrajectoryFileChangesDialog.showWithResult();
+                    if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_SAVE) {
+                        if (model.getTableDataInString().isEmpty()) {
                             logger.info("Попытка сохранения пустого файла траектории");
                             new DefaultOKDialog(
                                     mainFrame,
                                     "Сохранение файла",
                                     "Невозможно сохранить пустой файл траектории"
-                            ).show();   // показываем диалоговое окно с ошибкой
+                            ).show();
                         } else {
                             TrajectoryFile currentFile = fileStorage.getCurrentFile();
-                            currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
-                            catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                            currentFile.writeCurrentDataToFileIfHasChanges();
+                            catalogDisplay.updateComponentView();
                         }
                     } else if (closingResult == SaveTrajectoryFileChangesDialog.EXIT_ON_CANCEL) {
                         return;
                     }
                 }
-                fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand())); // удаляем файл из файлового хранилища по имени
-                updateEntireInfo();     // обновляем все компоненты
+                fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+                updateEntireInfo();
                 if (!fileStorage.isEmpty()) {
-                    mainFrame.appendFileToFrameTitle(fileStorage.getCurrentFile().getName());   // добавление названия траектории в заголовок главного окна
+                    mainFrame.appendFileToFrameTitle(fileStorage.getCurrentFile().getName());
                 } else {
-                    mainFrame.restoreTitle();   // возврат заголовка к исходному состоянию
-                    if (isInvokeFileChooserWhenNoFilesOpened()) {   // если необходимо показывать JFileChooser при отсутствии файлов в каталоге
-                        fileChooserOpen();  // показываем JFileChooser
+                    mainFrame.restoreTitle();
+                    if (isInvokeFileChooserWhenNoFilesOpened()) {
+                        fileChooserOpen();
                     }
                 }
-                model.fireTableDataChanged();   // вызываем событие модели, приводящее к обновлению информации во всех компонентах
+                model.fireTableDataChanged();
             }
         };
     }
@@ -228,64 +225,63 @@ public class ApplicationAssembler {
                 TrajectoryNameSetDialog trajectoryNameSetDialog;
                 int returnVal;
                 switch (actionCommand) {
-                    case TopMenuBar.MENU_OPEN:  // пункт меню ОТКРЫТЬ
+                    case TopMenuBar.MENU_OPEN:
                         returnVal = fileChooser.showOpenDialog(mainFrame);
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {     // если в файлЧузере выбрана кнопка "Открыть"
-                            File chosenFile = fileChooser.getSelectedFile();    // получаем файл, который выбрал пользователь
-                            TrajectoryFile existingFileByPath = fileStorage.findFileByPath(chosenFile.getAbsolutePath());   // пробуем найти тот же файл в хранилище
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            File chosenFile = fileChooser.getSelectedFile();
+                            TrajectoryFile existingFileByPath = fileStorage.findFileByPath(chosenFile.getAbsolutePath());
 
-                            if (existingFileByPath == null) { // если такой конкретный файл еще не загружен,
-                                // тогда переходим к заданию имени траектории
+                            if (existingFileByPath == null) {
                                 trajectoryNameSetDialog = new TrajectoryNameSetDialog(mainFrame);
-                                boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();    // показ диалогового окна для задания имени траектории
+                                boolean isTrajectoryNameAccepted = trajectoryNameSetDialog.showWithResult();
 
-                                if (isTrajectoryNameAccepted) {     // если была нажата кнопка "ОК" в диалоговом окне задания имени
+                                if (isTrajectoryNameAccepted) {
                                     String trajectoryName = trajectoryNameSetDialog.getTextFieldString();
 
                                     try {
                                         if (chosenFile.exists()) {
-                                            TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);  // создаем новый файл траектории
-                                            // на основе текстового файла и введенного имени
-                                            TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());    // проверка валидности данных в выбранном файле
-                                            TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);   // если проверка пройдена, то пытаемся найти файл с таким же именем
-                                            if (existingFile != null) {   // если такая траектория уже загружена
-                                                if (existingFile.hasChanges()) {    // и если она имеет несохраненные изменения
-                                                    ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);   // показ диалогового окна замены файла
-                                                    boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult(); // получение результата закрытия диалогового окна
-                                                    if (isClosedWithConfirm) {  // если окно закрылось на утверждении
-                                                        fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);   // заменяем существующий файл с таким именем на новый
+                                            TrajectoryFile newTrajectoryFile = new TrajectoryFile(chosenFile, trajectoryName);
+                                            TrajectoryFile.checkTrajectoryDataValidity(newTrajectoryFile.getData());
+                                            TrajectoryFile existingFile = fileStorage.findFileByName(trajectoryName);
+                                            if (existingFile != null) {
+                                                if (existingFile.hasChanges()) {
+                                                    ReplaceTrajectoryFileDialog replaceTrajectoryFileDialog = new ReplaceTrajectoryFileDialog(mainFrame);
+                                                    boolean isClosedWithConfirm = replaceTrajectoryFileDialog.showWithResult();
+                                                    if (isClosedWithConfirm) {
+                                                        fileStorage.replaceFileByName(trajectoryName, newTrajectoryFile);
                                                     } else {
-                                                        this.actionPerformed(e);    // вызываем повторное открытие окна JFileChooser'а с выбором файла
+                                                        this.actionPerformed(e);
                                                     }
-                                                } else {  // если траектория с таким именем не имеет изменений
+                                                } else {
                                                     logger.info("Попытка загрузки траектории с уже существующем в приложении именем");
-                                                    new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();  // показ диалога
+                                                    new DefaultOKDialog(mainFrame, "Выбор файла", "Траектория с таким именем уже загружена").show();
                                                 }
-                                            } else {  // если такой траектории не загружено
-                                                fileStorage.add(newTrajectoryFile);     // добавляем в хранилище
+                                            } else {
+                                                fileStorage.add(newTrajectoryFile);
                                             }
                                             updateEntireInfo();
-                                            mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());  // добавление имени траектории в заголовок главного окна
+                                            mainFrame.appendFileToFrameTitle(newTrajectoryFile.getName());
                                         } else {
                                             logger.info("Попытка создать несуществующий файл траектории: {}", chosenFile.getAbsolutePath());
                                             throw new FileNotFoundException();
                                         }
 
-                                    } catch (FileNotFoundException ex) {    // если указан путь до несуществующего файла
+                                    } catch (FileNotFoundException ex) {
                                         logger.info("Попытка загрузки несуществующего файла");
-                                        new FileNotFoundDialog(mainFrame).show();   // показ диалога "Файл с таким именем не найден"
-                                    } catch (InvalidFileFormatException ex) {   // если файл содержит данные, не соответствующие формату траекторной информации
+                                        new FileNotFoundDialog(mainFrame).show();
+                                    } catch (
+                                            InvalidFileFormatException ex) {
                                         logger.info("Попытка загрузки файла неверного формата");
-                                        new InvalidFileFormatDialog(mainFrame, ex).show();  // показ диалога "Неверный формат файла
+                                        new InvalidFileFormatDialog(mainFrame, ex).show();
                                     }
                                 }
-                            } else {    // если такой файл уже загружен
+                            } else {
                                 logger.info("Попытка загрузки уже открытого под именем {} файла", existingFileByPath.getName());
                                 new DefaultOKDialog(mainFrame, "Выбор файла", "Этот файл уже открыт (" + existingFileByPath.getName() + ")").show();
                             }
                         }
                         break;
-                    case TopMenuBar.MENU_SAVE: // пункт меню СОХРАНИТЬ
+                    case TopMenuBar.MENU_SAVE:
                         if (!fileStorage.isEmpty()) {
                             if (model.getTableDataInString().isEmpty()) {
                                 logger.info("Попытка сохранения пустого файла траектории");
@@ -293,25 +289,25 @@ public class ApplicationAssembler {
                                         mainFrame,
                                         "Сохранение файла",
                                         "Невозможно сохранить пустой файл траектории"
-                                ).show();   // показ диалога
+                                ).show();
                             } else {
                                 TrajectoryFile currentFile = fileStorage.getCurrentFile();
-                                currentFile.writeCurrentDataToFileIfHasChanges(); // записываем новые данные в файл
-                                catalogDisplay.updateComponentView();  // вызываем рефреш каталога (т.к. только его это затрагивает), чтобы убрать звездочку с файла
+                                currentFile.writeCurrentDataToFileIfHasChanges();
+                                catalogDisplay.updateComponentView();
                             }
                         }
                         break;
-                    case TopMenuBar.MENU_SAVE_AS: // пункт меню СОХРАНИТЬ КАК...
+                    case TopMenuBar.MENU_SAVE_AS:
                         if (!fileStorage.isEmpty()) {
                             returnVal = fileChooser.showSaveDialog(mainFrame);
-                            if (returnVal == JFileChooser.APPROVE_OPTION) {     // если пользователь нажал "Сохранить" в FileChooser'е
-                                File newFile = fileChooser.getSelectedFile();   // получаем выбранный файл
-                                TrajectoryFile currentFile = fileStorage.getCurrentFile();  // получаем текущий открытый в каталоге файл
-                                String oldPath = currentFile.getPath(); // считываем предыдущий путь до файла для последующего сравнения
-                                currentFile.setPath(newFile.getAbsolutePath()); // устанавливаем новый путь до файла траектории (может быть и идентичным, но логику не меняет)
-                                currentFile.writeCurrentDataToFileIfHasChangesOrIsNewFile(oldPath); // записываем данные прошлого файла в новый файл
-                                catalogDisplay.updateComponentView();  // вызываем рефреш каталога, чтобы убрать звездочку с файла, если она есть
-                                fileDisplay.updateComponentView();  // обновляем файловый дисплей, чтобы добиться изменения пути до файла в соответствующем лейбле
+                            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                File newFile = fileChooser.getSelectedFile();
+                                TrajectoryFile currentFile = fileStorage.getCurrentFile();
+                                String oldPath = currentFile.getPath();
+                                currentFile.setPath(newFile.getAbsolutePath());
+                                currentFile.writeCurrentDataToFileIfHasChangesOrIsNewFile(oldPath);
+                                catalogDisplay.updateComponentView();
+                                fileDisplay.updateComponentView();
                             }
                         }
                         break;

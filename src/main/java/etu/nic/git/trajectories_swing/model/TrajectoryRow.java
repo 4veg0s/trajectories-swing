@@ -45,6 +45,7 @@ public class TrajectoryRow {
 
     /**
      * Метод создает объект на основе строки
+     *
      * @param rawString строка, потенциально являющаяся строкой траектории
      * @return объект траекторной строки
      */
@@ -68,6 +69,7 @@ public class TrajectoryRow {
 
     /**
      * Получение массива double из траектории
+     *
      * @return массив double, соответствующий траекторной строке
      */
     public double[] toDoubleArray() {
@@ -85,10 +87,8 @@ public class TrajectoryRow {
     /**
      * Метод парсит потенциальную строку с данными траектории и возвращает результат валидации
      */
-    // парсит потенциальную строку с данными траектории и возвращает результат валидации данных
     public static boolean isValidTrajectoryString(String rawString) {
 
-        // если количество элементов после дробления не соответствует количеству параметров траектории
         if (!isValidAmountOfParametersInTrajectoryString(rawString)) {
             return false;
         }
@@ -109,10 +109,8 @@ public class TrajectoryRow {
      *
      * @throws InvalidAmountOfParametersException если в строке неверное число параметров траектории
      */
-    // парсит потенциальную строку с данными траектории и возвращает результат валидации данных
     public static void isValidTrajectoryStringWithExceptions(String rawString) throws InvalidAmountOfParametersException, NumberFormatException {
 
-        // если количество элементов после дробления не соответствует количеству параметров траектории
         if (!isValidAmountOfParametersInTrajectoryString(rawString)) {
             throw new InvalidAmountOfParametersException();
         }
@@ -145,6 +143,7 @@ public class TrajectoryRow {
 
     /**
      * Проверяет строку на соответствие количеству параметров в траектории
+     *
      * @param rawString строка для проверки
      * @return
      */
@@ -155,6 +154,7 @@ public class TrajectoryRow {
 
     /**
      * Проверяет строку на соответствие формату числа с плавающей точкой, в том числе - в научном формате (число содержит E)
+     *
      * @param stringToCheck строка для проверки
      * @return true, если строка соответствует критерию, иначе - false
      */
@@ -220,6 +220,7 @@ public class TrajectoryRow {
 
     /**
      * Метод для нахождения индекса параметра траектории по его имени
+     *
      * @param name строка, индекс в массиве параметров которой необходимо найти
      * @return Индекс найденного параметра.
      * -1, если такой параметр не был найден
@@ -235,6 +236,7 @@ public class TrajectoryRow {
 
     /**
      * "toString", но в формате, как строка из исходного файла
+     *
      * @return строка с параметрами траектории через два пробела
      */
     public String toFileString() {  //

@@ -19,17 +19,19 @@ public class TrajectoryFileStorage {
 
     /**
      * Добавляет файл траекторной информации в хранилище
+     *
      * @param file файл, который необходимо добавить
      */
     public void add(TrajectoryFile file) {
         fileList.add(file);
-        currentFileIndex = fileList.size() - 1; // при добавлении нового файла будем переключаться на него
-        TrajectoryFile.incrementTrajectoryIndex();  // увеличиваем приписываемый к имени траектории индекс, если добавили файл
+        currentFileIndex = fileList.size() - 1;
+        TrajectoryFile.incrementTrajectoryIndex();
     }
 
     /**
      * Заменяет имеющийся в хранилище файл по имени
-     * @param name имя существующего файла
+     *
+     * @param name    имя существующего файла
      * @param newFile новый файл, который заменит предыдущий с таким именем
      */
     public void replaceFileByName(String name, TrajectoryFile newFile) {
@@ -41,6 +43,7 @@ public class TrajectoryFileStorage {
 
     /**
      * Удаляет файл из хранилища по имени
+     *
      * @param name имя файла, который необходимо удалить
      */
     public void removeFileByName(String name) {
@@ -48,7 +51,6 @@ public class TrajectoryFileStorage {
         int indexOfFileToReplace = fileList.indexOf(file);
         fileList.remove(indexOfFileToReplace);
 
-        // обработка крайнего случая с индексом открытого файла
         if (fileList.isEmpty()) {
             currentFileIndex = 0;
         } else if (currentFileIndex != 0) {
@@ -58,7 +60,8 @@ public class TrajectoryFileStorage {
 
     /**
      * Обновляет данные объекта {@link TrajectoryFile} по индексу в хранилище
-     * @param index индекс файла в хранилище
+     *
+     * @param index    индекс файла в хранилище
      * @param fileData новые данные файла
      */
     public void updateFileDataByIndex(int index, String fileData) {
@@ -67,6 +70,7 @@ public class TrajectoryFileStorage {
 
     /**
      * Находит файл по индексу в хранилище
+     *
      * @param index индекс файла в хранилище
      * @return файл траекторной информации ({@link TrajectoryFile}), если в хранилище есть файл с таким индексом, null - иначе
      */
@@ -76,6 +80,7 @@ public class TrajectoryFileStorage {
 
     /**
      * Находит файл по имени, заданному пользователем, в хранилище
+     *
      * @param fileName имя файла в хранилище
      * @return файл траекторной информации ({@link TrajectoryFile}), если в хранилище есть файл с таким именем, null - иначе
      */
@@ -90,6 +95,7 @@ public class TrajectoryFileStorage {
 
     /**
      * Находит файл в хранилище по пути до него в системе
+     *
      * @param filePath путь файла в системе
      * @return файл траекторной информации ({@link TrajectoryFile}), если в хранилище есть файл с таким путем, null - иначе
      */
@@ -104,6 +110,7 @@ public class TrajectoryFileStorage {
 
     /**
      * Устанавливает индекс текущего файла на значение, соответствующее переданному файлу из хранилища
+     *
      * @param file файл из хранилища
      */
     public void updateCurrentFileIndexByFile(TrajectoryFile file) {

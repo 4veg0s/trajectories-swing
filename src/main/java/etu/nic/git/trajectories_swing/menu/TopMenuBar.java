@@ -28,15 +28,14 @@ public class TopMenuBar {
 
         menuBar.add(fileMenu);
 
-        // пункт меню "Открыть"
         JMenuItem openMenuItem = new JMenuItem(MENU_OPEN);
         openMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         openMenuItem.addActionListener(menuActionListener);
-        // пункт меню "Сохранить"
+
         JMenuItem saveMenuItem = new JMenuItem(MENU_SAVE);
         saveMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveMenuItem.addActionListener(menuActionListener);
-        // пункт меню "Сохранить как..."
+
         JMenuItem saveAsMenuItem = new JMenuItem(MENU_SAVE_AS);
         saveAsMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveAsMenuItem.addActionListener(menuActionListener);

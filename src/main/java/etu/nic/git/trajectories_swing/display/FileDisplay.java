@@ -41,14 +41,13 @@ public class FileDisplay extends AbstractDisplay {
 
         verticalBox.add(displayHeader);
 
-        // разделитель между двумя лейблами
         separator = new JSeparator();
         separator.setOrientation(SwingConstants.HORIZONTAL);
         verticalBox.add(separator);
 
-        if (fileStorage.isEmpty()) {    // если хранилище пустое
+        if (fileStorage.isEmpty()) {
             filePathLabel = new JLabel("Файл не выбран");
-        } else {    // если хранилище не пустое, то в лейбл записываем сокращенный путь к файлу
+        } else {
             String path = fileStorage.getCurrentFile().getPath();
             if (path.length() > 30) {
                 String shortenedPath =
@@ -56,8 +55,7 @@ public class FileDisplay extends AbstractDisplay {
                         "..." +
                         path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
                 filePathLabel = new JLabel(shortenedPath);
-                filePathLabel.setToolTipText(path); // если путь до файла слишком длинный, то урезаем его
-                                                    // и устанавливаем тултип для лейбла с полным путем до файла
+                filePathLabel.setToolTipText(path);
             } else {
                 filePathLabel = new JLabel(path);
             }
