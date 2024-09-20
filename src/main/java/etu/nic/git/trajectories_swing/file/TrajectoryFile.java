@@ -3,18 +3,14 @@ package etu.nic.git.trajectories_swing.file;
 import etu.nic.git.trajectories_swing.exception.InvalidAmountOfParametersException;
 import etu.nic.git.trajectories_swing.exception.InvalidFileFormatException;
 import etu.nic.git.trajectories_swing.model.TrajectoryRow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Objects;
 
 /**
  * Класс, характеризующий файл траекторной информации
  */
 public class TrajectoryFile {
-    private static final Logger logger = LoggerFactory.getLogger(TrajectoryFile.class);
     public static final String TRAJECTORY_NAME_PREFIX = "Траектория ";
     private static int nextTrajectoryIndex = 1;     // индекс, подставляющийся в текстовое поле задания наименования траектории
     private String path;
@@ -28,7 +24,7 @@ public class TrajectoryFile {
      * @param file файл траектории
      * @param name имя траектории (например, "Траектория 1")
      */
-    public TrajectoryFile(File file, String name) throws FileNotFoundException {
+    public TrajectoryFile(File file, String name) {
         if (file.exists()) {
             this.path = file.getAbsolutePath();
             this.name = name;
