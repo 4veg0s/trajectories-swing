@@ -3,6 +3,7 @@ package etu.nic.git.trajectories_swing.file;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Хранилище файлов с траекториями.
@@ -16,7 +17,6 @@ public class TrajectoryFileStorage {
         fileList = new ArrayList<>();
     }
 
-
     /**
      * Добавляет файл траекторной информации в хранилище
      *
@@ -26,6 +26,36 @@ public class TrajectoryFileStorage {
         fileList.add(file);
         currentFileIndex = fileList.size() - 1;
         TrajectoryFile.incrementTrajectoryIndex();
+    }
+
+    public void setFileList(List<TrajectoryFile> fileList) {
+        this.fileList = fileList;
+    }
+
+    /**
+     * Получает следующий доступный индекс для вставки в название траектории
+     * Пример: <br>
+     * </><code>{ "Траектория 1", "Траектория 2", "Траектория 4" }</code><br>
+     * Результатом будет <code>3</code>
+     *
+     * @return следующий доступный индекс
+     */
+    public int getNextAvailableTrajectoryFileIndex() {
+        if (this.fileList.isEmpty())
+            return 1;
+
+        List<Integer> usedNameIndexes = this.fileList.stream()
+                .map(TrajectoryFile::getName)
+                .map(name -> Integer.parseInt(name.replaceAll("\\D+", "")))
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < usedNameIndexes.size(); i++) {
+            int nextPossibleIndex = i + 1;
+            if (usedNameIndexes.get(i) != nextPossibleIndex && !usedNameIndexes.contains(nextPossibleIndex)) {
+                return nextPossibleIndex;
+            }
+        }
+        return usedNameIndexes.stream().max(Integer::compareTo).get() + 1;
     }
 
     /**
