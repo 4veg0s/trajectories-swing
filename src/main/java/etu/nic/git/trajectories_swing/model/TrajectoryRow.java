@@ -1,6 +1,7 @@
 package etu.nic.git.trajectories_swing.model;
 
 import etu.nic.git.trajectories_swing.exception.InvalidAmountOfParametersException;
+import etu.nic.git.trajectories_swing.tool.TrajectoryFormatConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,18 @@ public class TrajectoryRow {
         this.velocityX = VelocityX;
         this.velocityY = VelocityY;
         this.velocityZ = VelocityZ;
+    }
+
+    public TrajectoryRow(TrajectoryFormatConverter.TrajectoryPoint point) {
+        this(
+                point.getTime(),
+                point.getCoordinateX(),
+                point.getCoordinateY(),
+                point.getCoordinateZ(),
+                point.getVelocityX(),
+                point.getVelocityY(),
+                point.getVelocityZ()
+        );
     }
 
     /**

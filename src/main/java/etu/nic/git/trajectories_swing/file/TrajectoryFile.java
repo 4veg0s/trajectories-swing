@@ -13,6 +13,7 @@ import java.util.Objects;
 public class TrajectoryFile {
     public static final String TRAJECTORY_NAME_PREFIX = "Траектория ";
     private static int nextTrajectoryIndex = 1;     // индекс, подставляющийся в текстовое поле задания наименования траектории
+    private Long id;
     private String path;
     private String name;
     private String data;
@@ -34,12 +35,33 @@ public class TrajectoryFile {
     }
 
     /**
+     * Создает объект файла траекторной информации на основе готовой информации,
+     * переданной в <code>data</code>; Путь до файла носит символический характер,
+     * так как подразумевается, что этот конструктор будет использоваться при получении файла с сервера
+     *
+     * @param path путь до файла
+     * @param name имя траектории
+     * @param data данные траектории
+     */
+    public TrajectoryFile(String path, String name, String data) {
+        this.path = path;
+        this.name = name;
+        this.data = data;
+        this.dataOnCreation = data;
+    }
+
+    public TrajectoryFile(Long id, String path, String name, String data) {
+        this(path, name, data);
+        this.id = id;
+    }
+
+    /**
      * Читает данные из этого файла
      *
      * @return
      */
     public String readDataFromFile() {
-        return FileDataLoader.readDataFromFile(this.getPath()); // считать данные из этого файла и вернуть их
+        return FileDataTool.readDataFromFile(this.getPath()); // считать данные из этого файла и вернуть их
     }
 
     /**
@@ -64,8 +86,16 @@ public class TrajectoryFile {
      * Запись данных в файл без проверок
      */
     private void writeDataToFileWithNoConditions() {
-        FileDataLoader.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
+        FileDataTool.writeDataToFile(this.getPath(), this.getData()); // записываем данные траектории в соответсвующий текстовый файл
         this.setDataOnCreation(this.getData()); // устанавливаем данные "до изменения" на новые (текущие)
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setDataOnCreation(String dataOnCreation) {
@@ -181,6 +211,13 @@ public class TrajectoryFile {
 
     public static void incrementTrajectoryIndex() {
         nextTrajectoryIndex++;
+    }
+    public static void resetTrajectoryIndex() {
+        nextTrajectoryIndex = 1;
+    }
+
+    public static void setNextTrajectoryIndex(int nextTrajectoryIndex) {
+        TrajectoryFile.nextTrajectoryIndex = nextTrajectoryIndex;
     }
 
     @Override
