@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
  */
 public class CatalogPopupMenu {
     private static final String MENU_CLOSE_FILE = "Закрыть файл";
+    private static final String MENU_SAVE_TO_REMOTE = "Сохранить на сервере";
+    private static final String MENU_DELETE_FROM_REMOTE = "Удалить с сервера";
     private final JPopupMenu popupMenu;
 
     /**
@@ -24,6 +26,19 @@ public class CatalogPopupMenu {
         closeFileMenuItem.addActionListener(popupMenuActionListener);
 
         popupMenu.add(closeFileMenuItem);
+    }
+
+    public void setSaveToRemotePopupListener(ActionListener popupMenuActionListener) {
+        JMenuItem saveToRemoteMenuItem = new JMenuItem(MENU_SAVE_TO_REMOTE);
+        saveToRemoteMenuItem.addActionListener(popupMenuActionListener);
+
+        popupMenu.add(saveToRemoteMenuItem);
+    }
+    public void setDeleteFromRemotePopupListener(ActionListener popupMenuActionListener) {
+        JMenuItem deleteFromRemoteMenuItem = new JMenuItem(MENU_DELETE_FROM_REMOTE);
+        deleteFromRemoteMenuItem.addActionListener(popupMenuActionListener);
+
+        popupMenu.add(deleteFromRemoteMenuItem);
     }
 
     public JPopupMenu getPopupMenu() {

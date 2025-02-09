@@ -13,6 +13,7 @@ public class TopMenuBar {
     public static final String MENU_OPEN = "Открыть";
     public static final String MENU_SAVE = "Сохранить";
     public static final String MENU_SAVE_AS = "Сохранить как";
+    public static final String MENU_SYNC_CATALOG = "Синхронизировать удаленный каталог";
     private final JMenuBar menuBar;
     private final JMenu fileMenu;
 
@@ -31,17 +32,16 @@ public class TopMenuBar {
         JMenuItem openMenuItem = new JMenuItem(MENU_OPEN);
         openMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         openMenuItem.addActionListener(menuActionListener);
+        fileMenu.add(openMenuItem);
 
         JMenuItem saveMenuItem = new JMenuItem(MENU_SAVE);
         saveMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveMenuItem.addActionListener(menuActionListener);
+        fileMenu.add(saveMenuItem);
 
         JMenuItem saveAsMenuItem = new JMenuItem(MENU_SAVE_AS);
         saveAsMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
         saveAsMenuItem.addActionListener(menuActionListener);
-
-        fileMenu.add(openMenuItem);
-        fileMenu.add(saveMenuItem);
         fileMenu.add(saveAsMenuItem);
     }
 
@@ -55,5 +55,13 @@ public class TopMenuBar {
     public void fireOpenFileMenuItemClick() {
         JMenuItem openFileMenuItem = fileMenu.getItem(0);
         openFileMenuItem.doClick();
+    }
+
+    public void addSyncCatalogMenuButton(ActionListener syncCatalogActionListener) {
+        JMenuItem syncCatalogMenuItem = new JMenuItem(MENU_SYNC_CATALOG);
+        syncCatalogMenuItem.setFont(new Font(Font.DIALOG, Font.BOLD, 13));
+        syncCatalogMenuItem.addActionListener(syncCatalogActionListener);
+
+        fileMenu.add(syncCatalogMenuItem);
     }
 }
