@@ -3,7 +3,6 @@ package etu.nic.git.trajectories_swing.tool;
 import com.google.gson.Gson;
 import etu.nic.git.trajectories_swing.file.TrajectoryFile;
 import okhttp3.*;
-import sun.invoke.empty.Empty;
 
 import java.io.IOException;
 import java.util.ArrayList;
