@@ -6,3 +6,7 @@
 
 ### Логирование
 Лог-файл `appLog.log` находится в директории `log/`
+
+### Сборка
+
+```mvn clean compile assembly:single``` (из идеи запустить с помощью `Ctrl + Enter`)
