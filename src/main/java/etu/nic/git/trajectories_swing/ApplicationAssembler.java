@@ -18,14 +18,14 @@ import etu.nic.git.trajectories_swing.menu.TableDisplayPopupMenu;
 import etu.nic.git.trajectories_swing.menu.TablePopupMenu;
 import etu.nic.git.trajectories_swing.menu.TopMenuBar;
 import etu.nic.git.trajectories_swing.model.TrajectoryRowTableModel;
-import etu.nic.git.trajectories_swing.file.FileDataLoader;
+import etu.nic.git.trajectories_swing.file.FileDataTool;
 import etu.nic.git.trajectories_swing.file.TrajectoryFile;
 import etu.nic.git.trajectories_swing.file.TrajectoryFileStorage;
+import etu.nic.git.trajectories_swing.tool.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
@@ -55,9 +55,14 @@ public class ApplicationAssembler {
     private FileDisplay fileDisplay;
     private final ChartDisplay chartDisplay;
     private boolean invokeFileChooserWhenNoFilesOpened = true;
+    private static boolean allDataOnRemote = false;
     private final List<AbstractDisplay> displayList;
 
     public ApplicationAssembler() {
+        // смотреть JavaDoc методов
+        setAllDataOnRemote(true);
+        setInvokeFileChooserWhenNoFilesOpened(false);
+
         model = initModel();
 
         fileStorage = new TrajectoryFileStorage();
@@ -66,7 +71,7 @@ public class ApplicationAssembler {
 
         displayList = new ArrayList<>();
 
-        catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupActionListener());
+        catalogPopupMenu = new CatalogPopupMenu(initCatalogPopupCloseActionListener());
         catalogDisplay = new CatalogDisplay(fileStorage, catalogPopupMenu.getPopupMenu(), initCatalogSelectActionListener());
         displayList.add(catalogDisplay);
 
@@ -85,8 +90,23 @@ public class ApplicationAssembler {
         topMenuBar = new TopMenuBar(initMenuActionListener());
 
         // смотреть JavaDoc методов
-        setInvokeFileChooserWhenNoFilesOpened(true);
         chartDisplay.setMarkersAsLettersOnChart(false);
+
+        // если приложение в режиме общения с сервером, где лежат данные траекторий
+        if (isAllDataOnRemote()) {
+            // при инициализации каталог наполняется с сервера
+            fileStorage.setFileList(HttpClient.getAllTrajectoryFiles());
+
+            // кнопка для сохранения файла на сервере в контекстном меню элемента каталога
+            catalogPopupMenu.setSaveToRemotePopupListener(initCatalogPopupSaveToRemoteActionListener());
+            catalogPopupMenu.setDeleteFromRemotePopupListener(initCatalogPopupDeleteFromRemoteActionListener());
+
+            // кнопка для синхронизации каталога в меню "Файл"
+            topMenuBar.addSyncCatalogMenuButton(initMenuSyncCatalogListener());
+
+            // отрисовать интерфейс с учетом наполненного каталога
+            updateEntireInfo();
+        }
     }
 
     /**
@@ -107,7 +127,7 @@ public class ApplicationAssembler {
      */
     public void updateEntireInfo() {
         if (!fileStorage.isEmpty()) {
-            model.setTrajectoryRowList(FileDataLoader.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
+            model.setTrajectoryRowList(FileDataTool.parseToTrajectoryRowList(fileStorage.getCurrentFile().getData()));
             for (AbstractDisplay display : displayList) {
                 display.updateComponentView();
             }
@@ -170,7 +190,7 @@ public class ApplicationAssembler {
      *
      * @return слушатель
      */
-    public ActionListener initCatalogPopupActionListener() {
+    public ActionListener initCatalogPopupCloseActionListener() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,6 +228,85 @@ public class ApplicationAssembler {
                     }
                 }
                 model.fireTableDataChanged();
+            }
+        };
+    }
+
+    private ActionListener initCatalogPopupSaveToRemoteActionListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton buttonInvoker = (JButton) catalogPopupMenu.getInvoker();
+
+                TrajectoryFile selectedFile = fileStorage.findFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+                if (selectedFile.hasChanges()) {
+                    if (model.getTableDataInString().isEmpty()) {
+                        logger.info("Попытка сохранения пустого файла траектории");
+                        new DefaultOKDialog(
+                                mainFrame,
+                                "Сохранение файла",
+                                "Невозможно сохранить пустой файл траектории"
+                        ).show();
+                    } else {
+                        TrajectoryFile currentFile = fileStorage.getCurrentFile();
+                        currentFile.writeCurrentDataToFileIfHasChanges();
+                        catalogDisplay.updateComponentView();
+                    }
+                }
+
+                boolean result;
+                if (selectedFile.getId() == null) { // если у файла нет айди, значит, он еще не побывал на сервере
+                    result = HttpClient.createTrajectoryFile(selectedFile);
+                } else {
+                    result = HttpClient.updateTrajectoryFile(selectedFile);
+                }
+                JOptionPane.showMessageDialog(
+                        null,
+                        (result ?
+                            "Успешное сохранение на сервере"
+                            :
+                            "Не удалось сохранить файл на сервере"
+                        )
+                );
+            }
+        };
+    }
+
+    public ActionListener initCatalogPopupDeleteFromRemoteActionListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton buttonInvoker = (JButton) catalogPopupMenu.getInvoker();
+
+                TrajectoryFile selectedFile = fileStorage.findFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+
+                if (selectedFile.getId() == null) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Файл еще не был сохранен на сервере\n" +
+                                    "Это можно сделать из контекстного меню в каталоге"
+                    );
+                } else {
+                    int confirmationResult = JOptionPane.showConfirmDialog(
+                            null,
+                            "Вы уверены, что хотите удалить файл с сервера?"
+                    );
+                    if (confirmationResult == JOptionPane.OK_OPTION) {
+                        boolean result = HttpClient.deleteTrajectoryFile(selectedFile);
+                        JOptionPane.showMessageDialog(
+                                null,
+                                (result ?
+                                        "Успешное удаление с сервера"
+                                        :
+                                        "Не удалось удалить файл с сервера"
+                                )
+                        );
+                        if (result) {
+                            fileStorage.removeFileByName(TrajectoryFile.stripAsteriskFromNameString(buttonInvoker.getActionCommand()));
+                            updateEntireInfo();
+                        }
+                    }
+                }
             }
         };
     }
@@ -316,6 +415,23 @@ public class ApplicationAssembler {
         };
     }
 
+    private ActionListener initMenuSyncCatalogListener() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetCatalogAndUpdateInfo();
+            }
+        };
+    }
+
+    private void resetCatalogAndUpdateInfo() {
+        TrajectoryFile.resetTrajectoryIndex();
+        if (isAllDataOnRemote()) {
+            fileStorage.setFileList(HttpClient.getAllTrajectoryFiles());
+        }
+        updateEntireInfo();
+    }
+
     /**
      * Метод имитирует клик по пункту файлового меню "Открыть" с соответствующими последствиями
      *
@@ -340,7 +456,9 @@ public class ApplicationAssembler {
      */
     public void showGUI() {
         mainFrame.showMainFrame();
-        fileChooserOnFirstOpen(true);
+        if (!isAllDataOnRemote()) {
+            fileChooserOnFirstOpen(true);
+        }
     }
 
     /**
@@ -365,4 +483,17 @@ public class ApplicationAssembler {
         this.invokeFileChooserWhenNoFilesOpened = invokeFileChooserWhenNoFilesOpened;
     }
 
+    public static boolean isAllDataOnRemote() {
+        return ApplicationAssembler.allDataOnRemote;
+    }
+
+    /**
+     * Устанавливает параметр, означающий необходимость обращаться за данными на сервер, а не искать их локально
+     *
+     * @param allDataOnRemote <code>true</code>, если данные находятся в БД на сервере,<br>
+     *                                           <code>false</code> - иначе
+     */
+    public static void setAllDataOnRemote(boolean allDataOnRemote) {
+        ApplicationAssembler.allDataOnRemote = allDataOnRemote;
+    }
 }
