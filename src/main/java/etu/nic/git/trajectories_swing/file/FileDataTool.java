@@ -8,13 +8,16 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Класс, отвечающий за чтение из файла и запись в файл траекторной информации
  */
-public class FileDataLoader {
+public class FileDataTool {
     /**
      * Метод считывает данные из файла
      *
@@ -67,5 +70,14 @@ public class FileDataLoader {
             }
         }
         return trajectoryRowList;
+    }
+
+    public static boolean isValidPath(String pathStr) {
+        try {
+            Path path = Paths.get(pathStr);
+            return path.getParent() != null && !pathStr.equals(path.getFileName().toString());
+        } catch (InvalidPathException e) {
+            return false;
+        }
     }
 }

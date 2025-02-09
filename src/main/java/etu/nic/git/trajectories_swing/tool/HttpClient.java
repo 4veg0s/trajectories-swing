@@ -2,7 +2,6 @@ package etu.nic.git.trajectories_swing.tool;
 
 import com.google.gson.Gson;
 import etu.nic.git.trajectories_swing.file.TrajectoryFile;
-import etu.nic.git.trajectories_swing.file.TrajectoryFormatConverter;
 import okhttp3.*;
 
 import java.io.IOException;
