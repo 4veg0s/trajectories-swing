@@ -3,8 +3,10 @@ package etu.nic.git.trajectories_swing.tool;
 import com.google.gson.Gson;
 import etu.nic.git.trajectories_swing.file.TrajectoryFile;
 import okhttp3.*;
+import sun.invoke.empty.Empty;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HttpClient {
@@ -23,8 +25,19 @@ public class HttpClient {
         try (Response response = client.newCall(request).execute()) {
             assert response.body() != null;
 
-            List<TrajectoryFile> trajectoryFiles = TrajectoryFormatConverter.createTrajectoryFileListFromJson(response.body().string());
-            return trajectoryFiles;
+            String bodyStr = response.body().string();
+
+            if (response.isSuccessful()) {
+                List<TrajectoryFile> trajectoryFiles;
+                if (bodyStr.isEmpty()) {
+                    trajectoryFiles = new ArrayList<>();
+                } else {
+                    trajectoryFiles = TrajectoryFormatConverter.createTrajectoryFileListFromJson(bodyStr);
+                }
+                return trajectoryFiles;
+            } else {
+                throw new RuntimeException(response.toString());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

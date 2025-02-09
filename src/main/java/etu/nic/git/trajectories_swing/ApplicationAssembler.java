@@ -103,9 +103,6 @@ public class ApplicationAssembler {
 
             // кнопка для синхронизации каталога в меню "Файл"
             topMenuBar.addSyncCatalogMenuButton(initMenuSyncCatalogListener());
-
-            // отрисовать интерфейс с учетом наполненного каталога
-            updateEntireInfo();
         }
     }
 
@@ -456,6 +453,7 @@ public class ApplicationAssembler {
      */
     public void showGUI() {
         mainFrame.showMainFrame();
+        updateEntireInfo();
         if (!isAllDataOnRemote()) {
             fileChooserOnFirstOpen(true);
         }
