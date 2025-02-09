@@ -1,5 +1,7 @@
 package etu.nic.git.trajectories_swing.display;
 
+import etu.nic.git.trajectories_swing.ApplicationAssembler;
+import etu.nic.git.trajectories_swing.file.FileDataTool;
 import etu.nic.git.trajectories_swing.file.TrajectoryFileStorage;
 
 import javax.swing.Box;
@@ -14,6 +16,8 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 /**
@@ -122,15 +126,30 @@ public class FileDisplay extends AbstractDisplay {
     private void loadFileDataToArea(String fileData) {
         this.fileTextArea.setText(fileData);
         String path = fileStorage.getCurrentFile().getPath();
-        if (path.length() > 30) {
-            String shortenedPath =
-                    path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
-                            "..." +
-                            path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
-            filePathLabel.setText(shortenedPath);
-            filePathLabel.setToolTipText(path);
+        if (ApplicationAssembler.isAllDataOnRemote()) {
+            if (FileDataTool.isValidPath(path)) {
+                Path pathToFile = Paths.get(path);
+
+                String fileNameWithExt = pathToFile.getFileName().toString(); // Получаем "xxx.txt"
+
+                // Убираем расширение
+                int dotIndex = fileNameWithExt.lastIndexOf(".");
+                String fileNameWithoutExt = (dotIndex == -1) ? fileNameWithExt : fileNameWithExt.substring(0, dotIndex);
+                filePathLabel.setText(fileNameWithoutExt);
+            } else {
+                filePathLabel.setText(path);
+            }
         } else {
-            filePathLabel.setText(path);
+            if (path.length() > 30) {
+                String shortenedPath =
+                        path.substring(0, Math.max(path.indexOf("\\"), path.indexOf("/")) + 1) +
+                                "..." +
+                                path.substring(Math.max(path.lastIndexOf("\\"), path.lastIndexOf("/")));
+                filePathLabel.setText(shortenedPath);
+                filePathLabel.setToolTipText(path);
+            } else {
+                filePathLabel.setText(path);
+            }
         }
     }
 

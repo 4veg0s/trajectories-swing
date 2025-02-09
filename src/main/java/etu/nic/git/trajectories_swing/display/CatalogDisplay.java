@@ -7,10 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +49,11 @@ public class CatalogDisplay extends AbstractDisplay {
         background.add(BorderLayout.NORTH, displayHeader);
 
         background.add(BorderLayout.CENTER, scrollPane);
+
+        int fixedWidth = 220;
+        Dimension minimumSize = background.getMinimumSize();
+        minimumSize.width = fixedWidth;
+        background.setMinimumSize(minimumSize);
     }
 
     /**
